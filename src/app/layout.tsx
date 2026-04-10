@@ -15,6 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://freeband.com.br"),
   title: "Internacional Freeband | Desde 1969",
   description:
     "Banda de eventos premium com mais de 55 anos de história. Casamentos, formaturas, corporativo e shows municipais.",
