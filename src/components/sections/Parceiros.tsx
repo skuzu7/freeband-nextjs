@@ -1,37 +1,32 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 import { partners } from "@/data/content";
 
-export default function Parceiros() {
+export function Parceiros() {
   return (
-    <section
-      id="parceiros"
-      className="section-padding"
-      style={{ background: "var(--color-bg-2)" }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle>Nossos Parceiros</SectionTitle>
+    <Section id="parceiros" className="bg-bg-2">
+      <Container>
+        <SectionTitle eyebrow="Confiança">Nossos Parceiros</SectionTitle>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-          {partners.map((partner, i) => (
-            <div key={partner} className="flex items-center gap-4">
-              <span
-                className="text-lg font-medium tracking-wide text-center"
-                style={{ color: "var(--color-white)" }}
-              >
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-10">
+          {partners.map((partner, index) => (
+            <li key={partner} className="flex items-center gap-6 md:gap-10">
+              <span className="font-display text-base uppercase tracking-[0.15em] text-white md:text-lg">
                 {partner}
               </span>
-              {i < partners.length - 1 && (
+              {index < partners.length - 1 ? (
                 <span
-                  className="text-2xl font-thin"
-                  style={{ color: "var(--color-gold)" }}
+                  className="hidden text-xl font-thin text-gold md:inline"
+                  aria-hidden="true"
                 >
                   |
                 </span>
-              )}
-            </div>
+              ) : null}
+            </li>
           ))}
-        </div>
-      </div>
-    </section>
+        </ul>
+      </Container>
+    </Section>
   );
 }
