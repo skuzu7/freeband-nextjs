@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0d0d0d;
+  --color-bg-2: #111111;
+  --color-bg-card: #1a1a1a;
+  --color-gold: #c9a84c;
+  --color-gold-light: #e8cc7a;
+  --color-white: #ffffff;
+  --color-text-2: #999999;
+  --color-border: #1f1f1f;
+  --color-green-wa: #25d366;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body > *:not(#print-root) {
+    display: none !important;
+  }
+
+  #print-root {
+    display: block !important;
+    width: 210mm;
+    min-height: 297mm;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm 20mm;
+  }
+}
+
+.gold-line {
+  width: 80px;
+  height: 4px;
+  background-color: var(--color-gold);
+  margin-top: 12px;
+}
+
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+}
