@@ -4,13 +4,13 @@ import "./globals.css";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-playfair",
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-inter",
   display: "swap",
 });
 
