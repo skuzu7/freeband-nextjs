@@ -1,72 +1,57 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 import { services, serviceIncludes } from "@/data/content";
 
-export default function Servicos() {
+export function Servicos() {
   return (
-    <section
-      id="servicos"
-      className="section-padding"
-      style={{ background: "var(--color-bg)" }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle>Nossos Serviços</SectionTitle>
+    <Section id="servicos" className="bg-bg">
+      <Container>
+        <SectionTitle eyebrow="O que fazemos">Nossos Serviços</SectionTitle>
 
-        {/* 5 cards: 3+2 on large screens */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
-            <div
+            <article
               key={service.title}
-              className="group p-8 transition-all duration-300"
-              style={{
-                background: "var(--color-bg-card)",
-                border: "1px solid var(--color-border)",
-                borderBottom: "3px solid var(--color-gold)",
-              }}
+              className="group relative border border-border border-b-4 border-b-gold bg-bg-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_12px_32px_-16px_rgba(201,168,76,0.4)]"
             >
-              <div
-                className="text-4xl mb-4"
-                style={{ color: "var(--color-gold)" }}
-              >
+              <div className="mb-5 text-4xl text-gold" aria-hidden="true">
                 {service.icon}
               </div>
-              <h3
-                className="text-xl font-bold uppercase tracking-widest mb-3"
-                style={{ color: "var(--color-white)" }}
-              >
+              <h3 className="mb-3 font-display text-xl font-bold uppercase tracking-widest text-white">
                 {service.title}
               </h3>
-              <p style={{ color: "var(--color-text-2)", lineHeight: 1.7 }}>
+              <p className="text-sm leading-relaxed text-text-2 md:text-base">
                 {service.description}
               </p>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* Includes checklist */}
-        <div className="mt-16">
-          <h3
-            className="text-2xl font-bold mb-8 text-center uppercase tracking-widest"
-            style={{ color: "var(--color-gold)" }}
-          >
+        <div className="mt-20">
+          <h3 className="text-center font-display text-2xl font-bold uppercase tracking-[0.2em] text-gold md:text-3xl">
             Incluso em todos os eventos
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
             {serviceIncludes.map((item) => (
-              <div key={item} className="flex items-start gap-3">
+              <div
+                key={item}
+                className="flex items-start gap-3 border border-border bg-bg-card/60 p-4"
+              >
                 <span
-                  className="text-xl mt-0.5 flex-shrink-0"
-                  style={{ color: "var(--color-gold)" }}
+                  className="mt-0.5 flex-shrink-0 text-xl text-gold"
+                  aria-hidden="true"
                 >
-                  ✓
+                  &#10003;
                 </span>
-                <span style={{ color: "var(--color-white)", lineHeight: 1.6 }}>
+                <span className="text-sm leading-relaxed text-white md:text-base">
                   {item}
                 </span>
               </div>
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 }
