@@ -1,66 +1,32 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 import { artists } from "@/data/content";
 
-export default function Artistas() {
-  const half = Math.ceil(artists.length / 2);
-  const col1 = artists.slice(0, half);
-  const col2 = artists.slice(half);
-
+export function Artistas() {
   return (
-    <section
-      id="artistas"
-      className="section-padding"
-      style={{ background: "var(--color-bg-2)" }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle>Já tocamos ao lado de</SectionTitle>
+    <Section id="artistas" className="bg-bg-2">
+      <Container>
+        <SectionTitle eyebrow="Palco Compartilhado">
+          Já tocamos ao lado de
+        </SectionTitle>
 
-        <div className="flex gap-0 mt-12">
-          {/* Column 1 */}
-          <div className="flex-1 flex flex-col gap-4">
-            {col1.map((artist) => (
-              <div key={artist} className="flex items-center gap-3">
-                <span style={{ color: "var(--color-gold)", fontWeight: 700 }}>
-                  ❯
-                </span>
-                <span
-                  className="text-lg"
-                  style={{ color: "var(--color-white)" }}
-                >
-                  {artist}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Gold divider */}
-          <div
-            style={{
-              width: "1px",
-              background: "var(--color-gold)",
-              margin: "0 2rem",
-              opacity: 0.4,
-            }}
-          />
-
-          {/* Column 2 */}
-          <div className="flex-1 flex flex-col gap-4">
-            {col2.map((artist) => (
-              <div key={artist} className="flex items-center gap-3">
-                <span style={{ color: "var(--color-gold)", fontWeight: 700 }}>
-                  ❯
-                </span>
-                <span
-                  className="text-lg"
-                  style={{ color: "var(--color-white)" }}
-                >
-                  {artist}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+        <ul className="mt-10 grid grid-cols-1 gap-x-10 gap-y-4 divide-y divide-border sm:grid-cols-2 sm:divide-y-0 md:gap-x-16">
+          {artists.map((artist) => (
+            <li
+              key={artist}
+              className="flex items-center gap-4 py-3 text-base sm:border-b sm:border-border md:text-lg"
+            >
+              <span className="text-gold" aria-hidden="true">
+                &rsaquo;
+              </span>
+              <span className="font-display uppercase tracking-wider text-white">
+                {artist}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </Section>
   );
 }
