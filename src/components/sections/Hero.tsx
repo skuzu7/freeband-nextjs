@@ -1,144 +1,63 @@
-import Image from "next/image";
 import { bandInfo } from "@/data/content";
-import { images } from "@/data/images";
 
 export function Hero() {
   return (
-    <section
-      style={{
-        position: "relative",
-        height: "100vh",
-        minHeight: "600px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Image
-        src={images.festa55}
-        alt="Internacional Freeband ao vivo"
-        fill
-        style={{ objectFit: "cover", objectPosition: "center top" }}
-        priority
-        quality={90}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(to bottom, rgba(13,13,13,0.2) 0%, rgba(13,13,13,0.6) 60%, rgba(13,13,13,1) 100%)",
-        }}
-      />
-
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          textAlign: "center",
-          padding: "0 1.5rem",
-          maxWidth: "900px",
-        }}
+    <section className="relative flex h-screen min-h-[640px] items-center justify-center overflow-hidden">
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        poster="/images/hero-poster.jpeg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
       >
-        <div
-          style={{
-            display: "inline-block",
-            border: "1px solid var(--color-gold)",
-            color: "var(--color-gold)",
-            fontSize: "0.75rem",
-            fontWeight: 700,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            padding: "0.4rem 1.2rem",
-            marginBottom: "2rem",
-          }}
-        >
-          Desde 1969
+        <source src="/video/hero.mp4" type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,10,10,0.35)_0%,rgba(10,10,10,0.7)_55%,rgba(10,10,10,1)_100%)]" />
+
+      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+        <div className="mb-8 inline-block border border-gold px-5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.3em] text-gold">
+          Desde {bandInfo.founded}
         </div>
 
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            lineHeight: 1.05,
-            marginBottom: "1.5rem",
-          }}
-        >
-          <span
-            style={{
-              display: "block",
-              fontSize: "clamp(2.5rem, 8vw, 5rem)",
-              color: "var(--color-white)",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-            }}
-          >
+        <h1 className="mb-6 font-display font-bold leading-[1.05]">
+          <span className="block text-4xl uppercase tracking-wider text-white sm:text-5xl md:text-6xl lg:text-7xl">
             Internacional
           </span>
-          <span
-            style={{
-              display: "block",
-              fontSize: "clamp(3rem, 10vw, 6.5rem)",
-              color: "var(--color-gold)",
-              letterSpacing: "0.03em",
-              textTransform: "uppercase",
-            }}
-          >
+          <span className="block text-5xl uppercase tracking-wider text-gold sm:text-6xl md:text-7xl lg:text-8xl">
             Freeband
           </span>
         </h1>
 
-        <p
-          style={{
-            color: "var(--color-text-2)",
-            fontSize: "clamp(0.9rem, 2vw, 1.1rem)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            marginBottom: "2.5rem",
-          }}
-        >
+        <p className="mb-10 text-sm uppercase tracking-[0.25em] text-text-2 sm:text-base">
           {bandInfo.tagline}
         </p>
 
-        <a
-          href="#contato"
-          style={{
-            display: "inline-block",
-            backgroundColor: "var(--color-gold)",
-            color: "#0D0D0D",
-            padding: "1rem 2.5rem",
-            fontWeight: 700,
-            fontSize: "0.875rem",
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            textDecoration: "none",
-          }}
-        >
-          Agendar Show
-        </a>
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href="#contato"
+            className="inline-block bg-gold px-10 py-4 text-sm font-bold uppercase tracking-[0.2em] text-bg transition-colors hover:bg-gold-light"
+          >
+            Agendar Show
+          </a>
+          <a
+            href="/portfolio"
+            className="inline-block border border-gold px-10 py-4 text-sm font-bold uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold hover:text-bg"
+          >
+            Ver Portfólio
+          </a>
+        </div>
       </div>
 
       <div
-        style={{
-          position: "absolute",
-          bottom: "2rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          color: "var(--color-gold)",
-          fontSize: "1.5rem",
-          animation: "bounce 2s infinite",
-        }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-arrow text-2xl text-gold"
+        aria-hidden="true"
       >
-        ↓
+        &darr;
       </div>
-
-      <style>{`
-        @keyframes bounce {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(8px); }
-        }
-      `}</style>
     </section>
   );
 }
