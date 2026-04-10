@@ -1,34 +1,25 @@
 interface SectionTitleProps {
   children: React.ReactNode;
   light?: boolean;
+  eyebrow?: string;
 }
 
-export function SectionTitle({ children, light = false }: SectionTitleProps) {
+export function SectionTitle({
+  children,
+  light = false,
+  eyebrow,
+}: SectionTitleProps) {
   return (
-    <div style={{ marginBottom: "2.5rem" }}>
-      <h2
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(2rem, 5vw, 3rem)",
-          fontWeight: 700,
-          color: "var(--color-white)",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          lineHeight: 1.1,
-        }}
-      >
+    <div className="mb-10">
+      {eyebrow ? (
+        <p className="mb-3 font-sans text-xs uppercase tracking-[0.3em] text-gold">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 className="font-display text-4xl font-bold uppercase leading-tight tracking-wider text-white md:text-5xl lg:text-6xl">
         {children}
       </h2>
-      <div
-        style={{
-          width: "80px",
-          height: "4px",
-          backgroundColor: light
-            ? "var(--color-gold-light)"
-            : "var(--color-gold)",
-          marginTop: "12px",
-        }}
-      />
+      <div className={`mt-3 h-1 w-20 ${light ? "bg-gold-light" : "bg-gold"}`} />
     </div>
   );
 }
