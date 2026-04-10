@@ -1,59 +1,37 @@
 "use client";
 
-import { OrcamentoData } from "@/types/orcamento";
+// src/components/orcamento/OrcamentoForm.tsx
+// Controlled form used inside the token-protected /orcamento/[token] route.
+// Emits a new OrcamentoData snapshot on every change so the adjacent preview
+// and PDF can re-render reactively.
+import type { OrcamentoData } from "@/types/orcamento";
 
-interface Props {
+interface OrcamentoFormProps {
   data: OrcamentoData;
   onChange: (data: OrcamentoData) => void;
 }
 
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem 1rem",
-  background: "#1A1A1A",
-  border: "1px solid #1F1F1F",
-  color: "#fff",
-  borderRadius: "4px",
-  fontSize: "0.95rem",
-  outline: "none",
-};
+const inputClasses =
+  "w-full rounded border border-border bg-bg-card px-4 py-3 text-[0.95rem] text-white outline-none transition-colors focus:border-gold";
+const labelClasses =
+  "mb-1.5 block text-xs uppercase tracking-wider text-text-2";
+const fieldClasses = "mb-5";
 
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  marginBottom: "0.375rem",
-  fontSize: "0.8rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
-  color: "#999",
-};
-
-const fieldStyle: React.CSSProperties = {
-  marginBottom: "1.25rem",
-};
-
-export default function OrcamentoForm({ data, onChange }: Props) {
+export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
   function set(field: keyof OrcamentoData, value: string) {
     onChange({ ...data, [field]: value });
   }
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} style={{ padding: "2rem" }}>
-      <h2
-        style={{
-          fontSize: "1.5rem",
-          fontFamily: "var(--font-display)",
-          color: "var(--color-gold)",
-          marginBottom: "2rem",
-          fontWeight: 700,
-        }}
-      >
+    <form onSubmit={(e) => e.preventDefault()} className="p-8">
+      <h2 className="mb-8 font-display text-2xl font-bold text-gold">
         Dados da Proposta
       </h2>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Nome do Contratante</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Nome do Contratante</label>
         <input
-          style={inputStyle}
+          className={inputClasses}
           type="text"
           value={data.contratante}
           onChange={(e) => set("contratante", e.target.value)}
@@ -61,10 +39,10 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         />
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Tipo de Evento</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Tipo de Evento</label>
         <select
-          style={{ ...inputStyle, cursor: "pointer" }}
+          className={`${inputClasses} cursor-pointer`}
           value={data.tipoEvento}
           onChange={(e) => set("tipoEvento", e.target.value)}
         >
@@ -78,27 +56,20 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         </select>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1rem",
-          marginBottom: "1.25rem",
-        }}
-      >
+      <div className="mb-5 grid grid-cols-2 gap-4">
         <div>
-          <label style={labelStyle}>Data do Evento</label>
+          <label className={labelClasses}>Data do Evento</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="date"
             value={data.dataEvento}
             onChange={(e) => set("dataEvento", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Local / Cidade</label>
+          <label className={labelClasses}>Local / Cidade</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="text"
             value={data.local}
             onChange={(e) => set("local", e.target.value)}
@@ -107,36 +78,29 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "1rem",
-          marginBottom: "1.25rem",
-        }}
-      >
+      <div className="mb-5 grid grid-cols-3 gap-4">
         <div>
-          <label style={labelStyle}>Início</label>
+          <label className={labelClasses}>Início</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="time"
             value={data.horarioInicio}
             onChange={(e) => set("horarioInicio", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Fim</label>
+          <label className={labelClasses}>Fim</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="time"
             value={data.horarioFim}
             onChange={(e) => set("horarioFim", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Convidados</label>
+          <label className={labelClasses}>Convidados</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="number"
             value={data.numConvidados}
             onChange={(e) => set("numConvidados", e.target.value)}
@@ -145,10 +109,10 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Valor do Cachê (R$)</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Valor do Cachê (R$)</label>
         <input
-          style={inputStyle}
+          className={inputClasses}
           type="number"
           value={data.cache}
           onChange={(e) => set("cache", e.target.value)}
@@ -156,18 +120,11 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         />
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1rem",
-          marginBottom: "1.25rem",
-        }}
-      >
+      <div className="mb-5 grid grid-cols-2 gap-4">
         <div>
-          <label style={labelStyle}>Entrada (%)</label>
+          <label className={labelClasses}>Entrada (%)</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="number"
             min="0"
             max="100"
@@ -177,9 +134,9 @@ export default function OrcamentoForm({ data, onChange }: Props) {
           />
         </div>
         <div>
-          <label style={labelStyle}>Data da Entrada</label>
+          <label className={labelClasses}>Data da Entrada</label>
           <input
-            style={inputStyle}
+            className={inputClasses}
             type="date"
             value={data.entradaData}
             onChange={(e) => set("entradaData", e.target.value)}
@@ -187,38 +144,38 @@ export default function OrcamentoForm({ data, onChange }: Props) {
         </div>
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Data do Saldo</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Data do Saldo</label>
         <input
-          style={inputStyle}
+          className={inputClasses}
           type="date"
           value={data.saldoData}
           onChange={(e) => set("saldoData", e.target.value)}
         />
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Itens Inclusos</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Itens Inclusos</label>
         <textarea
-          style={{ ...inputStyle, minHeight: "100px", resize: "vertical" }}
+          className={`${inputClasses} min-h-[100px] resize-y`}
           value={data.itensInclusos}
           onChange={(e) => set("itensInclusos", e.target.value)}
         />
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Observações</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Observações</label>
         <textarea
-          style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }}
+          className={`${inputClasses} min-h-[80px] resize-y`}
           value={data.observacoes}
           onChange={(e) => set("observacoes", e.target.value)}
         />
       </div>
 
-      <div style={fieldStyle}>
-        <label style={labelStyle}>Validade da Proposta</label>
+      <div className={fieldClasses}>
+        <label className={labelClasses}>Validade da Proposta</label>
         <input
-          style={inputStyle}
+          className={inputClasses}
           type="date"
           value={data.validade}
           onChange={(e) => set("validade", e.target.value)}
