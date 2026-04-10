@@ -2,110 +2,63 @@ import Image from "next/image";
 import { release } from "@/data/content";
 import { images } from "@/data/images";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 
 export function Sobre() {
-  return (
-    <section
-      id="sobre"
-      className="section-padding"
-      style={{ backgroundColor: "var(--color-bg)" }}
-    >
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        <SectionTitle>Quem Somos</SectionTitle>
+  const paragraphs = release.full.split("\n\n");
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "3rem",
-            marginBottom: "3rem",
-          }}
-          className="sobre-grid"
-        >
-          <div>
-            {release.full.split("\n\n").map((para, i) => (
-              <p
-                key={i}
-                style={{
-                  color: "var(--color-text-2)",
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  marginBottom: "1.2rem",
-                  textAlign: "justify",
-                }}
-              >
+  return (
+    <Section id="sobre" className="bg-bg">
+      <Container>
+        <SectionTitle eyebrow="A Banda">Quem Somos</SectionTitle>
+
+        <div className="mb-14 grid gap-10 md:grid-cols-[60%_38%] md:gap-12">
+          <div className="space-y-5 text-base leading-relaxed text-text-2 md:text-lg">
+            {paragraphs.map((para, index) => (
+              <p key={index} className="text-justify">
                 {para}
               </p>
             ))}
+            <ul className="flex flex-wrap gap-3 pt-2">
+              {release.values.map((value) => (
+                <li
+                  key={value}
+                  className="border border-gold/40 px-4 py-1 text-xs uppercase tracking-[0.2em] text-gold"
+                >
+                  {value}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div style={{ position: "relative", minHeight: "350px" }}>
+          <div className="relative aspect-[4/5] w-full overflow-hidden border-2 border-gold md:aspect-auto md:min-h-[440px]">
             <Image
               src={images.anos70}
               alt="Freeband anos 70"
               fill
-              style={{
-                objectFit: "cover",
-                filter: "grayscale(100%) contrast(1.1)",
-                border: "2px solid var(--color-gold)",
-              }}
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="object-cover grayscale contrast-125"
             />
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1px",
-            backgroundColor: "var(--color-border)",
-            border: "1px solid var(--color-border)",
-          }}
-          className="stats-grid"
-        >
-          {release.highlights.map((h, i) => (
+        <div className="grid grid-cols-2 gap-px border border-border bg-border md:grid-cols-4">
+          {release.highlights.map((highlight) => (
             <div
-              key={i}
-              style={{
-                backgroundColor: "var(--color-bg-card)",
-                padding: "2rem",
-                textAlign: "center",
-              }}
+              key={highlight.label}
+              className="bg-bg-card px-4 py-8 text-center md:px-6 md:py-10"
             >
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(2.5rem, 6vw, 3.5rem)",
-                  fontWeight: 700,
-                  color: "var(--color-gold)",
-                  lineHeight: 1,
-                  marginBottom: "0.5rem",
-                }}
-              >
-                {h.value}
+              <div className="font-display text-5xl font-bold leading-none text-gold md:text-6xl">
+                {highlight.value}
               </div>
-              <div
-                style={{
-                  fontSize: "0.75rem",
-                  color: "var(--color-text-2)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  fontWeight: 600,
-                }}
-              >
-                {h.label}
+              <div className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-text-2">
+                {highlight.label}
               </div>
             </div>
           ))}
         </div>
-      </div>
-
-      <style>{`
-        @media (min-width: 768px) {
-          .sobre-grid { grid-template-columns: 60% 38% !important; }
-          .stats-grid { grid-template-columns: repeat(4, 1fr) !important; }
-        }
-      `}</style>
-    </section>
+      </Container>
+    </Section>
   );
 }
