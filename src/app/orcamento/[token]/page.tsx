@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { validateToken } from "@/lib/token";
-import OrcamentoPage from "@/components/orcamento/OrcamentoPage";
+import { OrcamentoPage } from "@/components/orcamento/OrcamentoPage";
 
 interface Props {
   params: Promise<{ token: string }>;

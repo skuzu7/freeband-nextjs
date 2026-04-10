@@ -1,4 +1,9 @@
-import { OrcamentoData } from "@/types/orcamento";
+// src/components/orcamento/PrintLayout.tsx
+// Print/screen HTML version of the proposal rendered inside OrcamentoPreview.
+// Separate from OrcamentoPdf (which is the @react-pdf/renderer document) so
+// the live preview can reflect form state reactively without going through
+// the PDF pipeline.
+import type { OrcamentoData } from "@/types/orcamento";
 import {
   formatCurrency,
   formatDate,
@@ -6,343 +11,146 @@ import {
   calcSaldo,
 } from "@/lib/format";
 
-interface Props {
+interface PrintLayoutProps {
   data: OrcamentoData;
 }
 
-export default function PrintLayout({ data }: Props) {
-  const entradaStr = calcEntrada(data.cache, data.entradaPct);
-  const saldoStr = calcSaldo(data.cache, data.entradaPct);
+const sectionTitleClasses =
+  "mb-4 border-b border-[#e8e0ce] pb-2 text-xs font-semibold uppercase tracking-widest text-gold";
+const labelClasses = "mb-0.5 text-[10px] uppercase tracking-widest text-[#888]";
+const bodyBlockClasses =
+  "whitespace-pre-line text-[13px] leading-[1.8] text-[#333]";
+
+export function PrintLayout({ data }: PrintLayoutProps) {
   const hasCache = data.cache !== "";
   const hasEntrada = hasCache && data.entradaPct !== "";
+  const entradaStr = calcEntrada(data.cache, data.entradaPct);
+  const saldoStr = calcSaldo(data.cache, data.entradaPct);
+  const saldoPct = data.entradaPct ? 100 - Number(data.entradaPct) : 0;
+
+  const infoRows: ReadonlyArray<readonly [string, string]> = [
+    ["Tipo de Evento", data.tipoEvento || "\u2014"],
+    ["Data", data.dataEvento ? formatDate(data.dataEvento) : "\u2014"],
+    ["Local", data.local || "\u2014"],
+    [
+      "Horario",
+      data.horarioInicio && data.horarioFim
+        ? `${data.horarioInicio} as ${data.horarioFim}`
+        : "\u2014",
+    ],
+    [
+      "Convidados",
+      data.numConvidados ? `${data.numConvidados} pessoas` : "\u2014",
+    ],
+  ];
 
   return (
     <div
       id="print-area"
-      style={{
-        background: "#fff",
-        color: "#1a1a1a",
-        fontFamily: "Georgia, serif",
-        padding: "40px",
-        minHeight: "297mm",
-        width: "210mm",
-        maxWidth: "100%",
-      }}
+      className="min-h-[297mm] w-[210mm] max-w-full bg-white p-10 font-serif text-[#1a1a1a]"
     >
-      {/* Header */}
-      <div
-        style={{
-          borderBottom: "3px solid #C9A84C",
-          paddingBottom: "24px",
-          marginBottom: "32px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontSize: "10px",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "#888",
-                marginBottom: "4px",
-              }}
-            >
-              Proposta Comercial
-            </div>
-            <div
-              style={{
-                fontSize: "28px",
-                fontWeight: 700,
-                color: "#1a1a1a",
-                lineHeight: 1.1,
-              }}
-            >
-              Internacional
-            </div>
-            <div
-              style={{
-                fontSize: "28px",
-                fontWeight: 700,
-                color: "#C9A84C",
-                lineHeight: 1.1,
-              }}
-            >
-              Freeband
-            </div>
+      <div className="mb-8 flex items-end justify-between border-b-[3px] border-gold pb-6">
+        <div>
+          <div className="mb-1 text-[10px] uppercase tracking-[0.2em] text-[#888]">
+            Proposta Comercial
           </div>
-          <div style={{ textAlign: "right", fontSize: "12px", color: "#666" }}>
-            <div>Desde 1969</div>
-            <div>Trabiju, SP</div>
-            <div style={{ marginTop: "4px", color: "#C9A84C" }}>
-              (16) 99171-2996
-            </div>
+          <div className="text-[28px] font-bold leading-none text-[#1a1a1a]">
+            Internacional
           </div>
+          <div className="text-[28px] font-bold leading-none text-gold">
+            Freeband
+          </div>
+        </div>
+        <div className="text-right text-xs text-[#666]">
+          <div>Desde 1969</div>
+          <div>Trabiju, SP</div>
+          <div className="mt-1 text-gold">(16) 99171-2996</div>
         </div>
       </div>
 
-      {/* Contratante */}
-      <div style={{ marginBottom: "24px" }}>
-        <div
-          style={{
-            fontSize: "11px",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "#888",
-            marginBottom: "4px",
-          }}
-        >
+      <div className="mb-6">
+        <div className="mb-1 text-[11px] uppercase tracking-widest text-[#888]">
           Proposta para
         </div>
-        <div style={{ fontSize: "22px", fontWeight: 600, color: "#1a1a1a" }}>
-          {data.contratante || "—"}
+        <div className="text-[22px] font-semibold text-[#1a1a1a]">
+          {data.contratante || "\u2014"}
         </div>
       </div>
 
-      {/* Event info grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "16px",
-          background: "#f9f7f2",
-          border: "1px solid #e8e0ce",
-          padding: "20px",
-          marginBottom: "24px",
-        }}
-      >
-        {[
-          ["Tipo de Evento", data.tipoEvento || "—"],
-          ["Data", data.dataEvento ? formatDate(data.dataEvento) : "—"],
-          ["Local", data.local || "—"],
-          [
-            "Horário",
-            data.horarioInicio && data.horarioFim
-              ? `${data.horarioInicio} às ${data.horarioFim}`
-              : "—",
-          ],
-          [
-            "Convidados",
-            data.numConvidados ? `${data.numConvidados} pessoas` : "—",
-          ],
-        ].map(([label, value]) => (
+      <div className="mb-6 grid grid-cols-2 gap-4 border border-[#e8e0ce] bg-[#f9f7f2] p-5">
+        {infoRows.map(([label, value]) => (
           <div key={label}>
-            <div
-              style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: "#888",
-                marginBottom: "2px",
-              }}
-            >
-              {label}
-            </div>
-            <div style={{ fontSize: "14px", fontWeight: 500 }}>{value}</div>
+            <div className={labelClasses}>{label}</div>
+            <div className="text-sm font-medium">{value}</div>
           </div>
         ))}
       </div>
 
-      {/* Investment */}
-      <div style={{ marginBottom: "24px" }}>
-        <div
-          style={{
-            fontSize: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "#C9A84C",
-            borderBottom: "1px solid #e8e0ce",
-            paddingBottom: "8px",
-            marginBottom: "16px",
-            fontWeight: 600,
-          }}
-        >
-          Investimento
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <span style={{ fontSize: "14px", color: "#444" }}>Valor Total</span>
-          <span style={{ fontSize: "22px", fontWeight: 700, color: "#1a1a1a" }}>
-            {hasCache ? formatCurrency(data.cache) : "—"}
+      <div className="mb-6">
+        <div className={sectionTitleClasses}>Investimento</div>
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-sm text-[#444]">Valor Total</span>
+          <span className="text-[22px] font-bold text-[#1a1a1a]">
+            {hasCache ? formatCurrency(data.cache) : "\u2014"}
           </span>
         </div>
       </div>
 
-      {/* Payment conditions */}
-      <div style={{ marginBottom: "24px" }}>
-        <div
-          style={{
-            fontSize: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "#C9A84C",
-            borderBottom: "1px solid #e8e0ce",
-            paddingBottom: "8px",
-            marginBottom: "16px",
-            fontWeight: 600,
-          }}
-        >
-          Condições de Pagamento
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "12px",
-          }}
-        >
-          <div
-            style={{
-              background: "#f9f7f2",
-              padding: "12px",
-              border: "1px solid #e8e0ce",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
-                color: "#888",
-                marginBottom: "4px",
-              }}
-            >
+      <div className="mb-6">
+        <div className={sectionTitleClasses}>Condicoes de Pagamento</div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="border border-[#e8e0ce] bg-[#f9f7f2] p-3">
+            <div className="mb-1 text-[10px] uppercase text-[#888]">
               Entrada ({data.entradaPct || 0}%)
             </div>
-            <div style={{ fontSize: "18px", fontWeight: 700 }}>
-              {hasEntrada ? entradaStr : "—"}
+            <div className="text-lg font-bold">
+              {hasEntrada ? entradaStr : "\u2014"}
             </div>
-            {data.entradaData && (
-              <div
-                style={{ fontSize: "11px", color: "#666", marginTop: "4px" }}
-              >
-                até {formatDate(data.entradaData)}
+            {data.entradaData ? (
+              <div className="mt-1 text-[11px] text-[#666]">
+                ate {formatDate(data.entradaData)}
               </div>
-            )}
+            ) : null}
           </div>
-          <div
-            style={{
-              background: "#f9f7f2",
-              padding: "12px",
-              border: "1px solid #e8e0ce",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
-                color: "#888",
-                marginBottom: "4px",
-              }}
-            >
-              Saldo ({data.entradaPct ? 100 - Number(data.entradaPct) : 0}%)
+          <div className="border border-[#e8e0ce] bg-[#f9f7f2] p-3">
+            <div className="mb-1 text-[10px] uppercase text-[#888]">
+              Saldo ({saldoPct}%)
             </div>
-            <div style={{ fontSize: "18px", fontWeight: 700 }}>
-              {hasEntrada ? saldoStr : "—"}
+            <div className="text-lg font-bold">
+              {hasEntrada ? saldoStr : "\u2014"}
             </div>
-            {data.saldoData && (
-              <div
-                style={{ fontSize: "11px", color: "#666", marginTop: "4px" }}
-              >
-                até {formatDate(data.saldoData)}
+            {data.saldoData ? (
+              <div className="mt-1 text-[11px] text-[#666]">
+                ate {formatDate(data.saldoData)}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
-      {/* Itens inclusos */}
-      {data.itensInclusos && (
-        <div style={{ marginBottom: "24px" }}>
-          <div
-            style={{
-              fontSize: "12px",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "#C9A84C",
-              borderBottom: "1px solid #e8e0ce",
-              paddingBottom: "8px",
-              marginBottom: "16px",
-              fontWeight: 600,
-            }}
-          >
-            Itens Inclusos
-          </div>
-          <div
-            style={{
-              fontSize: "13px",
-              lineHeight: 1.8,
-              color: "#333",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {data.itensInclusos}
-          </div>
+      {data.itensInclusos ? (
+        <div className="mb-6">
+          <div className={sectionTitleClasses}>Itens Inclusos</div>
+          <div className={bodyBlockClasses}>{data.itensInclusos}</div>
         </div>
-      )}
+      ) : null}
 
-      {/* Observações */}
-      {data.observacoes && (
-        <div style={{ marginBottom: "24px" }}>
-          <div
-            style={{
-              fontSize: "12px",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "#C9A84C",
-              borderBottom: "1px solid #e8e0ce",
-              paddingBottom: "8px",
-              marginBottom: "16px",
-              fontWeight: 600,
-            }}
-          >
-            Observações
-          </div>
-          <div
-            style={{
-              fontSize: "13px",
-              lineHeight: 1.8,
-              color: "#333",
-              whiteSpace: "pre-line",
-            }}
-          >
-            {data.observacoes}
-          </div>
+      {data.observacoes ? (
+        <div className="mb-6">
+          <div className={sectionTitleClasses}>Observacoes</div>
+          <div className={bodyBlockClasses}>{data.observacoes}</div>
         </div>
-      )}
+      ) : null}
 
-      {/* Footer */}
-      <div
-        style={{
-          marginTop: "auto",
-          borderTop: "2px solid #C9A84C",
-          paddingTop: "16px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          fontSize: "11px",
-          color: "#888",
-        }}
-      >
+      <div className="mt-auto flex items-end justify-between border-t-2 border-gold pt-4 text-[11px] text-[#888]">
         <div>
-          {data.validade && (
-            <span>Proposta válida até {formatDate(data.validade)}</span>
-          )}
+          {data.validade ? (
+            <span>Proposta valida ate {formatDate(data.validade)}</span>
+          ) : null}
         </div>
-        <div style={{ textAlign: "right" }}>
+        <div className="text-right">
           <div>Internacional Freeband</div>
-          <div style={{ color: "#C9A84C" }}>(16) 99171-2996</div>
+          <div className="text-gold">(16) 99171-2996</div>
         </div>
       </div>
     </div>

@@ -1,56 +1,66 @@
-import PrintLayout from "./PrintLayout";
-import { OrcamentoData } from "@/types/orcamento";
+"use client";
 
-interface Props {
+// src/components/orcamento/OrcamentoPreview.tsx
+// Right-hand pane of the proposal builder: scaled HTML preview plus
+// Print / Gerar PDF actions. The @react-pdf renderer is lazy-loaded with
+// ssr: false so it only ships to the client after the user opts in.
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { PrintLayout } from "./PrintLayout";
+import type { OrcamentoData } from "@/types/orcamento";
+
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  { ssr: false },
+);
+
+const OrcamentoPdf = dynamic(
+  () =>
+    import("@/components/pdf/orcamento/OrcamentoPdf").then((mod) => ({
+      default: mod.OrcamentoPdf,
+    })),
+  { ssr: false },
+);
+
+interface OrcamentoPreviewProps {
   data: OrcamentoData;
   onPrint: () => void;
 }
 
-export default function OrcamentoPreview({ data, onPrint }: Props) {
+export function OrcamentoPreview({ data, onPrint }: OrcamentoPreviewProps) {
+  const [pdfReady, setPdfReady] = useState(false);
+
   return (
-    <div style={{ position: "sticky", top: "2rem" }}>
-      {/* Print button */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: "1rem",
-        }}
-      >
+    <div className="sticky top-8">
+      <div className="mb-4 flex justify-end gap-3">
         <button
+          type="button"
           onClick={onPrint}
-          style={{
-            padding: "0.75rem 2rem",
-            background: "var(--color-gold)",
-            color: "#000",
-            fontWeight: 700,
-            fontSize: "0.9rem",
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            border: "none",
-            cursor: "pointer",
-            borderRadius: "2px",
-          }}
+          className="cursor-pointer rounded-sm border-none bg-border px-8 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-bg-card"
         >
-          Baixar PDF
+          Imprimir
         </button>
+        {!pdfReady ? (
+          <button
+            type="button"
+            onClick={() => setPdfReady(true)}
+            className="cursor-pointer rounded-sm border-none bg-gold px-8 py-3 text-sm font-bold uppercase tracking-wider text-black transition-colors hover:bg-gold-light"
+          >
+            Gerar PDF
+          </button>
+        ) : (
+          <PDFDownloadLink
+            document={<OrcamentoPdf data={data} />}
+            fileName={`Proposta-Freeband-${data.contratante || "cliente"}.pdf`}
+            className="inline-block rounded-sm bg-gold px-8 py-3 text-sm font-bold uppercase tracking-wider text-black no-underline transition-colors hover:bg-gold-light"
+          >
+            {({ loading }) => (loading ? "Gerando..." : "Baixar PDF")}
+          </PDFDownloadLink>
+        )}
       </div>
 
-      {/* Preview container */}
-      <div
-        style={{
-          border: "1px solid var(--color-border)",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-        }}
-      >
-        <div
-          style={{
-            transformOrigin: "top left",
-            transform: "scale(0.85)",
-            width: "117.6%",
-          }}
-        >
+      <div className="overflow-hidden border border-border shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+        <div className="w-[117.6%] origin-top-left scale-[0.85]">
           <PrintLayout data={data} />
         </div>
       </div>

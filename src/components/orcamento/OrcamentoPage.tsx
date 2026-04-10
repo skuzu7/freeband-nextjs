@@ -1,11 +1,16 @@
 "use client";
 
+// src/components/orcamento/OrcamentoPage.tsx
+// Client page shown inside the token-protected /orcamento/[token] route.
+// Drives a split-pane editor: form on the left, scaled live preview on
+// the right.
 import { useState } from "react";
 import { OrcamentoForm } from "./OrcamentoForm";
-import OrcamentoPreview from "./OrcamentoPreview";
-import { OrcamentoData, defaultOrcamento } from "@/types/orcamento";
+import { OrcamentoPreview } from "./OrcamentoPreview";
+import { defaultOrcamento } from "@/types/orcamento";
+import type { OrcamentoData } from "@/types/orcamento";
 
-export default function OrcamentoPage() {
+export function OrcamentoPage() {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);
 
   function handlePrint() {
@@ -13,88 +18,29 @@ export default function OrcamentoPage() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--color-bg)",
-        color: "var(--color-white)",
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          borderBottom: "1px solid var(--color-border)",
-          padding: "1.5rem 2rem",
-          background: "#000",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+    <div className="min-h-screen bg-bg text-white">
+      <div className="flex items-center justify-between border-b border-border bg-black px-8 py-6">
         <div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.15em",
-              color: "var(--color-text-2)",
-            }}
-          >
+          <div className="text-xs uppercase tracking-[0.15em] text-text-2">
             Internacional Freeband
           </div>
-          <div
-            style={{
-              fontSize: "1.25rem",
-              fontFamily: "var(--font-display)",
-              color: "var(--color-gold)",
-              fontWeight: 700,
-            }}
-          >
+          <div className="font-display text-xl font-bold text-gold">
             Gerador de Proposta
           </div>
         </div>
         <a
           href="/"
-          style={{
-            fontSize: "0.8rem",
-            color: "var(--color-text-2)",
-            textDecoration: "none",
-          }}
+          className="text-sm text-text-2 no-underline transition-colors hover:text-white"
         >
-          ← Voltar ao site
+          &larr; Voltar ao site
         </a>
       </div>
 
-      {/* Split layout */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 0,
-          minHeight: "calc(100vh - 80px)",
-        }}
-        className="orcamento-grid"
-      >
-        {/* Form side */}
-        <div
-          style={{
-            borderRight: "1px solid var(--color-border)",
-            overflowY: "auto",
-            maxHeight: "calc(100vh - 80px)",
-          }}
-        >
+      <div className="grid min-h-[calc(100vh-80px)] grid-cols-1 lg:grid-cols-2">
+        <div className="max-h-[calc(100vh-80px)] overflow-y-auto border-r border-border">
           <OrcamentoForm data={data} onChange={setData} />
         </div>
-
-        {/* Preview side */}
-        <div
-          style={{
-            padding: "2rem",
-            overflowY: "auto",
-            maxHeight: "calc(100vh - 80px)",
-            background: "var(--color-bg-2)",
-          }}
-        >
+        <div className="max-h-[calc(100vh-80px)] overflow-y-auto bg-bg-2 p-8">
           <OrcamentoPreview data={data} onPrint={handlePrint} />
         </div>
       </div>
