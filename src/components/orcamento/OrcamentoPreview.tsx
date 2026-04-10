@@ -2,23 +2,19 @@
 
 // src/components/orcamento/OrcamentoPreview.tsx
 // Right-hand pane of the proposal builder: scaled HTML preview plus
-// Print / Gerar PDF actions. The @react-pdf renderer is lazy-loaded with
-// ssr: false so it only ships to the client after the user opts in.
+// Print / Gerar PDF actions. The @react-pdf/renderer bundle is isolated
+// behind OrcamentoDownloadButton + dynamic(ssr:false), keeping the PDF
+// toolkit out of this module's app-ssr graph.
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { PrintLayout } from "./PrintLayout";
 import type { OrcamentoData } from "@/types/orcamento";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  { ssr: false },
-);
-
-const OrcamentoPdf = dynamic(
+const OrcamentoDownloadButton = dynamic(
   () =>
-    import("@/components/pdf/orcamento/OrcamentoPdf").then((mod) => ({
-      default: mod.OrcamentoPdf,
-    })),
+    import("@/components/pdf/orcamento/OrcamentoDownloadButton").then(
+      (mod) => mod.OrcamentoDownloadButton,
+    ),
   { ssr: false },
 );
 
@@ -49,13 +45,7 @@ export function OrcamentoPreview({ data, onPrint }: OrcamentoPreviewProps) {
             Gerar PDF
           </button>
         ) : (
-          <PDFDownloadLink
-            document={<OrcamentoPdf data={data} />}
-            fileName={`Proposta-Freeband-${data.contratante || "cliente"}.pdf`}
-            className="inline-block rounded-sm bg-gold px-8 py-3 text-sm font-bold uppercase tracking-wider text-black no-underline transition-colors hover:bg-gold-light"
-          >
-            {({ loading }) => (loading ? "Gerando..." : "Baixar PDF")}
-          </PDFDownloadLink>
+          <OrcamentoDownloadButton data={data} />
         )}
       </div>
 

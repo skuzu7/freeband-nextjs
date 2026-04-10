@@ -1,21 +1,17 @@
 "use client";
 
 // src/app/portfolio/page.tsx
-// Public portfolio download route. Loads @react-pdf/renderer only on demand
-// (ssr: false) so the heavy PDF toolkit stays out of the initial bundle.
+// Public portfolio download route. The @react-pdf/renderer bundle is
+// isolated behind PortfolioDownloadButton + dynamic(ssr:false), keeping the
+// PDF toolkit out of this route's app-ssr module graph.
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  { ssr: false },
-);
-
-const PortfolioDocument = dynamic(
+const PortfolioDownloadButton = dynamic(
   () =>
-    import("@/components/pdf/portfolio/PortfolioDocument").then((mod) => ({
-      default: mod.PortfolioDocument,
-    })),
+    import("@/components/pdf/portfolio/PortfolioDownloadButton").then(
+      (mod) => mod.PortfolioDownloadButton,
+    ),
   { ssr: false },
 );
 
@@ -45,15 +41,7 @@ export default function PortfolioPage() {
             Preparar PDF
           </button>
         ) : (
-          <PDFDownloadLink
-            document={<PortfolioDocument />}
-            fileName="Internacional-Freeband-Portfolio.pdf"
-            className="inline-block bg-gold px-10 py-4 text-sm font-bold uppercase tracking-[0.15em] text-bg no-underline transition-colors hover:bg-gold-light"
-          >
-            {({ loading }) =>
-              loading ? "Gerando PDF..." : "Baixar Portfolio PDF"
-            }
-          </PDFDownloadLink>
+          <PortfolioDownloadButton />
         )}
 
         <div className="mt-8">
