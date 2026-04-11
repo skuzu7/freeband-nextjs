@@ -59,7 +59,7 @@ export function Historia() {
                   fill
                   sizes="(min-width: 1024px) 640px, 82vw"
                   quality={90}
-                  className="object-cover saturate-[0.15] contrast-[1.1] transition-[filter,transform] duration-[1200ms] ease-[var(--ease-stage)] group-hover:saturate-100 group-hover:scale-[1.03]"
+                  className="object-cover saturate-[0.5] contrast-[1.05] transition-[filter,transform] duration-[1200ms] ease-[var(--ease-stage)] group-hover:saturate-100 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 ring-1 ring-inset ring-border" />
               </div>

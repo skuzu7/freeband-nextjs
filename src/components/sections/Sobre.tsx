@@ -75,7 +75,7 @@ export function Sobre() {
               fill
               sizes="(min-width: 1024px) 60vw, 100vw"
               quality={90}
-              className="object-cover saturate-[0.2] contrast-[1.15] transition-[filter,transform] duration-[1200ms] ease-[var(--ease-stage)] hover:saturate-100 hover:scale-[1.02]"
+              className="object-cover saturate-[0.5] contrast-[1.05] transition-[filter,transform] duration-[1200ms] ease-[var(--ease-stage)] hover:saturate-100 hover:scale-[1.02]"
             />
             <div className="absolute inset-0 ring-1 ring-inset ring-border" />
             <div className="absolute bottom-4 left-4 bg-bg/80 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-text backdrop-blur">
