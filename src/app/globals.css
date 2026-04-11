@@ -94,22 +94,6 @@
   --dur-900: 900ms;
   --dur-1400: 1400ms;
 
-  /* Legacy duration aliases — kept alive during migration, removed in phase 6. */
-  --dur-fast: var(--dur-250);
-  --dur-base: var(--dur-400);
-  --dur-slow: var(--dur-900);
-  --dur-reveal: var(--dur-900);
-
-  /* ---------------- Legacy token aliases ----------------
-     Allow sections not yet migrated to keep compiling. Remove in phase 6. */
-  --color-bg-alt: var(--color-bg-raise);
-  --color-gold: var(--color-red-500);
-  --color-gold-light: var(--color-red-400);
-  --color-gold-dark: var(--color-red-600);
-  --color-text-main: var(--color-text);
-  --color-bg-card: var(--color-ink-800);
-  --color-text-2: var(--color-text-muted);
-
   /* ---------------- Keyframes ---------------- */
   @keyframes marquee-x {
     from { transform: translate3d(0, 0, 0); }
@@ -269,10 +253,8 @@ p {
    Reveal variants — CSS-only, scroll-driven. Four thresholds so different
    contexts (hero paragraphs, section titles, body copy, closing CTAs) each
    get the right animation-range. Stagger children via inline `--i: 1..n`.
-   Fallback: visible immediately, no animation. `.reveal` stays as an alias
-   for `.reveal-lead` during migration; removed in phase 6.
+   Fallback: visible immediately, no animation.
    ========================================================================= */
-.reveal,
 .reveal-hero,
 .reveal-lead,
 .reveal-mid,
@@ -283,7 +265,6 @@ p {
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .reveal,
     .reveal-lead {
       animation: reveal-in linear both;
       animation-timeline: view();
@@ -469,22 +450,6 @@ p {
 
 @media (prefers-reduced-motion: reduce) {
   .aurora::before { animation: none; }
-}
-
-/* =========================================================================
-   Gradient text (red signature)
-   ========================================================================= */
-.text-gradient-red {
-  background: linear-gradient(
-    135deg,
-    var(--color-red-400) 0%,
-    var(--color-red-500) 50%,
-    var(--color-red-700) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
 }
 
 /* =========================================================================
@@ -699,16 +664,6 @@ p {
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none !important; }
-}
-
-/* =========================================================================
-   Legacy utilities still referenced while sections are migrated.
-   ========================================================================= */
-.glass {
-  background: oklch(14% 0.025 300 / 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid oklch(98% 0 0 / 0.06);
 }
 
 /* Hide scrollbar but keep functionality */

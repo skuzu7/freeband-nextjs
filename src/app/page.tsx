@@ -5,7 +5,7 @@ import { AtoI_Manifesto } from "@/components/sections/AtoI_Manifesto";
 import { AtoII_Galeria } from "@/components/sections/AtoII_Galeria";
 import { AtoIII_Palcos } from "@/components/sections/AtoIII_Palcos";
 import { AtoIV_Eventos } from "@/components/sections/AtoIV_Eventos";
-import { Contato } from "@/components/sections/Contato";
+import { AtoV_Contato } from "@/components/sections/AtoV_Contato";
 
 export default function HomePage() {
   return (
@@ -17,7 +17,7 @@ export default function HomePage() {
         <AtoII_Galeria />
         <AtoIII_Palcos />
         <AtoIV_Eventos />
-        <Contato />
+        <AtoV_Contato />
       </main>
       <Footer />
     </>
