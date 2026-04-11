@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-const links = [
-  { label: "Sobre", href: "#sobre" },
-  { label: "História", href: "#historia" },
-  { label: "Galeria", href: "#galeria" },
-  { label: "Serviços", href: "#servicos" },
-  { label: "Contato", href: "#contato" },
+const LINKS = [
+  { num: "01", label: "Manifesto", href: "#sobre" },
+  { num: "02", label: "Palco", href: "#historia" },
+  { num: "03", label: "Galeria", href: "#galeria" },
+  { num: "04", label: "Eventos", href: "#servicos" },
+  { num: "05", label: "Contato", href: "#contato" },
 ];
 
 export function NavBar() {
@@ -15,86 +15,142 @@ export function NavBar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 32);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Bloquear scroll quando menu aberto
   useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   return (
     <nav
-      className={`fixed inset-x-0 top-0 z-[100] transition-all duration-300 ${
-        scrolled || open ? "bg-bg/90 backdrop-blur-md py-3 shadow-lg border-b border-white/5" : "bg-transparent py-5"
+      className={`fixed inset-x-0 top-0 z-[100] transition-[padding,background,backdrop-filter] duration-500 ease-[var(--ease-stage)] ${
+        scrolled || open
+          ? "bg-bg/85 py-3 backdrop-blur-xl"
+          : "bg-transparent py-6"
       }`}
+      style={{
+        borderBottom: scrolled || open ? "1px solid var(--color-border)" : "1px solid transparent",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#" className="flex flex-col group">
-          <span className="text-[0.6rem] uppercase tracking-[0.4em] text-text-muted transition-colors group-hover:text-gold">Internacional</span>
-          <span className="text-lg font-bold uppercase tracking-[0.2em] text-gold">Freeband</span>
+      <div className="mx-auto flex w-full max-w-[min(92rem,100%)] items-center justify-between px-[clamp(1.25rem,4vw,3.5rem)]">
+        <a
+          href="#"
+          className="group relative inline-flex flex-col leading-none"
+          aria-label="Internacional Freeband — início"
+        >
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-text-muted transition-colors group-hover:text-brand">
+            Internacional
+          </span>
+          <span className="font-display text-2xl font-semibold -tracking-[0.02em] text-text group-hover:text-brand transition-colors">
+            freeband
+            <span
+              aria-hidden
+              className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-brand align-middle transition-transform duration-500 group-hover:scale-150"
+            />
+          </span>
         </a>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
+        <div className="hidden items-center gap-10 lg:flex">
+          {LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="text-[0.7rem] uppercase tracking-[0.2em] font-medium text-text-muted hover:text-white transition-colors"
+              className="group inline-flex items-baseline gap-2 text-sm text-text-muted transition-colors hover:text-text"
             >
-              {link.label}
+              <span className="font-mono text-[0.65rem] text-brand tabular-nums">
+                {link.num}
+              </span>
+              <span className="font-sans tracking-wide">{link.label}</span>
+              <span
+                aria-hidden
+                className="block h-px w-0 bg-brand transition-[width] duration-500 ease-[var(--ease-stage)] group-hover:w-4"
+              />
             </a>
           ))}
           <a
             href="#contato"
-            className="bg-gold px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-bg hover:bg-gold-light transition-all"
+            className="inline-flex items-center gap-2 bg-brand px-6 py-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink-950 transition-colors hover:bg-brand-hot"
           >
-            Agendar
+            Agendar show
+            <span aria-hidden>→</span>
           </a>
         </div>
 
-        {/* Hamburger */}
         <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden flex flex-col gap-1.5 z-50 p-2"
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
           aria-label="Menu"
+          aria-expanded={open}
+          className="relative z-[110] flex h-10 w-10 flex-col items-center justify-center gap-[6px] lg:hidden"
         >
-          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "rotate-45 translate-y-2" : ""}`} />
-          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "opacity-0" : ""}`} />
-          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span
+            className={`h-[2px] w-7 bg-text transition-transform duration-300 ${
+              open ? "translate-y-2 rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`h-[2px] w-7 bg-text transition-opacity duration-300 ${
+              open ? "opacity-0" : ""
+            }`}
+          />
+          <span
+            className={`h-[2px] w-7 bg-text transition-transform duration-300 ${
+              open ? "-translate-y-2 -rotate-45" : ""
+            }`}
+          />
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 bg-bg transition-transform duration-500 md:hidden ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 z-[105] bg-bg transition-[clip-path] duration-[600ms] ease-[var(--ease-stage)] lg:hidden ${
+          open
+            ? "[clip-path:circle(150%_at_100%_0)]"
+            : "[clip-path:circle(0%_at_100%_0)]"
         }`}
       >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {links.map((link) => (
+        <div className="flex h-full flex-col justify-between px-8 pb-12 pt-32">
+          <ul className="flex flex-col gap-4">
+            {LINKS.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="group flex items-baseline gap-5 border-b border-border py-5"
+                >
+                  <span className="font-mono text-xs text-brand tabular-nums">
+                    {link.num}
+                  </span>
+                  <span
+                    className="font-display leading-none text-text group-hover:text-brand transition-colors"
+                    style={{ fontSize: "var(--text-4xl)" }}
+                  >
+                    {link.label}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-col gap-6">
             <a
-              key={link.label}
-              href={link.href}
+              href="#contato"
               onClick={() => setOpen(false)}
-              className="text-2xl font-bold uppercase tracking-[0.3em] text-gold hover:text-white transition-colors"
+              className="block bg-brand px-8 py-5 text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-ink-950"
             >
-              {link.label}
+              Agendar show
             </a>
-          ))}
-          <a
-            href="#contato"
-            onClick={() => setOpen(false)}
-            className="mt-4 bg-gold px-12 py-4 text-sm font-bold uppercase tracking-[0.3em] text-bg"
-          >
-            Agendar Agora
-          </a>
+            <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
+              Desde 1969 · Trabiju/SP
+            </p>
+          </div>
         </div>
       </div>
     </nav>

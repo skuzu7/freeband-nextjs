@@ -1,9 +1,8 @@
 "use client";
 
-// src/components/orcamento/OrcamentoForm.tsx
 // Controlled form used inside the token-protected /orcamento/[token] route.
 // Emits a new OrcamentoData snapshot on every change so the adjacent preview
-// and PDF can re-render reactively.
+// and PDF can re-render reactively. Paper-themed.
 import type { OrcamentoData } from "@/types/orcamento";
 
 interface OrcamentoFormProps {
@@ -12,10 +11,10 @@ interface OrcamentoFormProps {
 }
 
 const inputClasses =
-  "w-full rounded border border-border bg-bg-card px-4 py-3 text-[0.95rem] text-white outline-none transition-colors focus:border-gold";
+  "w-full border border-border bg-bg-high px-4 py-3 text-[0.95rem] text-text outline-none transition-colors focus:border-brand focus:shadow-[0_0_0_3px_color-mix(in_oklch,var(--color-brand)_22%,transparent)]";
 const labelClasses =
-  "mb-1.5 block text-xs uppercase tracking-wider text-text-2";
-const fieldClasses = "mb-5";
+  "mb-2 block font-mono text-[0.62rem] uppercase tracking-[0.25em] text-text-muted";
+const fieldClasses = "mb-6 flex flex-col";
 
 export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
   function set(field: keyof OrcamentoData, value: string) {
@@ -23,10 +22,21 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
   }
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="p-8">
-      <h2 className="mb-8 font-display text-2xl font-bold text-gold">
-        Dados da Proposta
-      </h2>
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="p-[clamp(1.5rem,3vi,3rem)]"
+    >
+      <header className="mb-10 flex flex-col gap-3 border-b border-border pb-6">
+        <span className="font-mono text-[0.62rem] uppercase tracking-[0.3em] text-brand">
+          01 · Formulário
+        </span>
+        <h2
+          className="font-display -tracking-[0.02em] text-text"
+          style={{ fontSize: "var(--text-3xl)", lineHeight: 0.95 }}
+        >
+          Dados da <span className="serif-italic text-brand">proposta</span>
+        </h2>
+      </header>
 
       <div className={fieldClasses}>
         <label className={labelClasses}>Nome do Contratante</label>
@@ -42,7 +52,7 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       <div className={fieldClasses}>
         <label className={labelClasses}>Tipo de Evento</label>
         <select
-          className={`${inputClasses} cursor-pointer`}
+          className={`${inputClasses} cursor-pointer appearance-none`}
           value={data.tipoEvento}
           onChange={(e) => set("tipoEvento", e.target.value)}
         >
@@ -56,8 +66,8 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
         </select>
       </div>
 
-      <div className="mb-5 grid grid-cols-2 gap-4">
-        <div>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="flex flex-col">
           <label className={labelClasses}>Data do Evento</label>
           <input
             className={inputClasses}
@@ -66,7 +76,7 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
             onChange={(e) => set("dataEvento", e.target.value)}
           />
         </div>
-        <div>
+        <div className="flex flex-col">
           <label className={labelClasses}>Local / Cidade</label>
           <input
             className={inputClasses}
@@ -78,8 +88,8 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
         </div>
       </div>
 
-      <div className="mb-5 grid grid-cols-3 gap-4">
-        <div>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="flex flex-col">
           <label className={labelClasses}>Início</label>
           <input
             className={inputClasses}
@@ -88,7 +98,7 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
             onChange={(e) => set("horarioInicio", e.target.value)}
           />
         </div>
-        <div>
+        <div className="flex flex-col">
           <label className={labelClasses}>Fim</label>
           <input
             className={inputClasses}
@@ -97,7 +107,7 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
             onChange={(e) => set("horarioFim", e.target.value)}
           />
         </div>
-        <div>
+        <div className="flex flex-col">
           <label className={labelClasses}>Convidados</label>
           <input
             className={inputClasses}
@@ -120,8 +130,8 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
         />
       </div>
 
-      <div className="mb-5 grid grid-cols-2 gap-4">
-        <div>
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="flex flex-col">
           <label className={labelClasses}>Entrada (%)</label>
           <input
             className={inputClasses}
@@ -133,7 +143,7 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
             placeholder="50"
           />
         </div>
-        <div>
+        <div className="flex flex-col">
           <label className={labelClasses}>Data da Entrada</label>
           <input
             className={inputClasses}
@@ -157,7 +167,8 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       <div className={fieldClasses}>
         <label className={labelClasses}>Itens Inclusos</label>
         <textarea
-          className={`${inputClasses} min-h-[100px] resize-y`}
+          className={`${inputClasses} min-h-[100px]`}
+          style={{ fieldSizing: "content" } as React.CSSProperties}
           value={data.itensInclusos}
           onChange={(e) => set("itensInclusos", e.target.value)}
         />
@@ -166,7 +177,8 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       <div className={fieldClasses}>
         <label className={labelClasses}>Observações</label>
         <textarea
-          className={`${inputClasses} min-h-[80px] resize-y`}
+          className={`${inputClasses} min-h-[80px]`}
+          style={{ fieldSizing: "content" } as React.CSSProperties}
           value={data.observacoes}
           onChange={(e) => set("observacoes", e.target.value)}
         />

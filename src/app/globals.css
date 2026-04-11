@@ -1,84 +1,431 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   FREEBAND — design system "PALCO"
+   Red + ink editorial-kinetic identity derived from the band's own archive.
+   Brand red echoes the historical freeband wordmark; stage beams echo the
+   live-show lighting rig; paper theme scopes the orcamento proposal editor.
+   ========================================================================= */
+
 @theme {
-  /* Design System: Dark & Gold Premium */
-  --color-bg: #0A0A0B;
-  --color-bg-alt: #121214;
-  --color-gold: #C9A84C;
-  --color-gold-light: #E8CC7A;
-  --color-gold-dark: #A68A3D;
-  --color-text-main: #FFFFFF;
-  --color-text-muted: #94A3B8;
-  --color-border: rgba(255, 255, 255, 0.08);
+  /* ---------------- Palette (OKLCH) ---------------- */
+  --color-ink-950: oklch(10% 0.02 300);
+  --color-ink-900: oklch(14% 0.025 300);
+  --color-ink-800: oklch(18% 0.03 300);
+  --color-ink-700: oklch(24% 0.03 300);
+  --color-ink-600: oklch(34% 0.025 300);
+  --color-ink-400: oklch(56% 0.018 300);
+  --color-ink-300: oklch(70% 0.012 300);
+  --color-ink-200: oklch(82% 0.01 300);
+  --color-ink-100: oklch(96% 0.005 300);
 
-  /* Custom Animations */
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 40s linear infinite;
+  --color-red-300: oklch(82% 0.14 22);
+  --color-red-400: oklch(72% 0.22 25);
+  --color-red-500: oklch(62% 0.24 20);
+  --color-red-600: oklch(52% 0.22 20);
+  --color-red-700: oklch(42% 0.19 20);
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  --color-beam-magenta: oklch(68% 0.28 340);
+  --color-beam-cyan: oklch(82% 0.16 195);
+  --color-beam-amber: oklch(82% 0.14 75);
+
+  --color-paper-50: oklch(97% 0.01 80);
+  --color-paper-100: oklch(93% 0.015 80);
+  --color-paper-200: oklch(86% 0.02 80);
+  --color-paper-300: oklch(74% 0.025 80);
+  --color-paper-500: oklch(52% 0.03 80);
+  --color-paper-700: oklch(32% 0.03 80);
+  --color-paper-900: oklch(16% 0.03 80);
+
+  /* ---------------- Semantic aliases ---------------- */
+  /* These get re-mapped under [data-theme="paper"] below. */
+  --color-bg: var(--color-ink-950);
+  --color-bg-raise: var(--color-ink-900);
+  --color-bg-high: var(--color-ink-800);
+  --color-border: oklch(98% 0 0 / 0.08);
+  --color-border-strong: oklch(98% 0 0 / 0.18);
+  --color-text: var(--color-ink-100);
+  --color-text-muted: var(--color-ink-300);
+  --color-text-low: var(--color-ink-400);
+  --color-brand: var(--color-red-500);
+  --color-brand-hot: var(--color-red-400);
+  --color-brand-deep: var(--color-red-600);
+
+  /* ---------------- Fonts ---------------- */
+  --font-display: var(--font-fraunces), "PP Editorial New", Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---------------- Fluid type scale ----------------
+     clamp(min, preferred, max) — preferred uses vi (viewport-inline) so it
+     tracks the viewport width but caps at max for large screens. */
+  --text-xs: clamp(0.7rem, 0.66rem + 0.2vi, 0.8rem);
+  --text-sm: clamp(0.8rem, 0.75rem + 0.25vi, 0.92rem);
+  --text-base: clamp(0.95rem, 0.88rem + 0.35vi, 1.08rem);
+  --text-lg: clamp(1.1rem, 1rem + 0.5vi, 1.3rem);
+  --text-xl: clamp(1.35rem, 1.2rem + 0.75vi, 1.65rem);
+  --text-2xl: clamp(1.7rem, 1.4rem + 1.4vi, 2.15rem);
+  --text-3xl: clamp(2rem, 1.5rem + 2.4vi, 2.75rem);
+  --text-4xl: clamp(2.5rem, 1.6rem + 4vi, 3.75rem);
+  --text-5xl: clamp(3rem, 1.6rem + 6vi, 5rem);
+  --text-6xl: clamp(3.75rem, 1.8rem + 9vi, 6.75rem);
+  --text-7xl: clamp(4.5rem, 1.2rem + 14vi, 9rem);
+  --text-hero: clamp(4rem, -1rem + 22vi, 14rem);
+
+  /* ---------------- Motion ---------------- */
+  --ease-stage: cubic-bezier(0.2, 1, 0.3, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 360ms;
+  --dur-slow: 720ms;
+  --dur-reveal: 900ms;
+
+  /* ---------------- Legacy token aliases ----------------
+     Allow sections not yet migrated to keep compiling. Remove in phase 6. */
+  --color-bg-alt: var(--color-bg-raise);
+  --color-gold: var(--color-red-500);
+  --color-gold-light: var(--color-red-400);
+  --color-gold-dark: var(--color-red-600);
+  --color-text-main: var(--color-text);
+  --color-bg-card: var(--color-ink-800);
+  --color-text-2: var(--color-text-muted);
+
+  /* ---------------- Keyframes ---------------- */
+  @keyframes marquee-x {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
   }
-
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+  @keyframes marquee-x-reverse {
+    from { transform: translate3d(-50%, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
   }
-
-  @keyframes marquee-reverse {
-    from { transform: translateX(-50%); }
-    to { transform: translateX(0); }
+  @keyframes beam-drift {
+    0%, 100% { transform: translate3d(-8%, 0, 0) rotate(-8deg); opacity: 0.55; }
+    50% { transform: translate3d(6%, 0, 0) rotate(-8deg); opacity: 0.85; }
+  }
+  @keyframes aurora {
+    0% { --aurora-angle: 0deg; }
+    100% { --aurora-angle: 360deg; }
+  }
+  @keyframes reveal-in {
+    from { opacity: 0; transform: translate3d(0, 2.5rem, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes kinetic-axes {
+    0%   { font-variation-settings: "wght" 320, "opsz" 10, "SOFT" 0; letter-spacing: 0.05em; }
+    50%  { font-variation-settings: "wght" 900, "opsz" 144, "SOFT" 50; letter-spacing: -0.05em; }
+    100% { font-variation-settings: "wght" 480, "opsz" 80, "SOFT" 100; letter-spacing: 0; }
+  }
+  @keyframes saturate-in {
+    from { filter: saturate(0) contrast(1.1); }
+    to   { filter: saturate(1) contrast(1); }
   }
 }
 
-/* Base Fixes */
+/* =========================================================================
+   Typed custom properties — required for animating font-variation-settings
+   and gradient angles via @property.
+   ========================================================================= */
+@property --aurora-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* =========================================================================
+   Root + body
+   ========================================================================= */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--color-bg);
-  color: var(--color-text-main);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
   width: 100%;
 }
 
-/* Utility: Gradient Text */
-.text-gradient-gold {
-  background: linear-gradient(135deg, #E8CC7A 0%, #C9A84C 50%, #A68A3D 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+::selection {
+  background: var(--color-brand);
+  color: var(--color-ink-950);
 }
 
-/* Glassmorphism */
+/* Force strict red ring on focus-visible across the app */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Better paragraph / headline wrapping */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* =========================================================================
+   Paper theme (scoped to /orcamento via a layout wrapper)
+   ========================================================================= */
+[data-theme="paper"] {
+  --color-bg: var(--color-paper-50);
+  --color-bg-raise: var(--color-paper-100);
+  --color-bg-high: #ffffff;
+  --color-border: oklch(16% 0.03 80 / 0.12);
+  --color-border-strong: oklch(16% 0.03 80 / 0.28);
+  --color-text: var(--color-paper-900);
+  --color-text-muted: var(--color-paper-500);
+  --color-text-low: var(--color-paper-300);
+  color-scheme: light;
+}
+
+/* =========================================================================
+   Reveal — CSS-only, scroll-driven. Replaces useReveal JS entirely.
+   Usage: add `reveal` to any element you want to fade/slide in on scroll.
+   Stagger children via inline `--i: 1` / `--i: 2` etc.
+   ========================================================================= */
+.reveal {
+  /* Fallback: visible immediately, no animation. */
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 40%;
+      animation-delay: calc(var(--i, 0) * 60ms);
+    }
+  }
+}
+
+/* =========================================================================
+   Kinetic text — morphs Fraunces variable axes (wght, opsz, SOFT) on scroll.
+   Pure CSS; zero hydration. Unsupported browsers fall through to plain type.
+   ========================================================================= */
+@property --kw-wght {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 700;
+}
+@property --kw-opsz {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 80;
+}
+@property --kw-soft {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 50;
+}
+
+.text-kinetic {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings:
+    "wght" var(--kw-wght),
+    "opsz" var(--kw-opsz),
+    "SOFT" var(--kw-soft);
+  letter-spacing: -0.03em;
+  line-height: 0.82;
+  will-change: font-variation-settings, letter-spacing;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (font-variation-settings: "wght" 400) {
+    .text-kinetic {
+      animation: kinetic-axes linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+/* =========================================================================
+   Stage beams — large colored rotated gradients that drift behind hero.
+   ========================================================================= */
+.stage-beams {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+.stage-beams::before,
+.stage-beams::after {
+  content: "";
+  position: absolute;
+  inset: -20% -40%;
+  background-image: linear-gradient(
+    78deg,
+    transparent 38%,
+    oklch(68% 0.28 340 / 0.35) 46%,
+    transparent 54%,
+    oklch(62% 0.24 20 / 0.42) 60%,
+    transparent 66%,
+    oklch(82% 0.16 195 / 0.32) 72%,
+    transparent 80%
+  );
+  filter: blur(40px);
+  animation: beam-drift 18s var(--ease-stage) infinite;
+  transform-origin: center;
+}
+.stage-beams::after {
+  animation-duration: 26s;
+  animation-direction: reverse;
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-beams::before,
+  .stage-beams::after { animation: none; }
+}
+
+/* =========================================================================
+   Spotlight cursor — radial gradient that follows pointer on desktop.
+   ========================================================================= */
+.stage-spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(
+      circle 360px at var(--spot-x, 50%) var(--spot-y, 35%),
+      oklch(98% 0 0 / 0.18),
+      oklch(62% 0.24 20 / 0.1) 30%,
+      transparent 60%
+    );
+  mix-blend-mode: screen;
+  transition: background-position 120ms linear;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .stage-spot { display: none; }
+}
+
+/* =========================================================================
+   Horizontal scroll snap (used by Historia + Servicos)
+   ========================================================================= */
+.h-snap {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(82vw, 640px);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: clamp(1rem, 6vw, 5rem);
+  scrollbar-width: none;
+}
+.h-snap::-webkit-scrollbar { display: none; }
+.h-snap > * {
+  scroll-snap-align: start;
+}
+
+/* =========================================================================
+   Aurora WhatsApp pill
+   ========================================================================= */
+.aurora {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(90deg, oklch(68% 0.2 150), oklch(72% 0.18 170));
+  color: var(--color-ink-950);
+  overflow: hidden;
+}
+.aurora::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from var(--aurora-angle),
+    oklch(72% 0.19 155) 0deg,
+    oklch(82% 0.16 195) 70deg,
+    oklch(62% 0.24 20) 140deg,
+    oklch(68% 0.28 340) 200deg,
+    oklch(82% 0.14 75) 260deg,
+    oklch(72% 0.19 155) 360deg
+  );
+  filter: blur(24px) saturate(1.2);
+  opacity: 0.55;
+  z-index: -1;
+  animation: aurora 10s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora::before { animation: none; }
+}
+
+/* =========================================================================
+   Gradient text (red signature)
+   ========================================================================= */
+.text-gradient-red {
+  background: linear-gradient(
+    135deg,
+    var(--color-red-400) 0%,
+    var(--color-red-500) 50%,
+    var(--color-red-700) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* =========================================================================
+   Eyebrow + editorial helpers
+   ========================================================================= */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.6rem + 0.25vi, 0.78rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.serif-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* =========================================================================
+   Legacy utilities still referenced while sections are migrated.
+   ========================================================================= */
 .glass {
-  background: rgba(18, 18, 20, 0.7);
+  background: oklch(14% 0.025 300 / 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Reveal transition */
-.reveal-init {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
-}
-
-.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
+  border: 1px solid oklch(98% 0 0 / 0.06);
 }
 
 /* Hide scrollbar but keep functionality */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* =========================================================================
+   Print — clean paper output for the proposal.
+   ========================================================================= */
+@media print {
+  .no-print { display: none !important; }
+  html, body { background: #ffffff !important; }
+  #print-area {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 18mm !important;
+  }
 }

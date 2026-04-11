@@ -1,66 +1,93 @@
-"use client";
-
 import { bandInfo } from "@/data/content";
+import { KineticWord } from "@/components/ui/KineticWord";
+import { StageBeams } from "@/components/ui/StageBeams";
+import { SpotlightCursor } from "@/components/ui/SpotlightCursor";
 
 export function Hero() {
   return (
-    <section className="relative h-screen min-h-[600px] w-full flex items-center justify-center overflow-hidden">
-      {/* Background Video */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="h-full w-full object-cover scale-105"
-          poster="/images/hero-poster.jpeg"
-        >
-          <source src="/video/hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black" />
+    <section
+      id="hero"
+      className="relative isolate flex min-h-[100svh] w-full flex-col overflow-hidden bg-bg"
+    >
+      {/* Atmosphere video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/images/hero-poster.jpeg"
+        className="absolute inset-0 -z-20 h-full w-full object-cover opacity-40"
+      >
+        <source src="/video/hero.mp4" type="video/mp4" />
+      </video>
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-ink-950/60 via-ink-950/80 to-ink-950"
+      />
+
+      <StageBeams />
+      <SpotlightCursor />
+
+      {/* Top meta row */}
+      <div className="relative z-10 mt-[clamp(6rem,12vi,9rem)] flex w-full flex-col gap-4 px-[clamp(1.25rem,4vw,3.5rem)] font-mono text-[0.7rem] uppercase tracking-[0.3em] text-text-muted md:flex-row md:items-center md:justify-between">
+        <span className="flex items-center gap-3">
+          <span aria-hidden className="inline-block h-px w-10 bg-brand" />
+          <span className="text-brand">Est. {bandInfo.founded}</span>
+          <span className="hidden md:inline">
+            · {bandInfo.yearsActive} anos no palco
+          </span>
+        </span>
+        <span className="hidden md:inline">
+          Trabiju · São Paulo · Brasil
+        </span>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 text-center">
-        <div className="inline-block border border-gold/40 px-6 py-2 mb-8 animate-[fadeIn_1s_ease-out]">
-          <span className="text-[0.7rem] font-bold uppercase tracking-[0.4em] text-gold">
-            Desde {bandInfo.founded}
-          </span>
-        </div>
-
-        <h1 className="mb-6 flex flex-col items-center">
-          <span className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white opacity-90 leading-none">
+      {/* Main content pinned to bottom-left */}
+      <div className="relative z-10 mt-auto flex w-full flex-col gap-8 px-[clamp(1.25rem,4vw,3.5rem)] pb-[clamp(3rem,6vi,6rem)]">
+        <h1 className="flex flex-col gap-2 leading-[0.82]">
+          <span className="font-sans text-[clamp(0.95rem,0.85rem+0.5vi,1.2rem)] uppercase tracking-[0.35em] text-text-muted">
             Internacional
           </span>
-          <span className="text-gradient-gold text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none mt-2">
-            Freeband
-          </span>
+          <KineticWord>freeband</KineticWord>
         </h1>
 
-        <p className="max-w-2xl mx-auto text-sm sm:text-base uppercase tracking-[0.3em] text-text-muted mb-12">
-          {bandInfo.tagline}
-        </p>
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <p
+            className="max-w-[44ch] text-text-muted text-pretty"
+            style={{ fontSize: "var(--text-lg)" }}
+          >
+            Uma banda feita no palco. Réveillon, formatura, casamento, show
+            municipal — cinquenta e seis anos dividindo o mesmo pulso com o
+            Brasil.
+          </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#contato"
-            className="group relative px-12 py-5 bg-gold text-bg font-bold uppercase tracking-[0.2em] text-sm overflow-hidden transition-all hover:bg-gold-light w-full sm:w-auto"
-          >
-            Agendar Show
-          </a>
-          <a
-            href="#galeria"
-            className="group px-12 py-5 border border-white/20 text-white font-bold uppercase tracking-[0.2em] text-sm transition-all hover:bg-white/10 w-full sm:w-auto"
-          >
-            Ver Galeria
-          </a>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <a
+              href="#contato"
+              className="group inline-flex items-center justify-center gap-3 bg-brand px-8 py-5 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.25em] text-ink-950 transition-colors hover:bg-brand-hot"
+            >
+              Agendar show
+              <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                →
+              </span>
+            </a>
+            <a
+              href="#historia"
+              className="serif-italic inline-flex items-center justify-center gap-3 text-text underline decoration-brand decoration-2 underline-offset-[6px] transition-colors hover:text-brand"
+              style={{ fontSize: "var(--text-lg)" }}
+            >
+              56 anos de palco
+            </a>
+          </div>
         </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-        <span className="text-[0.6rem] uppercase tracking-[0.3em] text-gold/60">Scroll</span>
-        <div className="h-12 w-[1px] bg-gradient-to-b from-gold/60 to-transparent" />
+        <div className="mt-6 flex items-center gap-4 border-t border-border pt-6 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
+          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-brand" />
+          <span>Scroll</span>
+          <span aria-hidden className="ml-auto hidden text-text-muted md:inline">
+            {bandInfo.location}
+          </span>
+        </div>
       </div>
     </section>
   );

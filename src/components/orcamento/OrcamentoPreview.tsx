@@ -1,6 +1,5 @@
 "use client";
 
-// src/components/orcamento/OrcamentoPreview.tsx
 // Right-hand pane of the proposal builder: scaled HTML preview plus
 // Print / Gerar PDF actions. The @react-pdf/renderer bundle is isolated
 // behind OrcamentoDownloadButton + dynamic(ssr:false), keeping the PDF
@@ -27,30 +26,48 @@ export function OrcamentoPreview({ data, onPrint }: OrcamentoPreviewProps) {
   const [pdfReady, setPdfReady] = useState(false);
 
   return (
-    <div className="sticky top-8">
-      <div className="mb-4 flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={onPrint}
-          className="cursor-pointer rounded-sm border-none bg-border px-8 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-bg-card"
-        >
-          Imprimir
-        </button>
-        {!pdfReady ? (
+    <div className="sticky top-4 flex flex-col gap-4">
+      <div className="no-print flex items-center justify-between gap-3">
+        <span className="font-mono text-[0.62rem] uppercase tracking-[0.3em] text-text-muted">
+          02 · Preview A4
+        </span>
+        <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => setPdfReady(true)}
-            className="cursor-pointer rounded-sm border-none bg-gold px-8 py-3 text-sm font-bold uppercase tracking-wider text-black transition-colors hover:bg-gold-light"
+            onClick={onPrint}
+            className="cursor-pointer border border-border bg-bg-high px-6 py-3 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-text transition-colors hover:border-brand hover:text-brand"
           >
-            Gerar PDF
+            Imprimir
           </button>
-        ) : (
-          <OrcamentoDownloadButton data={data} />
-        )}
+          {!pdfReady ? (
+            <button
+              type="button"
+              onClick={() => setPdfReady(true)}
+              className="cursor-pointer bg-brand px-6 py-3 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-ink-950 transition-colors hover:bg-brand-hot"
+            >
+              Gerar PDF
+            </button>
+          ) : (
+            <OrcamentoDownloadButton data={data} />
+          )}
+        </div>
       </div>
 
-      <div className="overflow-hidden border border-border shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <div className="w-[117.6%] origin-top-left scale-[0.85]">
+      <div
+        className="origin-top overflow-hidden border border-border bg-bg-high shadow-[0_20px_60px_-20px_color-mix(in_oklch,var(--color-paper-900)_35%,transparent)]"
+        style={{ containerType: "inline-size" }}
+      >
+        <div
+          className="w-[210mm] max-w-none origin-top-left"
+          style={{
+            transform: "scale(var(--preview-scale, 1))",
+            transformOrigin: "top left",
+            height: "calc(297mm * var(--preview-scale, 1))",
+            // Scale the 210mm-wide document down to the container width.
+            // JS-less via CSS container query units (cqw).
+            ["--preview-scale" as string]: "min(1, calc(100cqw / 210mm))",
+          }}
+        >
           <PrintLayout data={data} />
         </div>
       </div>

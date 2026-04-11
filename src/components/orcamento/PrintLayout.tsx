@@ -1,8 +1,8 @@
 // src/components/orcamento/PrintLayout.tsx
 // Print/screen HTML version of the proposal rendered inside OrcamentoPreview.
-// Separate from OrcamentoPdf (which is the @react-pdf/renderer document) so
-// the live preview can reflect form state reactively without going through
-// the PDF pipeline.
+// Uses paper-theme design tokens so it stays consistent with the rest of
+// /orcamento and so the printed output doesn't need any bespoke hex values.
+// The @react-pdf/renderer document is a separate file (OrcamentoPdf.tsx).
 import type { OrcamentoData } from "@/types/orcamento";
 import {
   formatCurrency,
@@ -15,11 +15,10 @@ interface PrintLayoutProps {
   data: OrcamentoData;
 }
 
-const sectionTitleClasses =
-  "mb-4 border-b border-[#e8e0ce] pb-2 text-xs font-semibold uppercase tracking-widest text-gold";
-const labelClasses = "mb-0.5 text-[10px] uppercase tracking-widest text-[#888]";
-const bodyBlockClasses =
-  "whitespace-pre-line text-[13px] leading-[1.8] text-[#333]";
+const sectionTitle =
+  "mb-4 border-b border-border pb-2 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand";
+const microLabel = "mb-1 font-mono text-[0.6rem] uppercase tracking-[0.25em] text-text-muted";
+const bodyBlock = "whitespace-pre-line text-[0.82rem] leading-[1.8] text-text";
 
 export function PrintLayout({ data }: PrintLayoutProps) {
   const hasCache = data.cache !== "";
@@ -29,130 +28,148 @@ export function PrintLayout({ data }: PrintLayoutProps) {
   const saldoPct = data.entradaPct ? 100 - Number(data.entradaPct) : 0;
 
   const infoRows: ReadonlyArray<readonly [string, string]> = [
-    ["Tipo de Evento", data.tipoEvento || "\u2014"],
-    ["Data", data.dataEvento ? formatDate(data.dataEvento) : "\u2014"],
-    ["Local", data.local || "\u2014"],
+    ["Tipo de Evento", data.tipoEvento || "—"],
+    ["Data", data.dataEvento ? formatDate(data.dataEvento) : "—"],
+    ["Local", data.local || "—"],
     [
-      "Horario",
+      "Horário",
       data.horarioInicio && data.horarioFim
-        ? `${data.horarioInicio} as ${data.horarioFim}`
-        : "\u2014",
+        ? `${data.horarioInicio} às ${data.horarioFim}`
+        : "—",
     ],
     [
       "Convidados",
-      data.numConvidados ? `${data.numConvidados} pessoas` : "\u2014",
+      data.numConvidados ? `${data.numConvidados} pessoas` : "—",
     ],
   ];
 
   return (
     <div
       id="print-area"
-      className="min-h-[297mm] w-[210mm] max-w-full bg-white p-10 font-serif text-[#1a1a1a]"
+      className="flex min-h-[297mm] w-[210mm] max-w-full flex-col bg-bg-high p-[18mm] font-sans text-text"
     >
-      <div className="mb-8 flex items-end justify-between border-b-[3px] border-gold pb-6">
-        <div>
-          <div className="mb-1 text-[10px] uppercase tracking-[0.2em] text-[#888]">
+      {/* Header */}
+      <header className="mb-10 flex items-end justify-between border-b-[3px] border-brand pb-6">
+        <div className="flex flex-col gap-1">
+          <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-text-muted">
             Proposta Comercial
-          </div>
-          <div className="text-[28px] font-bold leading-none text-[#1a1a1a]">
+          </span>
+          <span
+            className="font-sans font-bold leading-none text-text"
+            style={{ fontSize: "24px" }}
+          >
             Internacional
-          </div>
-          <div className="text-[28px] font-bold leading-none text-gold">
-            Freeband
-          </div>
-        </div>
-        <div className="text-right text-xs text-[#666]">
-          <div>Desde 1969</div>
-          <div>Trabiju, SP</div>
-          <div className="mt-1 text-gold">(16) 99171-2996</div>
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <div className="mb-1 text-[11px] uppercase tracking-widest text-[#888]">
-          Proposta para
-        </div>
-        <div className="text-[22px] font-semibold text-[#1a1a1a]">
-          {data.contratante || "\u2014"}
-        </div>
-      </div>
-
-      <div className="mb-6 grid grid-cols-2 gap-4 border border-[#e8e0ce] bg-[#f9f7f2] p-5">
-        {infoRows.map(([label, value]) => (
-          <div key={label}>
-            <div className={labelClasses}>{label}</div>
-            <div className="text-sm font-medium">{value}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mb-6">
-        <div className={sectionTitleClasses}>Investimento</div>
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm text-[#444]">Valor Total</span>
-          <span className="text-[22px] font-bold text-[#1a1a1a]">
-            {hasCache ? formatCurrency(data.cache) : "\u2014"}
+          </span>
+          <span
+            className="font-display font-semibold leading-none text-brand -tracking-[0.02em]"
+            style={{ fontSize: "34px" }}
+          >
+            freeband
           </span>
         </div>
-      </div>
+        <div className="text-right font-mono text-[0.62rem] uppercase tracking-[0.15em] text-text-muted">
+          <div>Desde 1969</div>
+          <div>Trabiju / SP</div>
+          <div className="mt-1 text-brand">(16) 99171-2996</div>
+        </div>
+      </header>
 
-      <div className="mb-6">
-        <div className={sectionTitleClasses}>Condicoes de Pagamento</div>
+      {/* Recipient */}
+      <section className="mb-8">
+        <div className={microLabel}>Proposta para</div>
+        <div
+          className="font-display font-semibold -tracking-[0.01em] text-text"
+          style={{ fontSize: "24px", lineHeight: 1.1 }}
+        >
+          {data.contratante || "—"}
+        </div>
+      </section>
+
+      {/* Event info grid */}
+      <section className="mb-8 grid grid-cols-2 gap-4 border border-border bg-bg-raise p-5">
+        {infoRows.map(([label, value]) => (
+          <div key={label}>
+            <div className={microLabel}>{label}</div>
+            <div className="text-[0.9rem] font-medium text-text">{value}</div>
+          </div>
+        ))}
+      </section>
+
+      {/* Investment */}
+      <section className="mb-8">
+        <div className={sectionTitle}>Investimento</div>
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-[0.9rem] text-text-muted">Valor Total</span>
+          <span
+            className="font-display font-semibold -tracking-[0.01em] text-text"
+            style={{ fontSize: "26px" }}
+          >
+            {hasCache ? formatCurrency(data.cache) : "—"}
+          </span>
+        </div>
+      </section>
+
+      {/* Payment terms */}
+      <section className="mb-8">
+        <div className={sectionTitle}>Condições de Pagamento</div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="border border-[#e8e0ce] bg-[#f9f7f2] p-3">
-            <div className="mb-1 text-[10px] uppercase text-[#888]">
-              Entrada ({data.entradaPct || 0}%)
-            </div>
-            <div className="text-lg font-bold">
-              {hasEntrada ? entradaStr : "\u2014"}
+          <div className="border border-border bg-bg-raise p-4">
+            <div className={microLabel}>Entrada ({data.entradaPct || 0}%)</div>
+            <div
+              className="font-display font-semibold text-text"
+              style={{ fontSize: "18px" }}
+            >
+              {hasEntrada ? entradaStr : "—"}
             </div>
             {data.entradaData ? (
-              <div className="mt-1 text-[11px] text-[#666]">
-                ate {formatDate(data.entradaData)}
+              <div className="mt-1 font-mono text-[0.62rem] text-text-muted">
+                até {formatDate(data.entradaData)}
               </div>
             ) : null}
           </div>
-          <div className="border border-[#e8e0ce] bg-[#f9f7f2] p-3">
-            <div className="mb-1 text-[10px] uppercase text-[#888]">
-              Saldo ({saldoPct}%)
-            </div>
-            <div className="text-lg font-bold">
-              {hasEntrada ? saldoStr : "\u2014"}
+          <div className="border border-border bg-bg-raise p-4">
+            <div className={microLabel}>Saldo ({saldoPct}%)</div>
+            <div
+              className="font-display font-semibold text-text"
+              style={{ fontSize: "18px" }}
+            >
+              {hasEntrada ? saldoStr : "—"}
             </div>
             {data.saldoData ? (
-              <div className="mt-1 text-[11px] text-[#666]">
-                ate {formatDate(data.saldoData)}
+              <div className="mt-1 font-mono text-[0.62rem] text-text-muted">
+                até {formatDate(data.saldoData)}
               </div>
             ) : null}
           </div>
         </div>
-      </div>
+      </section>
 
       {data.itensInclusos ? (
-        <div className="mb-6">
-          <div className={sectionTitleClasses}>Itens Inclusos</div>
-          <div className={bodyBlockClasses}>{data.itensInclusos}</div>
-        </div>
+        <section className="mb-8">
+          <div className={sectionTitle}>Itens Inclusos</div>
+          <div className={bodyBlock}>{data.itensInclusos}</div>
+        </section>
       ) : null}
 
       {data.observacoes ? (
-        <div className="mb-6">
-          <div className={sectionTitleClasses}>Observacoes</div>
-          <div className={bodyBlockClasses}>{data.observacoes}</div>
-        </div>
+        <section className="mb-8">
+          <div className={sectionTitle}>Observações</div>
+          <div className={bodyBlock}>{data.observacoes}</div>
+        </section>
       ) : null}
 
-      <div className="mt-auto flex items-end justify-between border-t-2 border-gold pt-4 text-[11px] text-[#888]">
+      {/* Footer */}
+      <footer className="mt-auto flex items-end justify-between border-t-2 border-brand pt-4 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-text-muted">
         <div>
           {data.validade ? (
-            <span>Proposta valida ate {formatDate(data.validade)}</span>
+            <span>Proposta válida até {formatDate(data.validade)}</span>
           ) : null}
         </div>
         <div className="text-right">
           <div>Internacional Freeband</div>
-          <div className="text-gold">(16) 99171-2996</div>
+          <div className="text-brand">(16) 99171-2996</div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
