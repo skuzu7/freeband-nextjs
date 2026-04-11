@@ -10,6 +10,7 @@ import {
   calcEntrada,
   calcSaldo,
 } from "@/lib/format";
+import { bandInfo, contact } from "@/data/content";
 
 interface PrintLayoutProps {
   data: OrcamentoData;
@@ -68,9 +69,10 @@ export function PrintLayout({ data }: PrintLayoutProps) {
           </span>
         </div>
         <div className="text-right font-mono text-[0.62rem] uppercase tracking-[0.15em] text-text-muted">
-          <div>Desde 1969</div>
-          <div>Trabiju / SP</div>
-          <div className="mt-1 text-brand">(16) 99171-2996</div>
+          <div>Desde {bandInfo.founded}</div>
+          <div>{contact.address}</div>
+          <div>{contact.city}</div>
+          <div className="mt-1 text-brand">{contact.phone}</div>
         </div>
       </header>
 
@@ -159,15 +161,17 @@ export function PrintLayout({ data }: PrintLayoutProps) {
       ) : null}
 
       {/* Footer */}
-      <footer className="mt-auto flex items-end justify-between border-t-2 border-brand pt-4 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-text-muted">
-        <div>
+      <footer className="mt-auto flex items-end justify-between gap-6 border-t-2 border-brand pt-4 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-text-muted">
+        <div className="flex flex-col gap-1">
           {data.validade ? (
             <span>Proposta válida até {formatDate(data.validade)}</span>
           ) : null}
+          <span>CNPJ {bandInfo.cnpj}</span>
+          <span className="normal-case tracking-[0.1em]">{contact.instagram} · {contact.website}</span>
         </div>
         <div className="text-right">
-          <div>Internacional Freeband</div>
-          <div className="text-brand">(16) 99171-2996</div>
+          <div>{bandInfo.name}</div>
+          <div className="text-brand">{contact.phone}</div>
         </div>
       </footer>
     </div>

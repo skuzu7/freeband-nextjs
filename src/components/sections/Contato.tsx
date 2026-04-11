@@ -3,6 +3,22 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
+const InstagramIcon = () => (
+  <svg
+    aria-hidden
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    className="h-[0.85em] w-[0.85em] inline-block"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" />
+  </svg>
+);
+
 const WhatsAppIcon = () => (
   <svg
     aria-hidden
@@ -83,14 +99,39 @@ export function Contato() {
             </div>
             <div className="flex flex-col gap-2 border-t border-border pt-6">
               <dt className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
-                Base
+                Endereço
               </dt>
               <dd
                 className="font-display -tracking-[0.02em] text-text"
-                style={{ fontSize: "var(--text-2xl)", lineHeight: 1.05 }}
+                style={{ fontSize: "var(--text-xl)", lineHeight: 1.15 }}
               >
+                {contact.address}
+                <br />
                 {bandInfo.location} · Brasil
               </dd>
+            </div>
+            <div className="flex flex-col gap-2 border-t border-border pt-6">
+              <dt className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
+                Social
+              </dt>
+              <dd>
+                <a
+                  href={contact.instagramUrl}
+                  target="_blank"
+                  rel="noopener"
+                  className="font-display -tracking-[0.02em] text-text inline-flex items-center gap-3 transition-colors hover:text-brand"
+                  style={{ fontSize: "var(--text-xl)", lineHeight: 1.15 }}
+                >
+                  <InstagramIcon />
+                  {contact.instagram}
+                </a>
+              </dd>
+            </div>
+            <div className="flex flex-col gap-1 border-t border-border pt-6 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
+              <span>CNPJ {bandInfo.cnpj}</span>
+              <span className="normal-case tracking-[0.1em]">
+                {contact.website}
+              </span>
             </div>
           </dl>
         </div>

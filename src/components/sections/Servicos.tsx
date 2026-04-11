@@ -1,4 +1,4 @@
-import { services, serviceIncludes } from "@/data/content";
+import { services, includedFeatures } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -13,12 +13,11 @@ export function Servicos() {
             className="font-display -tracking-[0.02em] text-balance"
             style={{ fontSize: "var(--text-5xl)", lineHeight: 0.92 }}
           >
-            Do casamento ao show <br className="hidden md:block" />
-            <span className="serif-italic text-brand">municipal</span>.
+            Atendemos com <span className="serif-italic text-brand">excelência</span>.
           </h2>
           <p className="max-w-[54ch] text-text-muted" style={{ fontSize: "var(--text-base)" }}>
-            Cinco formatos, um mesmo rigor de palco. Arraste para conhecer cada
-            um.
+            Casamentos, formaturas e eventos corporativos premium — três
+            formatos com o mesmo rigor de palco. Arraste para conhecer cada um.
           </p>
         </div>
       </Container>
@@ -72,9 +71,9 @@ export function Servicos() {
       </div>
 
       <Container>
-        <div className="mt-[clamp(4rem,6vi,6rem)] grid gap-10 border-t border-border pt-[clamp(3rem,5vi,5rem)] lg:grid-cols-[minmax(0,1fr)_1.4fr] lg:gap-16">
+        <div className="mt-[clamp(4rem,6vi,6rem)] grid gap-10 border-t border-border pt-[clamp(3rem,5vi,5rem)] lg:grid-cols-[minmax(0,1fr)_1.6fr] lg:gap-16">
           <div className="reveal flex flex-col gap-6">
-            <Eyebrow>Infraestrutura</Eyebrow>
+            <Eyebrow>O que está incluso</Eyebrow>
             <h3
               className="font-display -tracking-[0.02em] text-balance"
               style={{ fontSize: "var(--text-4xl)", lineHeight: 0.95 }}
@@ -83,25 +82,45 @@ export function Servicos() {
               tudo nosso.
             </h3>
             <p className="max-w-[48ch] text-text-muted" style={{ fontSize: "var(--text-base)" }}>
-              Som, luz, logística, backup — investimos em tecnologia sem
-              terceirizar o padrão.
+              Som, luz, logística, DJ pós-show e backup — investimos em
+              tecnologia sem terceirizar o padrão.
             </p>
           </div>
 
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {serviceIncludes.map((item, i) => (
+          <ul className="grid gap-5 sm:grid-cols-2">
+            {includedFeatures.map((feature, i) => (
               <li
-                key={item}
-                className="reveal flex items-start gap-4 border border-border bg-bg-raise p-5 transition-colors hover:border-brand"
+                key={feature.title}
+                className="reveal flex flex-col gap-4 border border-border bg-bg-raise p-6 transition-colors hover:border-brand"
                 style={{ ["--i" as string]: i }}
               >
-                <span
-                  aria-hidden
-                  className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center border border-brand text-[0.65rem] text-brand"
-                >
-                  ✓
-                </span>
-                <span className="font-sans text-sm text-text">{item}</span>
+                <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+                  <h4 className="font-display text-text -tracking-[0.01em] text-balance" style={{ fontSize: "var(--text-lg)", lineHeight: 1.15 }}>
+                    {feature.title}
+                  </h4>
+                  {feature.optional ? (
+                    <span className="font-mono text-[0.58rem] uppercase tracking-[0.3em] text-brand">
+                      opcional
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-text-muted">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  )}
+                </div>
+                <ul className="flex flex-col gap-2">
+                  {feature.items.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span
+                        aria-hidden
+                        className="mt-[0.45em] inline-block h-1 w-1 shrink-0 rotate-45 bg-brand"
+                      />
+                      <span className="font-sans text-[0.85rem] text-text-muted leading-[1.55]">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>
