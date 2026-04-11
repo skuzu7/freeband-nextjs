@@ -3,9 +3,9 @@ import { bandInfo, contact } from "@/data/content";
 const YEAR_RIBBON = ["1969", "1979", "1989", "1999", "2009", "2019", "2026"];
 
 const FOOTER_LINKS = [
-  { label: "Manifesto", href: "#sobre" },
-  { label: "Palco", href: "#historia" },
+  { label: "Manifesto", href: "#manifesto" },
   { label: "Galeria", href: "#galeria" },
+  { label: "Palcos", href: "#palcos" },
   { label: "Eventos", href: "#servicos" },
   { label: "Contato", href: "#contato" },
 ];
