@@ -10,15 +10,17 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 // Editorial asymmetric row sizing — repeats across the gallery.
+// lg columns per row: [5+7=12], [3+6+3=12], [4+8=12], [4+4+4=12]
+// Mobile: uniform aspect-[4/3] so no ultra-tall or ultra-wide cells
 const GRID_PATTERN = [
-  "md:col-span-6 lg:col-span-5 aspect-[4/5]",
+  "md:col-span-6 lg:col-span-5 aspect-[4/3] md:aspect-[4/5]",
   "md:col-span-6 lg:col-span-7 aspect-[4/3]",
-  "md:col-span-4 lg:col-span-3 aspect-square",
-  "md:col-span-8 lg:col-span-6 aspect-[16/9]",
-  "md:col-span-6 lg:col-span-3 aspect-[3/4]",
-  "md:col-span-6 lg:col-span-4 aspect-[4/5]",
-  "md:col-span-12 lg:col-span-8 aspect-[21/9]",
-  "md:col-span-6 lg:col-span-4 aspect-[4/5]",
+  "md:col-span-4 lg:col-span-3 aspect-[4/3] md:aspect-square",
+  "md:col-span-8 lg:col-span-6 aspect-[4/3] md:aspect-[16/9]",
+  "md:col-span-6 lg:col-span-3 aspect-[4/3] md:aspect-[3/4]",
+  "md:col-span-6 lg:col-span-4 aspect-[4/3] md:aspect-[4/5]",
+  "md:col-span-8 lg:col-span-8 aspect-[4/3] md:aspect-[16/9]",
+  "md:col-span-4 lg:col-span-4 aspect-[4/3] md:aspect-square",
 ];
 
 interface StartTransition {
@@ -75,11 +77,11 @@ export function Galeria() {
                   fill
                   sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
                   quality={90}
-                  className="object-cover saturate-[0.2] transition-[filter,transform] duration-[1000ms] ease-[var(--ease-stage)] group-hover:saturate-100 group-hover:scale-[1.03]"
+                  className="object-cover saturate-[0.55] transition-[filter,transform] duration-[800ms] ease-[var(--ease-stage)] group-hover:saturate-100 group-hover:scale-[1.03]"
                 />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-95"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 />
                 <div className="pointer-events-none absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                   <span className="line-clamp-1 max-w-[75%] text-text">{img.alt}</span>
