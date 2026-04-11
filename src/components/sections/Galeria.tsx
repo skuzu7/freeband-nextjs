@@ -11,47 +11,31 @@ import { Section } from "@/components/ui/Section";
 
 export function Galeria() {
   const [index, setIndex] = useState(-1);
-
   const slides = galleryImages.map((img) => ({ src: img.src, alt: img.alt }));
 
   return (
     <Section id="galeria" className="bg-bg">
       <Container>
-        <SectionTitle eyebrow="Registros">Galeria Visual</SectionTitle>
+        <SectionTitle eyebrow="Momentos">Galeria Visual</SectionTitle>
 
-        <p className="mb-10 max-w-2xl text-base text-text-2">
-          Uma seleção de registros de shows, turnês e eventos ao longo de mais
-          de 55 anos de estrada.
-        </p>
-
-        <div className="gap-4 sm:columns-2 md:columns-3 lg:columns-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
           {galleryImages.map((img, i) => (
             <button
-              key={img.src}
-              type="button"
+              key={i}
               onClick={() => setIndex(i)}
-              className="group relative block w-full overflow-hidden"
-              aria-label={`Ver foto: ${img.alt}`}
+              className="relative w-full group overflow-hidden border border-white/5 block"
             >
-              <div
-                className={
-                  i % 4 === 0
-                    ? "relative aspect-[3/4] w-full"
-                    : i % 4 === 1
-                      ? "relative aspect-[4/3] w-full"
-                      : i % 4 === 2
-                        ? "relative aspect-square w-full"
-                        : "relative aspect-[4/5] w-full"
-                }
-              >
+              <div className="relative">
                 <Image
                   src={img.src}
                   alt={img.alt}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  width={600}
+                  height={800}
+                  className="w-full h-auto object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
                 />
-                <div className="absolute inset-0 bg-gold/0 transition-colors duration-300 group-hover:bg-gold/25" />
+                <div className="absolute inset-0 bg-gold/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-bg text-xs font-bold uppercase tracking-[0.3em] bg-gold px-4 py-2">Ver Foto</span>
+                </div>
               </div>
             </button>
           ))}

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { release } from "@/data/content";
 import { images } from "@/data/images";
@@ -9,52 +11,49 @@ export function Sobre() {
   const paragraphs = release.full.split("\n\n");
 
   return (
-    <Section id="sobre" className="bg-bg">
+    <Section id="sobre" className="bg-bg overflow-hidden">
       <Container>
-        <SectionTitle eyebrow="A Banda">Quem Somos</SectionTitle>
-
-        <div className="mb-14 grid gap-10 md:grid-cols-[60%_38%] md:gap-12">
-          <div className="space-y-5 text-base leading-relaxed text-text-2 md:text-lg">
-            {paragraphs.map((para, index) => (
-              <p key={index} className="text-justify">
-                {para}
-              </p>
-            ))}
-            <ul className="flex flex-wrap gap-3 pt-2">
-              {release.values.map((value) => (
-                <li
-                  key={value}
-                  className="border border-gold/40 px-4 py-1 text-xs uppercase tracking-[0.2em] text-gold"
-                >
-                  {value}
-                </li>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="order-2 md:order-1">
+            <SectionTitle eyebrow="A Banda">Quem Somos</SectionTitle>
+            <div className="space-y-6 text-text-muted leading-relaxed">
+              {paragraphs.map((para, i) => (
+                <p key={i} className="text-sm sm:text-base">
+                  {para}
+                </p>
               ))}
-            </ul>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-8">
+              {release.values.map((v) => (
+                <span key={v} className="text-[0.6rem] font-bold uppercase tracking-[0.3em] border border-gold/30 px-4 py-1.5 text-gold">
+                  {v}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div className="relative aspect-[4/5] w-full overflow-hidden border-2 border-gold md:aspect-auto md:min-h-[440px]">
+          <div className="order-1 md:order-2 relative aspect-[4/5] w-full max-w-md mx-auto md:max-w-none">
+            {/* Decoration */}
+            <div className="absolute -inset-4 border border-gold/10 -z-10 translate-x-4 translate-y-4" />
             <Image
               src={images.anos70}
-              alt="Freeband anos 70"
+              alt="Histórico"
               fill
-              sizes="(min-width: 768px) 40vw, 100vw"
-              className="object-cover grayscale contrast-125"
+              className="object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-px border border-border bg-border md:grid-cols-4">
-          {release.highlights.map((highlight) => (
-            <div
-              key={highlight.label}
-              className="bg-bg-card px-4 py-8 text-center md:px-6 md:py-10"
-            >
-              <div className="font-display text-5xl font-bold leading-none text-gold md:text-6xl">
-                {highlight.value}
-              </div>
-              <div className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-text-2">
-                {highlight.label}
-              </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-24">
+          {release.highlights.map((h) => (
+            <div key={h.label} className="text-center group">
+              <p className="text-4xl md:text-5xl font-black text-gold mb-2 group-hover:scale-110 transition-transform">
+                {h.value}
+              </p>
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-text-muted">
+                {h.label}
+              </p>
             </div>
           ))}
         </div>

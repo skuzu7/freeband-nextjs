@@ -1,3 +1,5 @@
+"use client";
+
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -7,48 +9,52 @@ export function Servicos() {
   return (
     <Section id="servicos" className="bg-bg">
       <Container>
-        <SectionTitle eyebrow="O que fazemos">Nossos Serviços</SectionTitle>
+        <SectionTitle eyebrow="Excelência">Nossos Serviços</SectionTitle>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <article
+            <div
               key={service.title}
-              className="group relative border border-border border-b-4 border-b-gold bg-bg-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_12px_32px_-16px_rgba(201,168,76,0.4)]"
+              className="glass p-8 group hover:border-gold/30 transition-all duration-500"
             >
-              <div className="mb-5 text-4xl text-gold" aria-hidden="true">
+              <div className="text-4xl mb-6 text-gold group-hover:scale-110 transition-transform origin-left">
                 {service.icon}
               </div>
-              <h3 className="mb-3 font-display text-xl font-bold uppercase tracking-widest text-white">
+              <h3 className="text-xl font-bold uppercase tracking-widest mb-4">
                 {service.title}
               </h3>
-              <p className="text-sm leading-relaxed text-text-2 md:text-base">
+              <p className="text-sm text-text-muted leading-relaxed">
                 {service.description}
               </p>
-            </article>
+            </div>
           ))}
         </div>
 
-        <div className="mt-20">
-          <h3 className="text-center font-display text-2xl font-bold uppercase tracking-[0.2em] text-gold md:text-3xl">
-            Incluso em todos os eventos
-          </h3>
-          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
-            {serviceIncludes.map((item) => (
-              <div
-                key={item}
-                className="flex items-start gap-3 border border-border bg-bg-card/60 p-4"
-              >
-                <span
-                  className="mt-0.5 flex-shrink-0 text-xl text-gold"
-                  aria-hidden="true"
-                >
-                  &#10003;
-                </span>
-                <span className="text-sm leading-relaxed text-white md:text-base">
-                  {item}
-                </span>
-              </div>
-            ))}
+        {/* Feature List */}
+        <div className="mt-24 py-16 border-t border-white/5">
+          <div className="grid lg:grid-cols-3 gap-12 items-center">
+            <div className="lg:col-span-1">
+              <h3 className="text-3xl font-black uppercase tracking-tighter leading-none mb-4">
+                Infraestrutura <br />
+                <span className="text-gold">Full Premium</span>
+              </h3>
+              <p className="text-text-muted text-sm">
+                Investimos constantemente em tecnologia para oferecer o melhor padrão sonoro e visual do mercado.
+              </p>
+            </div>
+
+            <div className="lg:col-span-2 grid sm:grid-cols-2 gap-4">
+              {serviceIncludes.map((item) => (
+                <div key={item} className="flex items-center gap-4 p-4 border border-white/5 bg-white/[0.02]">
+                  <span className="h-6 w-6 rounded-full border border-gold/40 flex items-center justify-center text-gold text-[0.6rem]">
+                    ✓
+                  </span>
+                  <span className="text-xs uppercase tracking-widest text-text-muted font-medium">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Container>

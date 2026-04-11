@@ -1,3 +1,5 @@
+"use client";
+
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -5,27 +7,18 @@ import { partners } from "@/data/content";
 
 export function Parceiros() {
   return (
-    <Section id="parceiros" className="bg-bg-2">
+    <Section id="parceiros" className="bg-bg border-t border-white/5">
       <Container>
-        <SectionTitle eyebrow="Confiança">Nossos Parceiros</SectionTitle>
-
-        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-x-10">
-          {partners.map((partner, index) => (
-            <li key={partner} className="flex items-center gap-6 md:gap-10">
-              <span className="font-display text-base uppercase tracking-[0.15em] text-white md:text-lg">
-                {partner}
+        <div className="flex flex-col items-center">
+          <SectionTitle eyebrow="Confiança" centered>Nossos Parceiros</SectionTitle>
+          <div className="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-8 opacity-40 hover:opacity-100 transition-opacity duration-700">
+            {partners.map((p) => (
+              <span key={p} className="text-sm sm:text-base font-bold uppercase tracking-[0.4em]">
+                {p}
               </span>
-              {index < partners.length - 1 ? (
-                <span
-                  className="hidden text-xl font-thin text-gold md:inline"
-                  aria-hidden="true"
-                >
-                  |
-                </span>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </div>
       </Container>
     </Section>
   );

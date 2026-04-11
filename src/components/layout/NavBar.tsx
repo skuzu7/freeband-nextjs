@@ -15,66 +15,75 @@ export function NavBar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const headerClasses = [
-    "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-    scrolled
-      ? "translate-y-0 border-b border-black/5 bg-white/90 backdrop-blur-md"
-      : "-translate-y-full bg-transparent",
-  ].join(" ");
+  // Bloquear scroll quando menu aberto
+  useEffect(() => {
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+  }, [open]);
 
   return (
-    <header className={headerClasses}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a
-          href="#"
-          className="font-display text-base font-bold tracking-widest text-slate-900 md:text-lg"
-        >
-          Internacional Freeband
+    <nav
+      className={`fixed inset-x-0 top-0 z-[100] transition-all duration-300 ${
+        scrolled || open ? "bg-bg/90 backdrop-blur-md py-3 shadow-lg border-b border-white/5" : "bg-transparent py-5"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <a href="#" className="flex flex-col group">
+          <span className="text-[0.6rem] uppercase tracking-[0.4em] text-text-muted transition-colors group-hover:text-gold">Internacional</span>
+          <span className="text-lg font-bold uppercase tracking-[0.2em] text-gold">Freeband</span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8">
           {links.map((link) => (
             <a
-              key={link.href}
+              key={link.label}
               href={link.href}
-              className="text-xs uppercase tracking-widest text-slate-600 transition-colors hover:text-black"
+              className="text-[0.7rem] uppercase tracking-[0.2em] font-medium text-text-muted hover:text-white transition-colors"
             >
               {link.label}
             </a>
           ))}
           <a
             href="#contato"
-            className="rounded-full bg-gold px-5 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-gold-light"
+            className="bg-gold px-6 py-2 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-bg hover:bg-gold-light transition-all"
           >
             Agendar
           </a>
-        </nav>
+        </div>
 
+        {/* Hamburger */}
         <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          className="text-2xl text-slate-900 md:hidden"
-          aria-label={open ? "Fechar menu" : "Abrir menu"}
-          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+          className="md:hidden flex flex-col gap-1.5 z-50 p-2"
+          aria-label="Menu"
         >
-          {open ? "\u2715" : "\u2630"}
+          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "rotate-45 translate-y-2" : ""}`} />
+          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "opacity-0" : ""}`} />
+          <div className={`h-0.5 w-6 bg-gold transition-all ${open ? "-rotate-45 -translate-y-2" : ""}`} />
         </button>
       </div>
 
-      {open ? (
-        <div className="flex flex-col gap-4 bg-white px-6 pb-6 pt-2 md:hidden">
+      {/* Mobile Menu */}
+      <div
+        className={`fixed inset-0 bg-bg transition-transform duration-500 md:hidden ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col items-center justify-center h-full gap-8">
           {links.map((link) => (
             <a
-              key={link.href}
+              key={link.label}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="text-base tracking-wide text-slate-900"
+              className="text-2xl font-bold uppercase tracking-[0.3em] text-gold hover:text-white transition-colors"
             >
               {link.label}
             </a>
@@ -82,12 +91,12 @@ export function NavBar() {
           <a
             href="#contato"
             onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-gold px-5 py-3 text-center text-sm font-bold uppercase tracking-widest text-white"
+            className="mt-4 bg-gold px-12 py-4 text-sm font-bold uppercase tracking-[0.3em] text-bg"
           >
-            Agendar Show
+            Agendar Agora
           </a>
         </div>
-      ) : null}
-    </header>
+      </div>
+    </nav>
   );
 }
