@@ -1,13 +1,11 @@
 import { NavBar } from "@/components/layout/NavBar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { Sobre } from "@/components/sections/Sobre";
-import { Historia } from "@/components/sections/Historia";
-import { Galeria } from "@/components/sections/Galeria";
-import { Artistas } from "@/components/sections/Artistas";
-import { Servicos } from "@/components/sections/Servicos";
-import { Parceiros } from "@/components/sections/Parceiros";
-import { Contato } from "@/components/sections/Contato";
+import { AtoI_Manifesto } from "@/components/sections/AtoI_Manifesto";
+import { AtoII_Galeria } from "@/components/sections/AtoII_Galeria";
+import { AtoIII_Palcos } from "@/components/sections/AtoIII_Palcos";
+import { AtoIV_Eventos } from "@/components/sections/AtoIV_Eventos";
+import { AtoV_Contato } from "@/components/sections/AtoV_Contato";
 
 export default function HomePage() {
   return (
@@ -15,13 +13,11 @@ export default function HomePage() {
       <NavBar />
       <main>
         <Hero />
-        <Sobre />
-        <Historia />
-        <Galeria />
-        <Artistas />
-        <Servicos />
-        <Parceiros />
-        <Contato />
+        <AtoI_Manifesto />
+        <AtoII_Galeria />
+        <AtoIII_Palcos />
+        <AtoIV_Eventos />
+        <AtoV_Contato />
       </main>
       <Footer />
     </>

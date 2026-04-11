@@ -71,3 +71,43 @@ export const historiaImages = [
   { src: images.fb2015, caption: "2015 - Nova geração" },
   { src: images.festa55, caption: "Hoje - Mais de 55 anos de estrada" },
 ];
+
+// PALCO II — aggressively curated masonry (13 of 24 shots), each tagged
+// with a scene-aware grade class, masonry span, aspect, parallax intensity
+// and optional crop override. Consumed by AtoII_Galeria.tsx.
+export type Grade =
+  | "vintage"
+  | "stage"
+  | "warm"
+  | "cool"
+  | "neon"
+  | "cinema"
+  | "mono";
+export type Parallax = "none" | "soft" | "strong";
+
+export interface CuratedTile {
+  src: string;
+  alt: string;
+  grade: Grade;
+  span: 4 | 5 | 6 | 7 | 8 | 12;
+  rowSpan?: 2;
+  aspect: string;
+  parallax: Parallax;
+  crop?: string;
+}
+
+export const curatedGallery: CuratedTile[] = [
+  { src: images.festa55,               alt: "Show Freeband no palco",               grade: "stage",   span: 7, rowSpan: 2, aspect: "16/9", parallax: "soft"   },
+  { src: images.img0867,               alt: "Show noturno — vocalistas",            grade: "stage",   span: 5, rowSpan: 2, aspect: "4/5",  parallax: "strong" },
+  { src: images.festa308,              alt: "Palco iluminado — luzes neon",         grade: "neon",    span: 4,             aspect: "4/5",  parallax: "soft"   },
+  { src: images.img0437,               alt: "Apresentação ao vivo",                 grade: "stage",   span: 4,             aspect: "1/1",  parallax: "none"   },
+  { src: images.img0690,               alt: "Freeband no palco",                    grade: "stage",   span: 4,             aspect: "4/5",  parallax: "soft"   },
+  { src: images.reveillomIacanga,      alt: "Réveillon em Iacanga",                 grade: "cool",    span: 6,             aspect: "16/9", parallax: "strong" },
+  { src: images.reveillomParanapanema, alt: "Réveillon em Paranapanema",            grade: "cool",    span: 6,             aspect: "16/9", parallax: "soft"   },
+  { src: images.baileTabatinga,        alt: "Baile em Tabatinga",                   grade: "warm",    span: 5,             aspect: "4/5",  parallax: "none"   },
+  { src: images.nauticoAraraquara,     alt: "Clube Náutico de Araraquara",          grade: "warm",    span: 7,             aspect: "16/9", parallax: "soft"   },
+  { src: images.anos70,                alt: "Freeband nos anos 70",                 grade: "vintage", span: 4,             aspect: "4/5",  parallax: "none", crop: "center 40%" },
+  { src: images.anos90,                alt: "Freeband nos anos 90",                 grade: "vintage", span: 4,             aspect: "4/5",  parallax: "soft"   },
+  { src: images.fb2015,                alt: "Freeband em 2015",                     grade: "vintage", span: 4,             aspect: "4/5",  parallax: "none"   },
+  { src: images.cartazCosmopolitano,   alt: "Cartaz — Cosmopolitano FC",            grade: "warm",    span: 12,            aspect: "21/9", parallax: "strong", crop: "center top" },
+];
