@@ -79,7 +79,19 @@ export function Footer() {
             >
               {contact.email}
             </a>
-            <p className="text-text-muted">{contact.city}</p>
+            <a
+              href={contact.instagramUrl}
+              target="_blank"
+              rel="noopener"
+              className="w-fit text-text transition-colors hover:text-brand"
+            >
+              {contact.instagram}
+            </a>
+            <p className="text-text-muted">
+              {contact.address}
+              <br />
+              {contact.city}
+            </p>
           </div>
         </div>
 
@@ -97,7 +109,7 @@ export function Footer() {
 
         <div className="flex flex-col items-start justify-between gap-4 text-[0.65rem] uppercase tracking-[0.3em] text-text-muted md:flex-row md:items-center">
           <span>
-            © {year} {bandInfo.name}
+            © {year} {bandInfo.name} · CNPJ {bandInfo.cnpj}
           </span>
           <span className="opacity-70">Todos os direitos reservados</span>
         </div>
