@@ -3,12 +3,12 @@
 // Cinematic closing: oversized tagline + NumberScrub phone number, aurora
 // WhatsApp button with magnetic hover + ripple bloom on click, Instagram +
 // email pills, CNPJ + website eyebrow.
-import { contact, bandInfo } from "@/data/content";
-import { Section } from "@/components/ui/Section";
-import { Container } from "@/components/ui/Container";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { NumberScrub } from "@/components/ui/NumberScrub";
-import { Button } from "@/components/ui/Button";
+import { contact, bandInfo, pageCopy } from '@/data/content';
+import { Section } from '@/components/ui/Section';
+import { Container } from '@/components/ui/Container';
+import { Eyebrow } from '@/components/ui/Eyebrow';
+import { NumberScrub } from '@/components/ui/NumberScrub';
+import { Button } from '@/components/ui/Button';
 
 const InstagramIcon = () => (
   <svg
@@ -39,38 +39,31 @@ const WhatsAppIcon = () => (
 
 export function AtoV_Contato() {
   return (
-    <Section
-      id="contato"
-      variant="ink-raise"
-      pad="hero"
-      className="relative overflow-hidden"
-    >
+    <Section id="contato" variant="ink-raise" pad="hero" className="relative overflow-hidden">
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand to-transparent"
       />
 
       <Container>
-        <Eyebrow number="V" tone="mono">
-          CNPJ {bandInfo.cnpj} · {contact.address}
+        <Eyebrow number={pageCopy.atoV.eyebrowNumber} tone="mono">
+          {pageCopy.atoV.eyebrowLabel}
         </Eyebrow>
 
         <h2
           className="reveal-lead mt-8 font-display -tracking-[0.02em] text-balance max-w-4xl"
-          style={{ fontSize: "var(--text-6xl)", lineHeight: 0.9 }}
+          style={{ fontSize: 'var(--text-6xl)', lineHeight: 0.9 }}
         >
-          Vamos{" "}
-          <span className="serif-italic text-brand">entrar no palco</span>{" "}
-          juntos?
+          {pageCopy.atoV.headlinePrefix}
+          <span className="serif-italic text-brand">{pageCopy.atoV.headlineEmphasis}</span>
+          {pageCopy.atoV.headlineSuffix}
         </h2>
 
         <p
           className="reveal-mid mt-8 max-w-[58ch] text-text-muted"
-          style={{ fontSize: "var(--text-lg)", lineHeight: 1.55 }}
+          style={{ fontSize: 'var(--text-lg)', lineHeight: 1.55 }}
         >
-          Conta pra gente o formato, a data e o sonho. Retornamos com uma
-          proposta sob medida — som, luz, logística, backup, DJ pós-show.
-          Tudo nosso.
+          {pageCopy.atoV.lead}
         </p>
 
         {/* Huge phone number — static NumberScrub variant="phone" */}
@@ -78,12 +71,13 @@ export function AtoV_Contato() {
           <NumberScrub
             value={contact.phone}
             variant="phone"
-            label="Fale com a produção"
+            label={pageCopy.atoV.phoneScrubLabel}
           />
         </div>
 
-        {/* Aurora CTA + contact pills */}
-        <div className="reveal-tail mt-10 flex flex-col flex-wrap items-start gap-8 md:flex-row md:items-center md:gap-6">
+        {/* Aurora CTA + contact pills — flex-wrap was redundant next to
+            flex-col/md:flex-row; removed for clearer intent. */}
+        <div className="reveal-tail mt-10 flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
           <Button
             as="a"
             variant="aurora"
@@ -94,7 +88,7 @@ export function AtoV_Contato() {
             rel="noopener"
           >
             <WhatsAppIcon />
-            Falar pelo WhatsApp
+            {pageCopy.atoV.whatsappCta}
             <span aria-hidden>→</span>
           </Button>
 
@@ -123,9 +117,7 @@ export function AtoV_Contato() {
             {bandInfo.legalName}
           </span>
           <span aria-hidden>·</span>
-          <span className="normal-case tracking-[0.1em]">
-            {contact.website}
-          </span>
+          <span className="normal-case tracking-[0.1em]">{contact.website}</span>
         </div>
       </Container>
     </Section>

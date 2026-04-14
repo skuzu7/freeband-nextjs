@@ -33,6 +33,7 @@ interface CinematicImageProps
   parallax?: Parallax;
   aspect?: string;
   crop?: string;
+  fit?: "cover" | "contain";
   quality?: Quality;
   wrapperClassName?: string;
   imgClassName?: string;
@@ -43,6 +44,7 @@ export function CinematicImage({
   parallax = "none",
   aspect,
   crop = "center",
+  fit = "cover",
   quality = 90,
   wrapperClassName = "",
   imgClassName = "",
@@ -72,7 +74,7 @@ export function CinematicImage({
         {...imgProps}
         alt={alt}
         quality={quality}
-        className={`object-cover ${gradeClass} ${imgClassName}`.trim()}
+        className={`${fit === "cover" ? "object-cover" : "object-contain"} ${gradeClass} ${imgClassName}`.trim()}
         style={{ objectPosition: crop }}
       />
     </div>

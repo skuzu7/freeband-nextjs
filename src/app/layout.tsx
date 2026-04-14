@@ -1,68 +1,56 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
+import { CursorGlow } from '@/components/ui/CursorGlow';
+import { pageCopy } from '@/data/content';
+import './globals.css';
 
-// Self-hosted variable fonts. No build-time network fetch, no runtime
-// requests to Google, stable across environments. See src/app/fonts/.
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 const fraunces = localFont({
-  src: [
-    {
-      path: "./fonts/Fraunces-Variable.ttf",
-      weight: "100 900",
-      style: "normal",
-    },
-    {
-      path: "./fonts/Fraunces-Italic-Variable.ttf",
-      weight: "100 900",
-      style: "italic",
-    },
-  ],
-  variable: "--font-fraunces",
-  display: "swap",
-  fallback: ["Georgia", "serif"],
+  src: './fonts/Fraunces-Variable.ttf',
+  variable: '--font-display',
+  display: 'swap',
 });
 
 const geist = localFont({
-  src: "./fonts/Geist-Variable.woff2",
-  variable: "--font-geist",
-  display: "swap",
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
-});
-
-const jetbrainsMono = localFont({
-  src: "./fonts/JetBrainsMono-Variable.ttf",
-  variable: "--font-jetbrains",
-  display: "swap",
-  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+  src: './fonts/Geist-Variable.woff2',
+  variable: '--font-sans',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://freeband.com.br"),
-  title: "Internacional Freeband — Desde 1969",
-  description:
-    "Uma banda feita no palco. Cinquenta e seis anos fazendo réveillon, casamento, formatura e show municipal Brasil afora.",
+  metadataBase: new URL('https://freeband.com.br'),
+  title: pageCopy.seo.title,
+  description: pageCopy.seo.description,
   openGraph: {
-    title: "Internacional Freeband",
-    description:
-      "Desde 1969 dividindo o mesmo pulso com o Brasil — réveillon, casamento, formatura, show municipal.",
-    images: ["/images/festa-55.jpeg"],
-    locale: "pt_BR",
-    type: "website",
+    title: pageCopy.seo.ogTitle,
+    description: pageCopy.seo.ogDescription,
+    images: ['/images/festa-55.jpeg'],
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  other: {
+    'theme-color': '#0a0a0f',
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="pt-BR"
-      className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="pt-BR" className={`${inter.variable} ${jetbrainsMono.variable} ${fraunces.variable} ${geist.variable}`}>
       <body className="bg-bg text-text font-sans antialiased">
+        <div className="grain" aria-hidden />
+        <CursorGlow />
         {children}
       </body>
     </html>

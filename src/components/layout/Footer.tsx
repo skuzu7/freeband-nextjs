@@ -1,19 +1,15 @@
-import { bandInfo, contact } from "@/data/content";
-
-const YEAR_RIBBON = ["1969", "1979", "1989", "1999", "2009", "2019", "2026"];
-
-const FOOTER_LINKS = [
-  { label: "Manifesto", href: "#manifesto" },
-  { label: "Galeria", href: "#galeria" },
-  { label: "Palcos", href: "#palcos" },
-  { label: "Eventos", href: "#servicos" },
-  { label: "Contato", href: "#contato" },
-];
+import { bandInfo, contact, pageCopy, yearRibbon } from '@/data/content';
 
 export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative overflow-hidden bg-bg-raise pt-24">
+      {/* Neon top accent */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand to-transparent opacity-60"
+      />
+
       {/* Giant background wordmark */}
       <div
         aria-hidden
@@ -22,37 +18,36 @@ export function Footer() {
         <span
           className="font-display font-semibold leading-[0.7] -tracking-[0.05em] text-transparent"
           style={{
-            fontSize: "clamp(8rem, 22vi, 22rem)",
-            WebkitTextStroke: "1px color-mix(in oklch, var(--color-red-500) 35%, transparent)",
+            fontSize: 'clamp(8rem, 22vi, 22rem)',
+            WebkitTextStroke: '1px color-mix(in oklch, var(--color-brand) 25%, transparent)',
           }}
         >
           freeband
         </span>
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-[min(92rem,100%)] flex-col gap-16 px-[clamp(1.25rem,4vw,3.5rem)] pb-24">
+      <div className="max-w-container px-section relative mx-auto flex w-full flex-col gap-16 pb-24">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div className="flex flex-col gap-4">
             <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-text-muted">
               Internacional
             </span>
             <span
-              className="font-display text-text -tracking-[0.02em]"
-              style={{ fontSize: "var(--text-4xl)" }}
+              className="font-display text-text -tracking-[0.02em] text-glow-red"
+              style={{ fontSize: 'var(--text-4xl)' }}
             >
               freeband
             </span>
             <p className="mt-2 max-w-[36ch] text-text-muted">
-              Uma banda feita no palco. Desde {bandInfo.founded}, dividindo o
-              mesmo pulso com o Brasil.
+              {pageCopy.footer.brandTagline} {pageCopy.footer.brandTaglineLong}
             </p>
           </div>
 
           <nav aria-label="Seções do site" className="flex flex-col gap-3">
             <span className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
-              Navegar
+              {pageCopy.footer.navHeading}
             </span>
-            {FOOTER_LINKS.map((link) => (
+            {pageCopy.nav.sections.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
@@ -65,7 +60,7 @@ export function Footer() {
 
           <div className="flex flex-col gap-3">
             <span className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
-              Contato
+              {pageCopy.footer.contactHeading}
             </span>
             <a
               href={contact.whatsappLink}
@@ -97,10 +92,10 @@ export function Footer() {
 
         {/* Year ribbon */}
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-border pt-8 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
-          {YEAR_RIBBON.map((y, i) => (
+          {yearRibbon.map((y, i) => (
             <span key={y} className="flex items-center gap-3">
               <span>{y}</span>
-              {i < YEAR_RIBBON.length - 1 && (
+              {i < yearRibbon.length - 1 && (
                 <span aria-hidden className="inline-block h-px w-6 bg-border" />
               )}
             </span>
@@ -111,7 +106,7 @@ export function Footer() {
           <span>
             © {year} {bandInfo.name} · CNPJ {bandInfo.cnpj}
           </span>
-          <span className="opacity-70">Todos os direitos reservados</span>
+          <span className="opacity-70">{pageCopy.footer.rightsNote}</span>
         </div>
       </div>
     </footer>

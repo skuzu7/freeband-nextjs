@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* =========================================================================
    FREEBAND — design system "PALCO"
@@ -8,84 +8,75 @@
    ========================================================================= */
 
 @theme {
-  /* ---------------- Palette (OKLCH) ---------------- */
-  --color-ink-950: oklch(10% 0.02 300);
-  --color-ink-900: oklch(14% 0.025 300);
-  --color-ink-800: oklch(18% 0.03 300);
-  --color-ink-700: oklch(24% 0.03 300);
-  --color-ink-600: oklch(34% 0.025 300);
-  --color-ink-400: oklch(56% 0.018 300);
-  --color-ink-300: oklch(70% 0.012 300);
-  --color-ink-200: oklch(82% 0.01 300);
-  --color-ink-100: oklch(96% 0.005 300);
+  --color-wordmark-red: #ed1b24;
+  --color-wordmark-blue: #00aeef;
 
-  --color-red-300: oklch(82% 0.14 22);
-  --color-red-400: oklch(72% 0.22 25);
-  --color-red-500: oklch(62% 0.24 20);
-  --color-red-600: oklch(52% 0.22 20);
-  --color-red-700: oklch(42% 0.19 20);
+  /* ---------------- Palette: FREQUÊNCIA ---------------- */
+  --color-void-950: oklch(6% 0.015 270);
+  --color-void-900: oklch(10% 0.02 270);
+  --color-void-800: oklch(14% 0.02 265);
+  --color-void-700: oklch(18% 0.02 260);
+  --color-void-600: oklch(24% 0.02 260);
+  --color-void-500: oklch(34% 0.02 260);
+  --color-void-400: oklch(48% 0.02 260);
+  --color-void-300: oklch(62% 0.015 260);
+  --color-void-200: oklch(78% 0.01 260);
+  --color-void-100: oklch(90% 0.005 260);
 
-  --color-beam-magenta: oklch(68% 0.28 340);
-  --color-beam-cyan: oklch(82% 0.16 195);
-  --color-beam-amber: oklch(82% 0.14 75);
+  /* Neon spectrum — extracted from real stage photos */
+  --color-neon-green: oklch(78% 0.22 155);
+  --color-neon-magenta: oklch(68% 0.28 340);
+  --color-neon-blue: oklch(72% 0.19 240);
+  --color-neon-purple: oklch(58% 0.24 300);
+  --color-neon-red: oklch(62% 0.26 25);
+  --color-neon-amber: oklch(82% 0.16 80);
 
-  --color-paper-50: oklch(97% 0.01 80);
-  --color-paper-100: oklch(93% 0.015 80);
-  --color-paper-200: oklch(86% 0.02 80);
-  --color-paper-300: oklch(74% 0.025 80);
-  --color-paper-500: oklch(52% 0.03 80);
-  --color-paper-700: oklch(32% 0.03 80);
-  --color-paper-900: oklch(16% 0.03 80);
+  --color-brand: #ed1b24;
+  --color-brand-hot: oklch(68% 0.3 30);
+  --color-brand-deep: oklch(52% 0.26 25);
+  --color-red-500: #ed1b24;
+  --color-blue-500: #00aeef;
 
-  /* ---------------- Semantic aliases ---------------- */
-  /* These get re-mapped under [data-theme="paper"] below. */
-  --color-bg: var(--color-ink-950);
-  --color-bg-raise: var(--color-ink-900);
-  --color-bg-high: var(--color-ink-800);
-  --color-border: oklch(98% 0 0 / 0.08);
-  --color-border-strong: oklch(98% 0 0 / 0.18);
-  --color-text: var(--color-ink-100);
-  --color-text-muted: var(--color-ink-300);
-  --color-text-low: var(--color-ink-400);
-  --color-brand: var(--color-red-500);
-  --color-brand-hot: var(--color-red-400);
-  --color-brand-deep: var(--color-red-600);
+  /* ---------------- Semantic aliases (dark-first) ---------------- */
+  --color-bg: var(--color-void-950);
+  --color-bg-raise: var(--color-void-900);
+  --color-bg-high: var(--color-void-800);
+  --color-border: oklch(100% 0 0 / 0.08);
+  --color-border-strong: oklch(100% 0 0 / 0.16);
+  --color-text: oklch(96% 0.005 260);
+  --color-text-muted: oklch(68% 0.01 260);
+  --color-text-low: oklch(48% 0.01 260);
 
   /* ---------------- Fonts ---------------- */
-  --font-display: var(--font-fraunces), "PP Editorial New", Georgia, serif;
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* ---------------- Fluid type scale ----------------
-     clamp(min, preferred, max) — preferred uses vi (viewport-inline) so it
-     tracks the viewport width but caps at max for large screens. */
-  --text-xs: clamp(0.7rem, 0.66rem + 0.2vi, 0.8rem);
-  --text-sm: clamp(0.8rem, 0.75rem + 0.25vi, 0.92rem);
-  --text-base: clamp(0.95rem, 0.88rem + 0.35vi, 1.08rem);
-  --text-lg: clamp(1.1rem, 1rem + 0.5vi, 1.3rem);
-  --text-xl: clamp(1.35rem, 1.2rem + 0.75vi, 1.65rem);
-  --text-2xl: clamp(1.7rem, 1.4rem + 1.4vi, 2.15rem);
-  --text-3xl: clamp(2rem, 1.5rem + 2.4vi, 2.75rem);
-  --text-4xl: clamp(2.5rem, 1.6rem + 4vi, 3.75rem);
-  --text-5xl: clamp(3rem, 1.6rem + 6vi, 5rem);
-  --text-6xl: clamp(3.75rem, 1.8rem + 9vi, 6.75rem);
-  --text-7xl: clamp(4.5rem, 1.2rem + 14vi, 9rem);
-  --text-hero: clamp(4rem, -1rem + 22vi, 14rem);
+  /* ---------------- Fluid type scale ---------------- */
+  --text-xs: clamp(0.65rem, 0.6rem + 0.2vi, 0.82rem);
+  --text-sm: clamp(0.75rem, 0.7rem + 0.2vi, 0.95rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.25vi, 1.1rem);
+  --text-lg: clamp(1.05rem, 1rem + 0.4vi, 1.35rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.6vi, 1.7rem);
+  --text-2xl: clamp(1.5rem, 1.35rem + 1vi, 2.25rem);
+  --text-3xl: clamp(1.8rem, 1.4rem + 2vi, 3rem);
+  --text-4xl: clamp(2.2rem, 1.5rem + 3.5vi, 4rem);
+  --text-5xl: clamp(2.6rem, 1.5rem + 5vi, 5.5rem);
+  --text-6xl: clamp(3.2rem, 1.6rem + 7.5vi, 7.5rem);
+  --text-7xl: clamp(3.8rem, 1.2rem + 12vi, 10rem);
+  --text-hero: clamp(3.5rem, -1rem + 18vi, 15rem);
 
   /* ---------------- Motion ----------------
      Six easing curves, six durations. Each curve has a clear purpose so
      PALCO II never falls back to a single "ease" for everything. */
-  --ease-stage:  cubic-bezier(0.2, 1, 0.3, 1);
+  --ease-stage: cubic-bezier(0.2, 1, 0.3, 1);
   --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-morph:  cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-drift:  cubic-bezier(0.45, 0, 0.15, 1);
-  --ease-snap:   cubic-bezier(0.85, 0, 0.15, 1);
+  --ease-morph: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-drift: cubic-bezier(0.45, 0, 0.15, 1);
+  --ease-snap: cubic-bezier(0.85, 0, 0.15, 1);
   --ease-settle: cubic-bezier(0.22, 1.12, 0.36, 1);
   /* CSS linear() spring — used by MagneticField cursor return + Button magnet */
-  --ease-spring: linear(
-    0, 0.27 9%, 0.65 19%, 1.02 30%, 1.09 36%,
-    1.02 45%, 0.99 54%, 1 71%, 1
-  );
+  --ease-spring: linear(0, 0.27 9%, 0.65 19%, 1.02 30%, 1.09 36%, 1.02 45%, 0.99 54%, 1 71%, 1);
 
   --dur-150: 150ms;
   --dur-250: 250ms;
@@ -94,52 +85,164 @@
   --dur-900: 900ms;
   --dur-1400: 1400ms;
 
+  /* ---------------- Layout ----------------
+     Container width + inline padding used by NavBar, Footer, Hero,
+     Section and masonry — one knob, four consumers. */
+  --container-max: min(92rem, 100%);
+  --section-inline-pad: clamp(1.25rem, 4vw, 3.5rem);
+
   /* ---------------- Keyframes ---------------- */
   @keyframes marquee-x {
-    from { transform: translate3d(0, 0, 0); }
-    to { transform: translate3d(-50%, 0, 0); }
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
   }
   @keyframes marquee-x-reverse {
-    from { transform: translate3d(-50%, 0, 0); }
-    to { transform: translate3d(0, 0, 0); }
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
   }
   @keyframes beam-drift {
-    0%, 100% { transform: translate3d(-8%, 0, 0) rotate(-8deg); opacity: 0.55; }
-    50% { transform: translate3d(6%, 0, 0) rotate(-8deg); opacity: 0.85; }
+    0%,
+    100% {
+      transform: translate3d(-8%, 0, 0) rotate(-8deg);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translate3d(6%, 0, 0) rotate(-8deg);
+      opacity: 0.85;
+    }
   }
   @keyframes aurora {
-    0% { --aurora-angle: 0deg; }
-    100% { --aurora-angle: 360deg; }
+    0% {
+      --aurora-angle: 0deg;
+    }
+    100% {
+      --aurora-angle: 360deg;
+    }
   }
   @keyframes reveal-in {
-    from { opacity: 0; transform: translate3d(0, 2.5rem, 0); }
-    to { opacity: 1; transform: translate3d(0, 0, 0); }
+    from {
+      opacity: 0;
+      transform: translate3d(0, 2.5rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
   }
   @keyframes kinetic-axes {
-    0%   { font-variation-settings: "wght" 320, "opsz" 10, "SOFT" 0; letter-spacing: 0.05em; }
-    50%  { font-variation-settings: "wght" 900, "opsz" 144, "SOFT" 50; letter-spacing: -0.05em; }
-    100% { font-variation-settings: "wght" 480, "opsz" 80, "SOFT" 100; letter-spacing: 0; }
+    0% {
+      font-variation-settings:
+        'wght' 320,
+        'opsz' 10,
+        'SOFT' 0;
+      letter-spacing: 0.05em;
+    }
+    50% {
+      font-variation-settings:
+        'wght' 900,
+        'opsz' 144,
+        'SOFT' 50;
+      letter-spacing: -0.05em;
+    }
+    100% {
+      font-variation-settings:
+        'wght' 480,
+        'opsz' 80,
+        'SOFT' 100;
+      letter-spacing: 0;
+    }
   }
   @keyframes saturate-in {
-    from { filter: saturate(0) contrast(1.1); }
-    to   { filter: saturate(1) contrast(1); }
+    from {
+      filter: saturate(0) contrast(1.1);
+    }
+    to {
+      filter: saturate(1) contrast(1);
+    }
   }
   @keyframes parallax-drift {
-    from { --parallax-y: -24px; }
-    to   { --parallax-y:  24px; }
+    from {
+      --parallax-y: -24px;
+    }
+    to {
+      --parallax-y: 24px;
+    }
   }
   @keyframes grade-scrub {
-    from { --grade-sat: 0; }
-    to   { --grade-sat: 1; }
+    from {
+      --grade-sat: 0;
+    }
+    to {
+      --grade-sat: 1;
+    }
   }
   @keyframes kinetic-paragraph {
-    0%   { --kwp-wght: 300; --kwp-opsz: 14; }
-    50%  { --kwp-wght: 460; --kwp-opsz: 48; }
-    100% { --kwp-wght: 400; --kwp-opsz: 36; }
+    0% {
+      --kwp-wght: 300;
+      --kwp-opsz: 14;
+    }
+    50% {
+      --kwp-wght: 460;
+      --kwp-opsz: 48;
+    }
+    100% {
+      --kwp-wght: 400;
+      --kwp-opsz: 36;
+    }
   }
   @keyframes num-count {
-    from { --n: 0; }
-    to   { --n: var(--n-target, 100); }
+    from {
+      --n: 0;
+    }
+    to {
+      --n: var(--n-target, 100);
+    }
+  }
+  @keyframes glitch-clip {
+    0% {
+      clip-path: inset(40% 0 61% 0);
+    }
+    20% {
+      clip-path: inset(92% 0 1% 0);
+    }
+    40% {
+      clip-path: inset(43% 0 1% 0);
+    }
+    60% {
+      clip-path: inset(25% 0 58% 0);
+    }
+    80% {
+      clip-path: inset(54% 0 7% 0);
+    }
+    100% {
+      clip-path: inset(58% 0 43% 0);
+    }
+  }
+  @keyframes glitch-skew {
+    0%,
+    100% {
+      transform: skewX(0deg);
+    }
+    20% {
+      transform: skewX(-2deg);
+    }
+    40% {
+      transform: skewX(0.5deg);
+    }
+    60% {
+      transform: skewX(-0.3deg);
+    }
+    80% {
+      transform: skewX(1deg);
+    }
   }
 }
 
@@ -148,47 +251,47 @@
    gradient angles, counters and transform offsets via @property.
    ========================================================================= */
 @property --aurora-angle {
-  syntax: "<angle>";
+  syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
 @property --ripple-scale {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 0;
 }
 @property --parallax-y {
-  syntax: "<length>";
+  syntax: '<length>';
   inherits: false;
   initial-value: 0px;
 }
 @property --mag-x {
-  syntax: "<length>";
+  syntax: '<length>';
   inherits: false;
   initial-value: 0px;
 }
 @property --mag-y {
-  syntax: "<length>";
+  syntax: '<length>';
   inherits: false;
   initial-value: 0px;
 }
 @property --grade-sat {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 0;
 }
 @property --kwp-wght {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 400;
 }
 @property --kwp-opsz {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 24;
 }
 @property --n {
-  syntax: "<integer>";
+  syntax: '<integer>';
   inherits: false;
   initial-value: 0;
 }
@@ -207,16 +310,92 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "cv11";
+  font-feature-settings: 'ss01', 'cv11', 'salt';
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   width: 100%;
+  color-scheme: dark;
+}
+
+/* =========================================================================
+   Organic Textures — grain, scanlines, and noise for a premium analog feel.
+   ========================================================================= */
+.grain {
+  position: fixed;
+  inset: -150%;
+  width: 300%;
+  height: 300%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: overlay;
+  animation: grain-shift 8s steps(10) infinite;
+}
+
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 51%,
+    transparent 51%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* =========================================================================
+   Premium Glassmorphism
+   ========================================================================= */
+.glass {
+  background: color-mix(in oklch, var(--color-bg-raise), transparent 40%);
+  backdrop-filter: blur(16px) saturate(1.8);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 32px 0 oklch(0% 0 0 / 0.2);
+}
+
+.glass-strong {
+  background: color-mix(in oklch, var(--color-bg-high), transparent 20%);
+  backdrop-filter: blur(24px) saturate(2);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: 0 12px 48px 0 oklch(0% 0 0 / 0.4);
 }
 
 ::selection {
   background: var(--color-brand);
-  color: var(--color-ink-950);
+  color: #ffffff;
+}
+
+/* Layout utilities — single source of truth for container width + inline
+   padding. Replaces duplicated max-w-[min(92rem,100%)] and
+   px-[clamp(1.25rem,4vw,3.5rem)] literals across NavBar / Footer / Hero. */
+.max-w-container {
+  max-width: var(--container-max);
+}
+.px-section {
+  padding-inline: var(--section-inline-pad);
 }
 
 /* Force strict red ring on focus-visible across the app */
@@ -227,7 +406,10 @@ body {
 }
 
 /* Better paragraph / headline wrapping */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   text-wrap: balance;
 }
 p {
@@ -237,7 +419,7 @@ p {
 /* =========================================================================
    Paper theme (scoped to /orcamento via a layout wrapper)
    ========================================================================= */
-[data-theme="paper"] {
+[data-theme='paper'] {
   --color-bg: var(--color-paper-50);
   --color-bg-raise: var(--color-paper-100);
   --color-bg-high: #ffffff;
@@ -297,17 +479,17 @@ p {
    Pure CSS; zero hydration. Unsupported browsers fall through to plain type.
    ========================================================================= */
 @property --kw-wght {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 700;
 }
 @property --kw-opsz {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 80;
 }
 @property --kw-soft {
-  syntax: "<number>";
+  syntax: '<number>';
   inherits: false;
   initial-value: 50;
 }
@@ -317,16 +499,16 @@ p {
   font-weight: 700;
   font-style: normal;
   font-variation-settings:
-    "wght" var(--kw-wght),
-    "opsz" var(--kw-opsz),
-    "SOFT" var(--kw-soft);
+    'wght' var(--kw-wght),
+    'opsz' var(--kw-opsz),
+    'SOFT' var(--kw-soft);
   letter-spacing: -0.03em;
   line-height: 0.82;
   will-change: font-variation-settings, letter-spacing;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (font-variation-settings: "wght" 400) {
+  @supports (animation-timeline: view()) and (font-variation-settings: 'wght' 400) {
     .text-kinetic {
       animation: kinetic-axes linear both;
       animation-timeline: view();
@@ -348,7 +530,7 @@ p {
 }
 .stage-beams::before,
 .stage-beams::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: -20% -40%;
   background-image: linear-gradient(
@@ -373,7 +555,9 @@ p {
 
 @media (prefers-reduced-motion: reduce) {
   .stage-beams::before,
-  .stage-beams::after { animation: none; }
+  .stage-beams::after {
+    animation: none;
+  }
 }
 
 /* =========================================================================
@@ -384,19 +568,20 @@ p {
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  background:
-    radial-gradient(
-      circle 360px at var(--spot-x, 50%) var(--spot-y, 35%),
-      oklch(98% 0 0 / 0.18),
-      oklch(62% 0.24 20 / 0.1) 30%,
-      transparent 60%
-    );
+  background: radial-gradient(
+    circle 360px at var(--spot-x, 50%) var(--spot-y, 35%),
+    oklch(98% 0 0 / 0.18),
+    oklch(62% 0.24 20 / 0.1) 30%,
+    transparent 60%
+  );
   mix-blend-mode: screen;
   transition: background-position 120ms linear;
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .stage-spot { display: none; }
+  .stage-spot {
+    display: none;
+  }
 }
 
 /* =========================================================================
@@ -414,9 +599,24 @@ p {
   scroll-padding-inline: clamp(1rem, 6vw, 5rem);
   scrollbar-width: none;
 }
-.h-snap::-webkit-scrollbar { display: none; }
+.h-snap::-webkit-scrollbar {
+  display: none;
+}
 .h-snap > * {
   scroll-snap-align: start;
+}
+
+/* Static-lg variant: when the content fits on wide screens (e.g. 3 service
+   cards at lg), stop behaving like a scroll runway and become a clean
+   3-col grid. Mobile / tablet still get the snap experience. */
+@media (min-width: 1024px) {
+  .h-snap[data-static-lg] {
+    grid-auto-flow: row;
+    grid-auto-columns: initial;
+    grid-template-columns: repeat(var(--static-lg-cols, 3), minmax(0, 1fr));
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
 }
 
 /* =========================================================================
@@ -430,7 +630,7 @@ p {
   overflow: hidden;
 }
 .aurora::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: -50%;
   background: conic-gradient(
@@ -449,7 +649,24 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora::before { animation: none; }
+  .aurora::before {
+    animation: none;
+  }
+}
+
+/* Section top gradient divider */
+.section-glow-top {
+  position: relative;
+}
+.section-glow-top::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-brand), transparent);
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 /* =========================================================================
@@ -498,6 +715,16 @@ p {
 .grade-scrub {
   filter: saturate(var(--grade-sat)) contrast(calc(1.15 - (var(--grade-sat) * 0.1)));
 }
+
+.chromatic-hover {
+  transition: filter var(--dur-400) var(--ease-stage);
+}
+.chromatic-hover:hover {
+  filter: drop-shadow(2px 0 0 rgba(255, 0, 0, 0.4)) 
+          drop-shadow(-2px 0 0 rgba(0, 255, 255, 0.4)) 
+          saturate(1.2);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .grade-scrub {
@@ -508,7 +735,9 @@ p {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .grade-scrub { --grade-sat: 1; }
+  .grade-scrub {
+    --grade-sat: 1;
+  }
 }
 
 /* =========================================================================
@@ -543,11 +772,19 @@ p {
    ========================================================================= */
 .text-kinetic-paragraph {
   font-family: var(--font-display);
-  font-variation-settings: "wght" var(--kwp-wght), "opsz" var(--kwp-opsz);
+  font-variation-settings:
+    'wght' var(--kwp-wght),
+    'opsz' var(--kwp-opsz);
   will-change: font-variation-settings;
 }
+
+.text-kinetic-paragraph:hover {
+  --kwp-wght: 600;
+  --kwp-opsz: 72;
+  transition: --kwp-wght var(--dur-400) var(--ease-stage), --kwp-opsz var(--dur-400) var(--ease-stage);
+}
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (font-variation-settings: "wght" 400) {
+  @supports (animation-timeline: view()) and (font-variation-settings: 'wght' 400) {
     .text-kinetic-paragraph {
       animation: kinetic-paragraph linear both;
       animation-timeline: view();
@@ -566,20 +803,34 @@ p {
   grid-auto-rows: auto;
   grid-auto-flow: dense;
   gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  padding-inline: var(--section-inline-pad);
 }
 .masonry-12 > * {
-  grid-column: span 12;   /* mobile: full width */
+  grid-column: span 12; /* mobile: full width */
   overflow-anchor: none;
 }
 @media (min-width: 768px) {
-  .masonry-12 > [data-span="4"]  { grid-column: span 4; }
-  .masonry-12 > [data-span="5"]  { grid-column: span 5; }
-  .masonry-12 > [data-span="6"]  { grid-column: span 6; }
-  .masonry-12 > [data-span="7"]  { grid-column: span 7; }
-  .masonry-12 > [data-span="8"]  { grid-column: span 8; }
-  .masonry-12 > [data-span="12"] { grid-column: span 12; }
-  .masonry-12 > [data-row="2"]   { grid-row: span 2; }
+  .masonry-12 > [data-span='4'] {
+    grid-column: span 4;
+  }
+  .masonry-12 > [data-span='5'] {
+    grid-column: span 5;
+  }
+  .masonry-12 > [data-span='6'] {
+    grid-column: span 6;
+  }
+  .masonry-12 > [data-span='7'] {
+    grid-column: span 7;
+  }
+  .masonry-12 > [data-span='8'] {
+    grid-column: span 8;
+  }
+  .masonry-12 > [data-span='12'] {
+    grid-column: span 12;
+  }
+  .masonry-12 > [data-row='2'] {
+    grid-row: span 2;
+  }
 }
 
 /* =========================================================================
@@ -592,12 +843,13 @@ p {
   isolation: isolate;
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--dur-400) var(--ease-spring),
-              background-color var(--dur-250) var(--ease-snap),
-              color var(--dur-250) var(--ease-snap);
+  transition:
+    transform var(--dur-400) var(--ease-spring),
+    background-color var(--dur-250) var(--ease-snap),
+    color var(--dur-250) var(--ease-snap);
 }
 .btn-ripple::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -618,8 +870,12 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
-  .btn-magnetic { transform: none !important; }
-  .btn-ripple::before { display: none; }
+  .btn-magnetic {
+    transform: none !important;
+  }
+  .btn-ripple::before {
+    display: none;
+  }
 }
 
 /* =========================================================================
@@ -630,7 +886,7 @@ p {
 }
 .marquee-fade::before,
 .marquee-fade::after {
-  content: "";
+  content: '';
   position: absolute;
   inset-block: 0;
   width: clamp(3rem, 8vw, 8rem);
@@ -655,7 +911,7 @@ p {
   animation-duration: var(--marquee-duration, 60s);
   will-change: transform;
 }
-.marquee-track[data-direction="r"] {
+.marquee-track[data-direction='r'] {
   animation-name: marquee-x-reverse;
 }
 .marquee-region:hover .marquee-track,
@@ -663,19 +919,37 @@ p {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none !important; }
+  .marquee-track {
+    animation: none !important;
+  }
 }
 
 /* Hide scrollbar but keep functionality */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 /* =========================================================================
    Print — clean paper output for the proposal.
    ========================================================================= */
 @media print {
-  .no-print { display: none !important; }
-  html, body { background: #ffffff !important; }
+  .no-print {
+    display: none !important;
+  }
+  .grain,
+  .scanlines::after,
+  .stage-beams,
+  .section-glow-top::before {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+  }
   #print-area {
     box-shadow: none !important;
     margin: 0 !important;

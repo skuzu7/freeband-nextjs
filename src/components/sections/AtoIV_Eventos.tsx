@@ -4,51 +4,41 @@
 // indicator below) + the rich "O que está incluso" grid wrapped in
 // <SpotlightCursor> so the radial gradient follows the cursor across
 // the feature cards — contextual, not decorative.
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { services, includedFeatures } from "@/data/content";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { SnapProgress } from "@/components/ui/SnapProgress";
-import { SpotlightCursor } from "@/components/ui/SpotlightCursor";
+import { useRef } from 'react';
+import { services, includedFeatures, pageCopy } from '@/data/content';
+import { Container } from '@/components/ui/Container';
+import { Section } from '@/components/ui/Section';
+import { Eyebrow } from '@/components/ui/Eyebrow';
+import { SectionHeadline } from '@/components/ui/SectionHeadline';
+import { SnapProgress } from '@/components/ui/SnapProgress';
+import { SpotlightCursor } from '@/components/ui/SpotlightCursor';
 
 export function AtoIV_Eventos() {
   const snapRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <Section
-      id="servicos"
-      variant="ink"
-      pad="xl"
-      className="overflow-hidden"
-    >
+    <Section id="servicos" variant="mesh" pad="xl" className="overflow-hidden">
       <Container>
-        <Eyebrow number="IV">Eventos</Eyebrow>
-        <h2
-          className="reveal-lead mt-6 font-display -tracking-[0.02em] text-balance max-w-3xl"
-          style={{ fontSize: "var(--text-5xl)", lineHeight: 0.92 }}
-        >
-          Atendemos com{" "}
-          <span className="serif-italic text-brand">excelência</span>.
-        </h2>
-        <p
-          className="reveal-mid mt-6 max-w-[54ch] text-text-muted"
-          style={{ fontSize: "var(--text-base)" }}
-        >
-          Casamentos, formaturas e eventos corporativos premium — três
-          formatos com o mesmo rigor de palco.
-        </p>
+        <SectionHeadline
+          eyebrowNumber={pageCopy.atoIV.eyebrowNumber}
+          eyebrowLabel={pageCopy.atoIV.eyebrowLabel}
+          prefix={pageCopy.atoIV.headlinePrefix}
+          emphasis={pageCopy.atoIV.headlineEmphasis}
+          suffix={pageCopy.atoIV.headlineSuffix}
+          lead={pageCopy.atoIV.lead}
+        />
       </Container>
 
+      {/* ≥lg: static 3-column grid (services.length === 3 — no empty
+          whitespace on wide desktops). <lg: scroll-snap runway with
+          SnapProgress. Switch is driven by `data-static-lg` via globals.css. */}
       <div
         ref={snapRef}
-        className="h-snap reveal-mid mt-[clamp(3rem,5vi,5rem)] pb-10"
-        style={{
-          paddingInline: "clamp(1.25rem, 4vw, 3.5rem)",
-          gridAutoColumns: "min(82vw, 440px)",
-        }}
+        data-static-lg
+        className="h-snap reveal-mid px-section mt-[clamp(3rem,5vi,5rem)] pb-10 lg:gap-8"
+        style={{ ['--static-lg-cols' as string]: services.length } as React.CSSProperties}
         tabIndex={0}
         role="region"
         aria-label="Tipos de evento atendidos"
@@ -60,17 +50,17 @@ export function AtoIV_Eventos() {
           >
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--color-red-500)_14%,transparent),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--color-brand)_10%,transparent),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             />
 
             <div className="flex items-start justify-between">
               <span className="font-mono text-[0.72rem] uppercase tracking-[0.3em] text-brand">
-                {String(i + 1).padStart(2, "0")}
+                {String(i + 1).padStart(2, '0')}
               </span>
               <span
                 aria-hidden
                 className="font-display text-brand"
-                style={{ fontSize: "var(--text-4xl)", lineHeight: 1 }}
+                style={{ fontSize: 'var(--text-4xl)', lineHeight: 1 }}
               >
                 {service.icon}
               </span>
@@ -79,14 +69,14 @@ export function AtoIV_Eventos() {
             <div className="flex flex-col gap-4">
               <h3
                 className="font-display -tracking-[0.02em] text-text text-balance"
-                style={{ fontSize: "var(--text-3xl)", lineHeight: 0.95 }}
+                style={{ fontSize: 'var(--text-3xl)', lineHeight: 0.95 }}
               >
                 {service.title}
               </h3>
               <p
                 className="text-text-muted text-pretty"
                 style={{
-                  fontSize: "var(--text-base)",
+                  fontSize: 'var(--text-base)',
                   lineHeight: 1.65,
                 }}
               >
@@ -98,14 +88,14 @@ export function AtoIV_Eventos() {
       </div>
 
       <Container>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-4 lg:hidden">
           <SnapProgress
             targetRef={snapRef}
             count={services.length}
-            labels={services.map((s) => s.title.split(" ")[0] ?? s.title)}
+            labels={services.map((s) => s.title.split(' ')[0] ?? s.title)}
           />
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
-            ← Arraste ou use as setas
+            {pageCopy.atoIV.dragHint}
           </span>
         </div>
       </Container>
@@ -113,20 +103,19 @@ export function AtoIV_Eventos() {
       <Container>
         <div className="mt-[clamp(4rem,6vi,6rem)] grid gap-10 border-t border-border pt-[clamp(3rem,5vi,5rem)] lg:grid-cols-[minmax(0,1fr)_1.6fr] lg:gap-16">
           <div className="reveal-mid flex flex-col gap-6">
-            <Eyebrow>O que está incluso</Eyebrow>
+            <Eyebrow>{pageCopy.atoIV.includedEyebrow}</Eyebrow>
             <h3
               className="font-display -tracking-[0.02em] text-balance"
-              style={{ fontSize: "var(--text-4xl)", lineHeight: 0.95 }}
+              style={{ fontSize: 'var(--text-4xl)', lineHeight: 0.95 }}
             >
-              <span className="serif-italic text-brand">Full premium</span>,{" "}
-              tudo nosso.
+              {pageCopy.atoIV.includedHeadlinePrefix}
+              <span className="serif-italic text-brand">
+                {pageCopy.atoIV.includedHeadlineEmphasis}
+              </span>
+              {pageCopy.atoIV.includedHeadlineSuffix}
             </h3>
-            <p
-              className="max-w-[48ch] text-text-muted"
-              style={{ fontSize: "var(--text-base)" }}
-            >
-              Som, luz, logística, DJ pós-show e backup — investimos em
-              tecnologia sem terceirizar o padrão.
+            <p className="max-w-[48ch] text-text-muted" style={{ fontSize: 'var(--text-base)' }}>
+              {pageCopy.atoIV.includedLead}
             </p>
           </div>
 
@@ -137,12 +126,12 @@ export function AtoIV_Eventos() {
                 <li
                   key={feature.title}
                   className="reveal-mid flex flex-col gap-4 border border-border bg-bg-raise p-6 transition-colors hover:border-brand"
-                  style={{ ["--i" as string]: i } as React.CSSProperties}
+                  style={{ ['--i' as string]: i } as React.CSSProperties}
                 >
                   <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
                     <h4
                       className="font-display text-text -tracking-[0.01em] text-balance"
-                      style={{ fontSize: "var(--text-lg)", lineHeight: 1.15 }}
+                      style={{ fontSize: 'var(--text-lg)', lineHeight: 1.15 }}
                     >
                       {feature.title}
                     </h4>
@@ -152,7 +141,7 @@ export function AtoIV_Eventos() {
                       </span>
                     ) : (
                       <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-text-muted">
-                        {String(i + 1).padStart(2, "0")}
+                        {String(i + 1).padStart(2, '0')}
                       </span>
                     )}
                   </div>

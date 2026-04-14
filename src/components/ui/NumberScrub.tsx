@@ -54,7 +54,7 @@ export function NumberScrub({
         className="number-scrub font-display font-semibold text-brand -tracking-[0.06em] leading-[0.75]"
         style={{
           ...style,
-          fontSize: "clamp(10rem, 22vi, 22rem)",
+          fontSize: "clamp(6rem, 22vi, 22rem)",
         }}
       >
         {numeric}

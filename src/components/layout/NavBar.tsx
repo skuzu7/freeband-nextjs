@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import { pageCopy } from '@/data/content';
 
-const LINKS = [
-  { num: "I",   label: "Manifesto", href: "#manifesto" },
-  { num: "II",  label: "Galeria",   href: "#galeria" },
-  { num: "III", label: "Palcos",    href: "#palcos" },
-  { num: "IV",  label: "Eventos",   href: "#servicos" },
-  { num: "V",   label: "Contato",   href: "#contato" },
-];
+const LINKS = pageCopy.nav.sections;
 
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -17,44 +12,43 @@ export function NavBar() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 32);
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = open ? 'hidden' : '';
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [open]);
 
   return (
     <nav
       className={`fixed inset-x-0 top-0 z-[100] transition-[padding,background,backdrop-filter] duration-500 ease-[var(--ease-stage)] ${
-        scrolled || open
-          ? "bg-bg/85 py-3 backdrop-blur-xl"
-          : "bg-transparent py-6"
+        scrolled || open ? 'bg-bg/85 py-3 backdrop-blur-xl' : 'bg-transparent py-6'
       }`}
       style={{
-        borderBottom: scrolled || open ? "1px solid var(--color-border)" : "1px solid transparent",
+        borderBottom: scrolled || open ? '1px solid var(--color-border)' : '1px solid transparent',
       }}
     >
-      <div className="mx-auto flex w-full max-w-[min(92rem,100%)] items-center justify-between px-[clamp(1.25rem,4vw,3.5rem)]">
+      <div className="max-w-container px-section mx-auto flex w-full items-center justify-between">
         <a
           href="#"
-          className="group relative inline-flex flex-col leading-none"
+          className="group relative flex items-center gap-3 leading-none transition-transform active:scale-95"
           aria-label="Internacional Freeband — início"
         >
-          <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-text-muted transition-colors group-hover:text-brand">
-            Internacional
-          </span>
-          <span className="font-display text-2xl font-semibold -tracking-[0.02em] text-text group-hover:text-brand transition-colors">
-            freeband
-            <span
-              aria-hidden
-              className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-brand align-middle transition-transform duration-500 group-hover:scale-150"
-            />
-          </span>
+          <div className="flex flex-col">
+            <span className="font-mono text-[0.55rem] uppercase tracking-[0.4em] text-text-muted transition-colors group-hover:text-brand">
+              Internacional
+            </span>
+            <span className="font-display text-[1.15rem] font-black italic -tracking-[0.05em] text-wordmark-red transition-colors group-hover:text-brand">
+              Freeband
+              <span className="ml-1 text-[0.55rem] font-bold not-italic tracking-[0.1em] md:tracking-[0.2em] text-wordmark-blue">
+                PRODUÇÕES
+              </span>
+            </span>
+          </div>
         </a>
 
         <div className="hidden items-center gap-10 lg:flex">
@@ -64,9 +58,7 @@ export function NavBar() {
               href={link.href}
               className="group inline-flex items-baseline gap-2 text-sm text-text-muted transition-colors hover:text-text"
             >
-              <span className="font-mono text-[0.65rem] text-brand tabular-nums">
-                {link.num}
-              </span>
+              <span className="font-mono text-[0.65rem] text-brand tabular-nums">{link.num}</span>
               <span className="font-sans tracking-wide">{link.label}</span>
               <span
                 aria-hidden
@@ -76,9 +68,9 @@ export function NavBar() {
           ))}
           <a
             href="#contato"
-            className="inline-flex items-center gap-2 bg-brand px-6 py-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-ink-950 transition-colors hover:bg-brand-hot"
+            className="inline-flex items-center gap-2 bg-brand px-6 py-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-brand-hot"
           >
-            Agendar show
+            {pageCopy.nav.ctaLabel}
             <span aria-hidden>→</span>
           </a>
         </div>
@@ -92,17 +84,17 @@ export function NavBar() {
         >
           <span
             className={`h-[2px] w-7 bg-text transition-transform duration-300 ${
-              open ? "translate-y-2 rotate-45" : ""
+              open ? 'translate-y-2 rotate-45' : ''
             }`}
           />
           <span
             className={`h-[2px] w-7 bg-text transition-opacity duration-300 ${
-              open ? "opacity-0" : ""
+              open ? 'opacity-0' : ''
             }`}
           />
           <span
             className={`h-[2px] w-7 bg-text transition-transform duration-300 ${
-              open ? "-translate-y-2 -rotate-45" : ""
+              open ? '-translate-y-2 -rotate-45' : ''
             }`}
           />
         </button>
@@ -111,9 +103,7 @@ export function NavBar() {
       {/* Mobile overlay */}
       <div
         className={`fixed inset-0 z-[105] bg-bg transition-[clip-path] duration-[600ms] ease-[var(--ease-stage)] lg:hidden ${
-          open
-            ? "[clip-path:circle(150%_at_100%_0)]"
-            : "[clip-path:circle(0%_at_100%_0)]"
+          open ? '[clip-path:circle(150%_at_100%_0)]' : '[clip-path:circle(0%_at_100%_0)]'
         }`}
       >
         <div className="flex h-full flex-col justify-between px-8 pb-12 pt-32">
@@ -125,12 +115,10 @@ export function NavBar() {
                   onClick={() => setOpen(false)}
                   className="group flex items-baseline gap-5 border-b border-border py-5"
                 >
-                  <span className="font-mono text-xs text-brand tabular-nums">
-                    {link.num}
-                  </span>
+                  <span className="font-mono text-xs text-brand tabular-nums">{link.num}</span>
                   <span
                     className="font-display leading-none text-text group-hover:text-brand transition-colors"
-                    style={{ fontSize: "var(--text-4xl)" }}
+                    style={{ fontSize: 'var(--text-4xl)' }}
                   >
                     {link.label}
                   </span>
@@ -143,12 +131,12 @@ export function NavBar() {
             <a
               href="#contato"
               onClick={() => setOpen(false)}
-              className="block bg-brand px-8 py-5 text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-ink-950"
+              className="block bg-brand px-8 py-5 text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-white"
             >
-              Agendar show
+              {pageCopy.nav.ctaLabel}
             </a>
             <p className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">
-              Desde 1969 · Trabiju/SP
+              {pageCopy.nav.brandLine}
             </p>
           </div>
         </div>

@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Freeband — Visual Direction</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #050505;
+        color: #e0e0e0;
+        font-family: 'Inter', sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      .header {
+        padding: 2rem 3rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header h1 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        color: #666;
+      }
+      .header span {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #444;
+      }
+
+      .intro {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 0 3rem;
+        text-align: center;
+      }
+      .intro h2 {
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #999;
+        margin-bottom: 0.75rem;
+      }
+      .intro p {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.7;
+      }
+
+      .concepts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem 3rem 4rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .concept {
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        position: relative;
+      }
+      .concept:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 80px -20px rgba(0, 0, 0, 0.8);
+      }
+      .concept.selected {
+        border-color: #d4af37;
+        box-shadow:
+          0 0 0 1px #d4af37,
+          0 20px 80px -20px rgba(212, 175, 55, 0.3);
+      }
+
+      .concept-mockup {
+        position: relative;
+        height: 520px;
+        overflow: hidden;
+      }
+
+      /* ===================== CONCEPT A: FREQUENCIA ===================== */
+      .concept-a .concept-mockup {
+        background: #0a0a0a;
+      }
+
+      .freq-bg {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 80% 60% at 20% 40%, rgba(237, 27, 36, 0.15), transparent),
+          radial-gradient(ellipse 60% 80% at 80% 60%, rgba(0, 174, 239, 0.12), transparent),
+          radial-gradient(ellipse 50% 50% at 50% 80%, rgba(120, 0, 255, 0.08), transparent);
+      }
+
+      .freq-scanlines {
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.015) 2px,
+          rgba(255, 255, 255, 0.015) 4px
+        );
+        pointer-events: none;
+      }
+
+      .freq-nav {
+        position: absolute;
+        top: 16px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+      }
+      .freq-nav .logo {
+        font-family: 'Inter', sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        font-size: 1.1rem;
+        color: #ed1b24;
+        letter-spacing: -0.05em;
+      }
+      .freq-nav .nav-links {
+        display: flex;
+        gap: 1.2rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: #555;
+      }
+      .freq-nav .nav-links span:hover {
+        color: #ed1b24;
+      }
+
+      .freq-hero-text {
+        position: absolute;
+        bottom: 40px;
+        left: 20px;
+        right: 20px;
+        z-index: 10;
+      }
+      .freq-hero-text .eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5em;
+        color: #ed1b24;
+        margin-bottom: 8px;
+      }
+      .freq-hero-text h2 {
+        font-size: 3.2rem;
+        font-weight: 900;
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        color: #fff;
+        text-shadow: 0 0 80px rgba(237, 27, 36, 0.3);
+      }
+      .freq-hero-text h2 .glitch {
+        position: relative;
+        display: inline-block;
+      }
+      .freq-hero-text h2 .glitch::before {
+        content: attr(data-text);
+        position: absolute;
+        left: 2px;
+        top: 0;
+        color: #00aeef;
+        clip-path: inset(20% 0 50% 0);
+        opacity: 0.7;
+      }
+      .freq-hero-text h2 .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        left: -2px;
+        top: 0;
+        color: #ed1b24;
+        clip-path: inset(50% 0 20% 0);
+        opacity: 0.7;
+      }
+      .freq-hero-text .sub {
+        margin-top: 12px;
+        font-size: 0.75rem;
+        color: #666;
+        max-width: 340px;
+        line-height: 1.6;
+      }
+
+      .freq-photo-strip {
+        position: absolute;
+        right: 10px;
+        top: 60px;
+        bottom: 60px;
+        width: 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 5;
+      }
+      .freq-photo {
+        flex: 1;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .freq-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(1.3) contrast(1.15);
+      }
+      .freq-photo::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(237, 27, 36, 0.2), rgba(0, 174, 239, 0.15));
+        mix-blend-mode: color;
+      }
+
+      .freq-spectrum {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          #ed1b24 0%,
+          #ff6b00 15%,
+          #d4af37 30%,
+          #00ff88 45%,
+          #00aeef 60%,
+          #7b2fff 75%,
+          #ed1b24 100%
+        );
+        opacity: 0.8;
+      }
+
+      /* ===================== CONCEPT B: PROJECAO ===================== */
+      .concept-b .concept-mockup {
+        background: #080808;
+      }
+
+      .proj-grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        pointer-events: none;
+      }
+
+      .proj-nav {
+        position: absolute;
+        top: 16px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+      }
+      .proj-nav .logo {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        color: #888;
+      }
+      .proj-nav .nav-links {
+        display: flex;
+        gap: 1.2rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: #444;
+      }
+
+      .proj-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+
+      .proj-photo-main {
+        width: 280px;
+        height: 200px;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 120px 40px rgba(237, 27, 36, 0.08),
+          0 0 60px 20px rgba(0, 174, 239, 0.06);
+      }
+      .proj-photo-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.85) contrast(1.1);
+      }
+      .proj-photo-main::before {
+        content: '';
+        position: absolute;
+        inset: -20px;
+        background: radial-gradient(ellipse, rgba(237, 27, 36, 0.08), transparent 70%);
+        z-index: -1;
+      }
+
+      .proj-wordmark {
+        margin-top: 24px;
+        font-size: 4rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: -0.06em;
+        line-height: 0.8;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+      }
+
+      .proj-meta {
+        margin-top: 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4em;
+        color: #444;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      .proj-meta .dot {
+        color: #ed1b24;
+      }
+
+      .proj-gallery-hint {
+        position: absolute;
+        bottom: 30px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        gap: 6px;
+        z-index: 5;
+      }
+      .proj-thumb {
+        flex: 1;
+        height: 50px;
+        border-radius: 2px;
+        overflow: hidden;
+        opacity: 0.4;
+        transition: opacity 0.3s;
+        position: relative;
+      }
+      .proj-thumb:hover {
+        opacity: 0.8;
+      }
+      .proj-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0) contrast(1.2);
+      }
+      .proj-thumb::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .proj-line {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+      }
+
+      /* ===================== INFO CARDS ===================== */
+      .concept-info {
+        padding: 1.5rem 1.5rem 2rem;
+        background: #0a0a0a;
+      }
+
+      .concept-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #d4af37;
+        margin-bottom: 0.75rem;
+      }
+      .concept-badge::before {
+        content: '';
+        display: inline-block;
+        width: 24px;
+        height: 1px;
+        background: #d4af37;
+      }
+
+      .concept-info h3 {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: #fff;
+        margin-bottom: 0.5rem;
+      }
+      .concept-info .tagline {
+        font-size: 0.8rem;
+        color: #888;
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+
+      .traits {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .trait {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        padding: 0.4rem 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 2px;
+        color: #777;
+      }
+
+      .concept-desc {
+        font-size: 0.78rem;
+        color: #555;
+        line-height: 1.7;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 1rem;
+      }
+
+      .select-btn {
+        margin-top: 1.25rem;
+        display: block;
+        width: 100%;
+        padding: 0.9rem;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        color: #888;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .select-btn:hover {
+        border-color: #d4af37;
+        color: #d4af37;
+      }
+      .concept.selected .select-btn {
+        background: #d4af37;
+        border-color: #d4af37;
+        color: #0a0a0a;
+      }
+
+      .footer-note {
+        text-align: center;
+        padding: 2rem 3rem 3rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #333;
+      }
+    </style>
+    <script>
+      function toggleSelect(el) {
+        document.querySelectorAll('.concept').forEach((c) => c.classList.remove('selected'));
+        el.classList.add('selected');
+        const choice = el.dataset.choice;
+        if (window.__sendEvent)
+          window.__sendEvent({ type: 'click', choice, text: el.querySelector('h3')?.textContent });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Freeband Redesign</h1>
+      <span>Escolha uma direcao visual</span>
+    </div>
+
+    <div class="intro">
+      <h2>Duas direcoes. Uma identidade.</h2>
+      <p>
+        Analisei os 24 assets da banda e o video. As fotos de palco ja carregam uma estetica surreal
+        natural — luz neon, fumaca, lasers. Cada conceito explora isso de forma diferente. Clique
+        pra selecionar.
+      </p>
+    </div>
+
+    <div class="concepts">
+      <!-- CONCEPT A -->
+      <div class="concept" data-choice="a" onclick="toggleSelect(this)">
+        <div class="concept-mockup concept-a">
+          <div class="freq-bg"></div>
+          <div class="freq-scanlines"></div>
+
+          <div class="freq-nav">
+            <span class="logo">Freeband</span>
+            <div class="nav-links">
+              <span>Manifesto</span>
+              <span>Galeria</span>
+              <span>Palcos</span>
+              <span>Eventos</span>
+              <span>Contato</span>
+            </div>
+          </div>
+
+          <div class="freq-hero-text">
+            <div class="eyebrow">Desde 1969 &mdash; Trabiju/SP</div>
+            <h2>
+              <span class="glitch" data-text="FREE">FREE</span><br />
+              <span class="glitch" data-text="BAND">BAND</span>
+            </h2>
+            <div class="sub">
+              Experiencias musicais que distorcem a realidade. 57 anos de frequencia ininterrupta.
+            </div>
+          </div>
+
+          <div class="freq-photo-strip">
+            <div class="freq-photo">
+              <img src="/images/img-0437.jpeg" alt="" />
+            </div>
+            <div class="freq-photo">
+              <img src="/images/img-0679.jpeg" alt="" />
+            </div>
+            <div class="freq-photo">
+              <img src="/images/img-0867.jpeg" alt="" />
+            </div>
+          </div>
+
+          <div class="freq-spectrum"></div>
+        </div>
+
+        <div class="concept-info">
+          <div class="concept-badge">Conceito A</div>
+          <h3>FREQUENCIA</h3>
+          <div class="tagline">"Chromatic Stage" &mdash; O palco como instalacao digital</div>
+          <div class="traits">
+            <span class="trait">Glitch text</span>
+            <span class="trait">RGB split</span>
+            <span class="trait">Scanlines</span>
+            <span class="trait">Neon spectrum</span>
+            <span class="trait">Scroll distortion</span>
+            <span class="trait">Dark immersive</span>
+          </div>
+          <div class="concept-desc">
+            Fundo 100% escuro. Fotos tratadas com separacao cromatica (canais RGB deslocados no
+            hover). Tipografia gigante com efeito glitch. Barra de espectro colorida como fio
+            condutor entre secoes. Scanlines sutis remetem a tela de video/projecao. Cada scroll e
+            como sintonizar uma nova frequencia. As cores do palco real (vermelho, azul, verde neon,
+            roxo) viram o sistema cromatico do site.
+          </div>
+          <button class="select-btn">Selecionar Frequencia</button>
+        </div>
+      </div>
+
+      <!-- CONCEPT B -->
+      <div class="concept" data-choice="b" onclick="toggleSelect(this)">
+        <div class="concept-mockup concept-b">
+          <div class="proj-grain"></div>
+          <div class="proj-line"></div>
+
+          <div class="proj-nav">
+            <span class="logo">Internacional Freeband</span>
+            <div class="nav-links">
+              <span>Historia</span>
+              <span>Arquivo</span>
+              <span>Shows</span>
+              <span>Proposta</span>
+            </div>
+          </div>
+
+          <div class="proj-center">
+            <div class="proj-photo-main">
+              <img src="/images/festa-55.jpeg" alt="" />
+            </div>
+            <div class="proj-wordmark">freeband</div>
+            <div class="proj-meta">
+              <span>1969</span>
+              <span class="dot">&#9679;</span>
+              <span>Trabiju/SP</span>
+              <span class="dot">&#9679;</span>
+              <span>57 anos</span>
+            </div>
+          </div>
+
+          <div class="proj-gallery-hint">
+            <div class="proj-thumb"><img src="/images/freeband-anos-70.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/img-0437.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/festa-209.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/img-0679.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/img-0690.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/festa-308.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/freeband-anos-90.jpeg" alt="" /></div>
+            <div class="proj-thumb"><img src="/images/img-0867.jpeg" alt="" /></div>
+          </div>
+        </div>
+
+        <div class="concept-info">
+          <div class="concept-badge">Conceito B</div>
+          <h3>PROJECAO</h3>
+          <div class="tagline">
+            "Light Installation" &mdash; Fotos como projecoes de luz no escuro
+          </div>
+          <div class="traits">
+            <span class="trait">Light bloom</span>
+            <span class="trait">Film grain</span>
+            <span class="trait">Outline type</span>
+            <span class="trait">Selective color</span>
+            <span class="trait">Gallery focus</span>
+            <span class="trait">Minimal dark</span>
+          </div>
+          <div class="concept-desc">
+            Mais contido, mais galeria de arte. Fundo escuro mas com momentos de respiro. Fotos
+            exibidas como "projecoes" — glow suave ao redor, como se a luz do palco vazasse pra
+            tela. Wordmark gigante em outline transparente. Galeria em P&B que revela cor no hover.
+            Grain sutil como textura de filme. A elegancia vem da restricao — deixa o drama das
+            fotos falar.
+          </div>
+          <button class="select-btn">Selecionar Projecao</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">Clique no conceito preferido &middot; Responda no terminal</div>
+  </body>
+</html>

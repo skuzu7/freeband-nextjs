@@ -106,8 +106,8 @@ export const curatedGallery: CuratedTile[] = [
   { src: images.reveillomParanapanema, alt: "Réveillon em Paranapanema",            grade: "cool",    span: 6,             aspect: "16/9", parallax: "soft"   },
   { src: images.baileTabatinga,        alt: "Baile em Tabatinga",                   grade: "warm",    span: 5,             aspect: "4/5",  parallax: "none"   },
   { src: images.nauticoAraraquara,     alt: "Clube Náutico de Araraquara",          grade: "warm",    span: 7,             aspect: "16/9", parallax: "soft"   },
-  { src: images.anos70,                alt: "Freeband nos anos 70",                 grade: "vintage", span: 4,             aspect: "4/5",  parallax: "none", crop: "center 40%" },
-  { src: images.anos90,                alt: "Freeband nos anos 90",                 grade: "vintage", span: 4,             aspect: "4/5",  parallax: "soft"   },
-  { src: images.fb2015,                alt: "Freeband em 2015",                     grade: "vintage", span: 4,             aspect: "4/5",  parallax: "none"   },
+  { src: images.anos70,                alt: "Freeband nos anos 70",                 grade: "vintage", span: 4,             aspect: "500/350",  parallax: "none" },
+  { src: images.anos90,                alt: "Freeband nos anos 90",                 grade: "vintage", span: 4,             aspect: "500/350",  parallax: "soft"   },
+  { src: images.fb2015,                alt: "Freeband em 2015",                     grade: "vintage", span: 4,             aspect: "500/350",  parallax: "none"   },
   { src: images.cartazCosmopolitano,   alt: "Cartaz — Cosmopolitano FC",            grade: "warm",    span: 12,            aspect: "21/9", parallax: "strong", crop: "center top" },
 ];
