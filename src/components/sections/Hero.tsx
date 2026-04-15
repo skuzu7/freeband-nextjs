@@ -35,83 +35,61 @@ export function Hero() {
       {/* Scanlines */}
       <div aria-hidden className="scanlines absolute inset-0 z-[5] pointer-events-none" />
 
-      {/* Top meta row */}
-      <div className="px-section relative z-10 mt-[clamp(6rem,12vi,9rem)] flex w-full flex-col gap-4 font-mono text-[0.7rem] uppercase tracking-[0.3em] text-text-muted md:flex-row md:items-center md:justify-between">
-        <span className="flex items-center gap-3">
-          <span aria-hidden className="inline-block h-px w-10 bg-brand" />
-          <span className="text-brand">Desde {bandInfo.founded}</span>
-          <span className="hidden md:inline">· {bandInfo.yearsActive} anos no palco</span>
-        </span>
-        <span className="hidden md:inline text-text-low">
-          {bandInfo.foundedCity} · Jaú · Trabiju · Brasil
-        </span>
+      {/* Bottom left logo */}
+      <div className="absolute bottom-8 left-8 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/20">
+        <span className="font-display text-lg font-bold text-white">N</span>
       </div>
 
-      <div className="max-w-container relative z-10 mx-auto mt-auto flex w-full flex-col gap-8 px-section pb-[clamp(3rem,6vi,6rem)]">
-        <div className="flex flex-col gap-6">
-          <span className="reveal-hero font-mono text-[0.65rem] uppercase tracking-[0.5em] text-brand">
+      {/* Bottom center indicator */}
+      <div className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2">
+        <span className="text-[#C59E57] text-xl">↓</span>
+      </div>
+
+      {/* Center Hero Content */}
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center px-4 pt-16">
+
+        <div className="mb-6 inline-block border border-[#C59E57] px-4 py-1">
+          <span className="font-sans text-xs font-bold tracking-[0.3em] text-[#C59E57] uppercase">
             {copy.eyebrow}
           </span>
-          <h1 className="flex flex-col leading-none">
-            <span className="font-sans text-[clamp(0.7rem,0.65rem+0.4vi,0.9rem)] uppercase tracking-[0.3em] text-brand/80 mb-2">
-              {copy.wordmarkPre}
-            </span>
-            <div className="relative">
-              <span
-                className="glitch-text font-display text-[clamp(3.5rem,10vw,10rem)] font-black italic tracking-tighter text-white"
-                data-text={copy.wordmarkMain}
-                style={{ fontVariationSettings: '"wght" 900, "opsz" 144, "SOFT" 100' }}
-              >
-                {copy.wordmarkMain}
-              </span>
-              <div className="absolute -inset-x-4 -inset-y-2 bg-brand/10 blur-3xl rounded-full mix-blend-overlay pointer-events-none -z-10" />
-            </div>
-            <span className="mt-2 font-sans text-[clamp(0.65rem,1.2vw,1rem)] font-bold tracking-[0.4em] md:tracking-[0.6em] text-wordmark-blue/90 uppercase">
-              {copy.wordmarkSub}
-            </span>
-          </h1>
         </div>
 
-        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
-          <div className="flex flex-col gap-6">
-            <p
-              className="reveal-hero text-text max-w-[48ch] text-pretty font-semibold text-fluid-xl"
-              style={{ lineHeight: 1.2 }}
-            >
-              {bandInfo.tagline}.
-            </p>
-            <p
-              className="reveal-hero text-text-muted max-w-[54ch] text-pretty text-fluid-base"
-              style={{ lineHeight: 1.6 }}
-            >
-              {copy.leadParagraph}
-            </p>
-          </div>
+        <h1 className="flex flex-col items-center leading-[0.9]">
+          <span className="font-display text-[clamp(2.5rem,6vw,5rem)] font-bold text-white">
+            {copy.wordmarkPre}
+          </span>
+          <span className="font-display text-[clamp(3.5rem,8vw,7rem)] font-bold text-[#C59E57]">
+            {copy.wordmarkMain}
+          </span>
+        </h1>
 
-          <Button
-            as="a"
-            variant="primary"
-            magnetic
-            ripple
+        <p className="mt-8 font-sans text-[clamp(0.7rem,1.5vw,0.9rem)] font-medium tracking-[0.4em] text-[#e0e0e0] max-w-2xl text-balance">
+          {copy.leadParagraph}
+        </p>
+
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
             href={contact.whatsappLink}
             target="_blank"
-            rel="noopener"
-            className="self-start md:mt-2 md:shrink-0"
+            rel="noopener noreferrer"
+            className="bg-[#C59E57] px-6 py-3 font-sans text-xs font-bold tracking-widest text-white transition-colors hover:bg-[#b08b47]"
           >
-            {copy.ctaLabel}
-            <span aria-hidden>→</span>
-          </Button>
+            {copy.ctaPrimary}
+          </a>
+          <a
+            href="#servicos"
+            className="border border-[#C59E57] bg-transparent px-6 py-3 font-sans text-xs font-bold tracking-widest text-white transition-colors hover:bg-[#C59E57]/10"
+          >
+            {copy.ctaSecondary}
+          </a>
         </div>
 
-        <div className="mt-2 flex items-center gap-4 border-t border-border pt-6 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-low">
-          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-brand" />
+        <div className="mt-2 flex items-center gap-4 border-t border-white/10 pt-6 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-white/50 w-full max-w-2xl justify-between">
           <span>{copy.statusLabel}</span>
-          <span aria-hidden className="ml-auto hidden text-text-low md:inline">
+          <span aria-hidden className="ml-auto hidden text-white/50 md:inline">
             CNPJ {bandInfo.cnpj}
           </span>
         </div>
-
-        <div className="spectrum-bar w-full" aria-hidden />
       </div>
     </section>
   );

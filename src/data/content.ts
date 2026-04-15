@@ -212,25 +212,25 @@ export const pageCopy = {
   nav: {
     // Shared array: consumed by NavBar (with num) and Footer (label-only).
     sections: [
-      { num: 'I', label: 'Manifesto', href: '#manifesto' },
-      { num: 'II', label: 'Galeria', href: '#galeria' },
-      { num: 'III', label: 'Palcos', href: '#palcos' },
-      { num: 'IV', label: 'Eventos', href: '#servicos' },
-      { num: 'V', label: 'Contato', href: '#contato' },
+      { num: 'I', label: 'SOBRE', href: '#sobre' },
+      { num: 'II', label: 'HISTÓRIA', href: '#historia' },
+      { num: 'III', label: 'GALERIA', href: '#galeria' },
+      { num: 'IV', label: 'SERVIÇOS', href: '#servicos' },
+      { num: 'V', label: 'CONTATO', href: '#contato' },
     ],
-    ctaLabel: 'Agendar show',
+    ctaLabel: 'AGENDAR',
     brandLine: `Desde ${bandInfo.founded} · ${bandInfo.location}`,
   },
 
   hero: {
-    eyebrow: `Legacy of ${bandInfo.founder.split(' ')[0]} ${bandInfo.founder.split(' ').slice(-1)[0]}`,
-    wordmarkPre: 'Internacional',
-    wordmarkMain: 'Freeband',
-    wordmarkSub: 'PRODUÇÕES',
-    leadParagraph:
-      'Réveillon, formatura, casamento, show municipal. Mais de meio século dividindo o mesmo pulso com o Brasil.',
+    eyebrow: `DESDE ${bandInfo.founded}`,
+    wordmarkPre: 'INTERNACIONAL',
+    wordmarkMain: 'FREEBAND',
+    wordmarkSub: '',
+    leadParagraph: `DESDE ${bandInfo.founded} CRIANDO EXPERIÊNCIAS MUSICAIS INESQUECÍVEIS`,
     statusLabel: `Status: Live in ${bandInfo.location.split('/')[0]}`,
-    ctaLabel: 'Agendar show',
+    ctaPrimary: 'AGENDAR SHOW',
+    ctaSecondary: 'VER PORTFÓLIO',
   },
 
   atoI: {

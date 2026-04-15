@@ -17,7 +17,7 @@ export function AtoI_Manifesto() {
   const copy = pageCopy.atoI;
 
   return (
-    <Section id="manifesto" variant="ink-deep" pad="xl" className="overflow-hidden">
+    <Section id="sobre" variant="ink-deep" pad="xl" className="overflow-hidden">
       <Container>
         <Eyebrow number={copy.eyebrowNumber}>{copy.eyebrowLabel}</Eyebrow>
 

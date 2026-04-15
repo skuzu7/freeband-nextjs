@@ -39,39 +39,27 @@ export function NavBar() {
           aria-label="Internacional Freeband — início"
         >
           <div className="flex flex-col">
-            <span className="font-mono text-[0.55rem] uppercase tracking-[0.4em] text-text-muted transition-colors group-hover:text-brand">
-              Internacional
-            </span>
-            <span className="font-display text-[1.15rem] font-black italic -tracking-[0.05em] text-wordmark-red transition-colors group-hover:text-brand">
-              Freeband
-              <span className="ml-1 text-[0.55rem] font-bold not-italic tracking-[0.1em] md:tracking-[0.2em] text-wordmark-blue">
-                PRODUÇÕES
-              </span>
+            <span className="font-display text-xl font-bold tracking-wide text-white transition-colors hover:text-[#C59E57]">
+              Internacional Freeband
             </span>
           </div>
         </a>
 
-        <div className="hidden items-center gap-10 lg:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           {LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="group inline-flex items-baseline gap-2 text-sm text-text-muted transition-colors hover:text-text"
+              className="group text-xs font-bold uppercase tracking-widest text-white transition-colors hover:text-[#C59E57]"
             >
-              <span className="font-mono text-[0.65rem] text-brand tabular-nums">{link.num}</span>
-              <span className="font-sans tracking-wide">{link.label}</span>
-              <span
-                aria-hidden
-                className="block h-px w-0 bg-brand transition-[width] duration-500 ease-[var(--ease-stage)] group-hover:w-4"
-              />
+              {link.label}
             </a>
           ))}
           <a
             href="#contato"
-            className="inline-flex items-center gap-2 bg-brand px-6 py-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-brand-hot"
+            className="inline-flex items-center justify-center bg-[#C59E57] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#b08b47]"
           >
             {pageCopy.nav.ctaLabel}
-            <span aria-hidden>→</span>
           </a>
         </div>
 

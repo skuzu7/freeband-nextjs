@@ -35,7 +35,7 @@ export function AtoII_Galeria() {
   }, [withVT]);
 
   return (
-    <Section id="galeria" variant="ink" pad="xl" className="overflow-hidden">
+    <Section id="historia" variant="ink" pad="xl" className="overflow-hidden">
       <Container>
         <SectionHeadline
           eyebrowNumber={pageCopy.atoII.eyebrowNumber}
