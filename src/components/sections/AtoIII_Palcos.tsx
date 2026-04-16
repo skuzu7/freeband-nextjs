@@ -21,7 +21,7 @@ const numberRow = [
 export function AtoIII_Palcos() {
   return (
     <Section
-      id="palcos"
+      id="galeria"
       variant="ink-raise"
       pad="xl"
       className="border-y border-border overflow-hidden"
