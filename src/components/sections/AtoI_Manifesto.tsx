@@ -4,6 +4,9 @@
 // layout: oversized "57" bleeding left, kinetic manifesto headline, body
 // paragraphs, a single cinematic photo that scrubs B&W → color on scroll,
 // and a vertical mini-timeline of the 5 eras with highlights row at bottom.
+"use client";
+
+import { motion } from 'framer-motion';
 import { release, timeline, pageCopy } from '@/data/content';
 import { images } from '@/data/images';
 import { Container } from '@/components/ui/Container';
@@ -16,17 +19,23 @@ export function AtoI_Manifesto() {
   const paragraphs = release.full.split('\n\n');
   const copy = pageCopy.atoI;
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
+  };
+
   return (
     <Section id="sobre" variant="ink-deep" pad="xl" className="overflow-hidden">
       <Container>
         <Eyebrow number={copy.eyebrowNumber}>{copy.eyebrowLabel}</Eyebrow>
 
-        {/* mt-6 matches the spacing other Atos use below their eyebrow (was
-            mt-[clamp(3rem,6vi,5rem)] — inconsistent with II/III/IV/V). */}
-        <div className="mt-6 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-20">
-          {/* Oversized 1969 — the -ml bleed is scoped inside an
-              overflow-hidden wrapper so it cannot cause horizontal scroll
-              on mobile regardless of viewport width. */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeUp}
+          className="mt-6 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-20"
+        >
           <div className="relative">
             <div className="lg:-ml-[clamp(1rem,4vw,3rem)] flex items-start">
               <NumberScrub value={1969} label={copy.numberScrubLabel} />
@@ -35,44 +44,40 @@ export function AtoI_Manifesto() {
 
           <div className="flex flex-col gap-10">
             <h2
-              className="reveal-lead font-display -tracking-[0.02em] text-balance text-text"
+              className="font-display -tracking-[0.02em] text-balance text-white drop-shadow-md"
               style={{ fontSize: 'var(--text-5xl)', lineHeight: 1.05 }}
             >
               <span className="lg:block">
                 {copy.headlinePrefix}
-                <span className="text-brand">{copy.headlineEmphasis}</span>
+                <span className="text-[#C59E57] mx-2">{copy.headlineEmphasis}</span>
                 {copy.headlineSuffix}
               </span>
             </h2>
 
-              <div
-                className="reveal-mid flex flex-col gap-6 text-text-muted max-w-[62ch]"
-                style={{ fontSize: 'var(--text-base)', lineHeight: 1.7 }}
-              >
-                {paragraphs.map((para, i) => (
-                  <p
-                    key={i}
-                    className="text-pretty text-kinetic-paragraph"
-                    style={{ ['--i' as string]: i } as React.CSSProperties}
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
+            <div
+              className="flex flex-col gap-6 text-gray-300 max-w-[62ch]"
+              style={{ fontSize: 'var(--text-base)', lineHeight: 1.7 }}
+            >
+              {paragraphs.map((para, i) => (
+                <p key={i} className="text-pretty">
+                  {para}
+                </p>
+              ))}
+            </div>
 
             <div className="flex flex-wrap gap-2 pt-2">
               {release.values.map((v) => (
                 <span
                   key={v}
-                  className="inline-flex items-center gap-2 border border-border px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-text-muted"
+                  className="inline-flex items-center gap-2 border border-white/10 bg-white/5 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-gray-400 backdrop-blur-sm transition-colors hover:border-[#C59E57]/50 hover:text-white"
                 >
-                  <span aria-hidden className="inline-block h-1 w-1 rotate-45 bg-brand" />
+                  <span aria-hidden className="inline-block h-1 w-1 rotate-45 bg-[#C59E57]" />
                   {v}
                 </span>
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Photo + vertical era timeline */}
         <div className="mt-[clamp(4rem,8vi,7rem)] grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-16">

@@ -5,6 +5,7 @@ import { AtoI_Manifesto } from "@/components/sections/AtoI_Manifesto";
 import { AtoII_Galeria } from "@/components/sections/AtoII_Galeria";
 import { AtoIII_Palcos } from "@/components/sections/AtoIII_Palcos";
 import { AtoIV_Eventos } from "@/components/sections/AtoIV_Eventos";
+import { Ato_Servicos } from "@/components/sections/Ato_Servicos";
 import { AtoV_Contato } from "@/components/sections/AtoV_Contato";
 
 export default function HomePage() {
@@ -14,6 +15,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <AtoI_Manifesto />
+        <Ato_Servicos />
         <AtoII_Galeria />
         <AtoIII_Palcos />
         <AtoIV_Eventos />

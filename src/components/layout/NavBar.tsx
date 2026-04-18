@@ -56,6 +56,12 @@ export function NavBar() {
             </a>
           ))}
           <a
+            href="#servicos"
+            className="group text-xs font-bold uppercase tracking-widest text-[#C59E57] transition-colors hover:text-white"
+          >
+            Serviços
+          </a>
+          <a
             href="#contato"
             className="inline-flex items-center justify-center bg-[#C59E57] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#b08b47]"
           >

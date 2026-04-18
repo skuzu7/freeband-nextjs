@@ -3,6 +3,9 @@
 // Cinematic closing: oversized tagline + NumberScrub phone number, aurora
 // WhatsApp button with magnetic hover + ripple bloom on click, Instagram +
 // email pills, CNPJ + website eyebrow.
+"use client";
+
+import { motion } from 'framer-motion';
 import { contact, bandInfo, pageCopy } from '@/data/content';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
@@ -46,79 +49,80 @@ export function AtoV_Contato() {
       />
 
       <Container>
-        <Eyebrow number={pageCopy.atoV.eyebrowNumber} tone="mono">
-          {pageCopy.atoV.eyebrowLabel}
-        </Eyebrow>
-
-        <h2
-          className="reveal-lead mt-8 font-display -tracking-[0.02em] text-balance max-w-4xl"
-          style={{ fontSize: 'var(--text-6xl)', lineHeight: 0.9 }}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
-          {pageCopy.atoV.headlinePrefix}
-          <span className="serif-italic text-brand">{pageCopy.atoV.headlineEmphasis}</span>
-          {pageCopy.atoV.headlineSuffix}
-        </h2>
+          <Eyebrow number={pageCopy.atoV.eyebrowNumber} tone="mono">
+            {pageCopy.atoV.eyebrowLabel}
+          </Eyebrow>
 
-        <p
-          className="reveal-mid mt-8 max-w-[58ch] text-text-muted"
-          style={{ fontSize: 'var(--text-lg)', lineHeight: 1.55 }}
-        >
-          {pageCopy.atoV.lead}
-        </p>
-
-        {/* Huge phone number — static NumberScrub variant="phone" */}
-        <div className="reveal-mid mt-[clamp(3rem,5vi,5rem)]">
-          <NumberScrub
-            value={contact.phone}
-            variant="phone"
-            label={pageCopy.atoV.phoneScrubLabel}
-          />
-        </div>
-
-        {/* Aurora CTA + contact pills — flex-wrap was redundant next to
-            flex-col/md:flex-row; removed for clearer intent. */}
-        <div className="reveal-tail mt-10 flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
-          <Button
-            as="a"
-            variant="aurora"
-            magnetic
-            ripple
-            href={contact.whatsappLink}
-            target="_blank"
-            rel="noopener"
+          <h2
+            className="mt-8 font-display -tracking-[0.02em] text-balance max-w-4xl text-white"
+            style={{ fontSize: 'var(--text-6xl)', lineHeight: 0.9 }}
           >
-            <WhatsAppIcon />
-            {pageCopy.atoV.whatsappCta}
-            <span aria-hidden>→</span>
-          </Button>
+            {pageCopy.atoV.headlinePrefix}
+            <span className="serif-italic text-[#C59E57] mx-2">{pageCopy.atoV.headlineEmphasis}</span>
+            {pageCopy.atoV.headlineSuffix}
+          </h2>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <a
-              href={contact.instagramUrl}
-              target="_blank"
-              rel="noopener"
-              className="inline-flex items-center gap-3 border border-border px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-text transition-colors hover:border-brand hover:text-brand"
-            >
-              <InstagramIcon />
-              {contact.instagram}
-            </a>
-            <a
-              href={`mailto:${contact.email}`}
-              className="inline-flex items-center gap-3 border border-border px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-text transition-colors hover:border-brand hover:text-brand"
-            >
-              {contact.email}
-            </a>
+          <p
+            className="mt-8 max-w-[58ch] text-gray-300"
+            style={{ fontSize: 'var(--text-lg)', lineHeight: 1.55 }}
+          >
+            {pageCopy.atoV.lead}
+          </p>
+
+          <div className="mt-[clamp(3rem,5vi,5rem)]">
+            <NumberScrub
+              value={contact.phone}
+              variant="phone"
+              label={pageCopy.atoV.phoneScrubLabel}
+            />
           </div>
-        </div>
 
-        <div className="mt-[clamp(4rem,6vi,5rem)] flex flex-wrap items-center gap-6 border-t border-border pt-8 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-text-muted">
-          <span className="flex items-center gap-3">
-            <span aria-hidden className="inline-block h-px w-8 bg-brand" />
-            {bandInfo.legalName}
-          </span>
-          <span aria-hidden>·</span>
-          <span className="normal-case tracking-[0.1em]">{contact.website}</span>
-        </div>
+          <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
+            <a
+              href={contact.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-md bg-gradient-to-r from-[#C59E57] to-[#8b6f3d] px-8 py-4 font-sans text-sm font-bold tracking-widest text-white shadow-[0_0_30px_rgba(197,158,87,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(197,158,87,0.5)]"
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent,rgba(255,255,255,0.2),transparent)] -skew-x-12 -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
+              <WhatsAppIcon />
+              {pageCopy.atoV.whatsappCta}
+            </a>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href={contact.instagramUrl}
+                target="_blank"
+                rel="noopener"
+                className="inline-flex items-center gap-3 border border-white/20 bg-white/5 px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-white backdrop-blur-sm transition-all hover:border-[#C59E57] hover:text-[#C59E57] hover:bg-white/10"
+              >
+                <InstagramIcon />
+                {contact.instagram}
+              </a>
+              <a
+                href={`mailto:${contact.email}`}
+                className="inline-flex items-center gap-3 border border-white/20 bg-white/5 px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-white backdrop-blur-sm transition-all hover:border-[#C59E57] hover:text-[#C59E57] hover:bg-white/10"
+              >
+                {contact.email}
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-[clamp(4rem,6vi,5rem)] flex flex-wrap items-center gap-6 border-t border-white/10 pt-8 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-gray-500">
+            <span className="flex items-center gap-3">
+              <span aria-hidden className="inline-block h-px w-8 bg-[#C59E57]" />
+              {bandInfo.legalName}
+            </span>
+            <span aria-hidden>·</span>
+            <span className="normal-case tracking-[0.1em]">{contact.website}</span>
+          </div>
+        </motion.div>
       </Container>
     </Section>
   );
