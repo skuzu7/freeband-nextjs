@@ -1,11 +1,18 @@
 @import 'tailwindcss';
 
 /* =========================================================================
-   FREEBAND — design system "PALCO"
-   Gold + ink editorial-kinetic identity. Gold is the single brand accent
-   (site and PDFs); the historical red/blue wordmark colors survive only on
-   the /admin login screen; stage beams echo the live-show lighting rig;
-   paper theme scopes the orcamento proposal editor.
+   FREEBAND — design system "ARQUIVO"
+
+   The page is built out of the band's own archive, which holds three
+   genuinely different kinds of picture and treats each one differently:
+
+     live    — stage photography, shot under saturated light. Runs in FULL
+               COLOUR; that colour is the sales argument.
+     poster  — real event flyers. Printed artefacts, never filtered.
+     vintage — pre-digital band shots, already faded; graded warm.
+
+   Gold stays the single typographic accent (the PDFs consume it too); the
+   colour on the page comes from the photographs, not from a token.
    ========================================================================= */
 
 @theme {
@@ -18,8 +25,8 @@
   --color-void-900: oklch(10% 0.02 270);
   --color-void-800: oklch(14% 0.02 265);
 
-  /* Gold — the brand accent. --color-brand aliases it so every PALCO
-     component (focus ring, ::selection, eyebrows, marquee) follows. */
+  /* Gold — the brand accent. --color-brand aliases it so every component
+     (focus ring, ::selection, eyebrows, marquee) follows. */
   --color-gold: #c59e57;
   --color-gold-light: #d8b975;
   --color-gold-deep: #8b6f3d;
@@ -44,9 +51,8 @@
   --color-text: oklch(96% 0.005 260);
   --color-text-muted: oklch(68% 0.01 260);
   /* 59%, not 48%: at 48% this lands on 3.2:1 against --color-bg, and it
-     carries real body copy (era descriptions, highlight labels), not just
-     decoration. 59% clears 4.5:1 against the *lightest* surface it sits on
-     (--color-bg-high, the ink-deep sections) and still reads below -muted. */
+     carries real body copy, not just decoration. 59% clears 4.5:1 against
+     the lightest surface it sits on (--color-bg-high). */
   --color-text-low: oklch(59% 0.01 260);
 
   /* ---------------- Fonts ----------------
@@ -76,8 +82,7 @@
   --dur-400: 400ms;
 
   /* ---------------- Layout ----------------
-     Container width + inline padding used by NavBar, Footer, Hero,
-     Section and masonry — one knob, four consumers. */
+     Container width + inline padding — one knob, four consumers. */
   --container-max: min(92rem, 100%);
   --section-inline-pad: clamp(1.25rem, 4vw, 3.5rem);
 
@@ -98,25 +103,6 @@
       transform: translate3d(0, 0, 0);
     }
   }
-  @keyframes beam-drift {
-    0%,
-    100% {
-      transform: translate3d(-8%, 0, 0) rotate(-8deg);
-      opacity: 0.55;
-    }
-    50% {
-      transform: translate3d(6%, 0, 0) rotate(-8deg);
-      opacity: 0.85;
-    }
-  }
-  @keyframes aurora {
-    0% {
-      --aurora-angle: 0deg;
-    }
-    100% {
-      --aurora-angle: 360deg;
-    }
-  }
   @keyframes reveal-in {
     from {
       opacity: 0;
@@ -127,42 +113,6 @@
       transform: translate3d(0, 0, 0);
     }
   }
-  @keyframes parallax-drift {
-    from {
-      --parallax-y: -24px;
-    }
-    to {
-      --parallax-y: 24px;
-    }
-  }
-  @keyframes grade-scrub {
-    from {
-      --grade-sat: 0;
-    }
-    to {
-      --grade-sat: 1;
-    }
-  }
-}
-
-/* =========================================================================
-   Typed custom properties — required for animating font-variation-settings,
-   gradient angles, counters and transform offsets via @property.
-   ========================================================================= */
-@property --aurora-angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
-@property --parallax-y {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-@property --grade-sat {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
 }
 
 /* =========================================================================
@@ -188,9 +138,7 @@ body {
   color-scheme: dark;
 }
 
-/* =========================================================================
-   Organic Textures — grain, scanlines, and noise for a premium analog feel.
-   ========================================================================= */
+/* Film grain over the whole page — the only global texture left. */
 .grain {
   position: fixed;
   inset: -150%;
@@ -205,38 +153,28 @@ body {
 }
 
 @keyframes grain-shift {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
-}
-
-/* Layered so Tailwind utilities (e.g. `absolute` on the Hero overlay) win
-   over the default positioning below. Unlayered CSS beats every @layer. */
-@layer components {
-  .scanlines {
-    position: relative;
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-15%, 5%);
+  }
+  40% {
+    transform: translate(-5%, 25%);
+  }
+  60% {
+    transform: translate(15%, 0%);
+  }
+  80% {
+    transform: translate(3%, 35%);
   }
 }
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 0, 0, 0.05) 51%,
-    transparent 51%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-  z-index: 10;
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
 }
 
 ::selection {
@@ -245,8 +183,7 @@ body {
 }
 
 /* Layout utilities — single source of truth for container width + inline
-   padding. Replaces duplicated max-w-[min(92rem,100%)] and
-   px-[clamp(1.25rem,4vw,3.5rem)] literals across NavBar / Footer / Hero. */
+   padding. Replaces duplicated max-w/px literals across the layout shell. */
 .max-w-container {
   max-width: var(--container-max);
 }
@@ -254,8 +191,7 @@ body {
   padding-inline: var(--section-inline-pad);
 }
 
-/* Gold glow shadows — registered as utilities so hover:/focus: variants
-   work. Replaces hardcoded rgba(197,158,87,…) box-shadows. */
+/* Gold glow shadows — registered as utilities so hover:/focus: variants work. */
 @utility glow-gold-soft {
   box-shadow: 0 0 20px color-mix(in oklab, var(--color-gold), transparent 85%);
 }
@@ -300,15 +236,12 @@ p {
 }
 
 /* =========================================================================
-   Reveal variants — CSS-only, scroll-driven. Four thresholds so different
-   contexts (hero paragraphs, section titles, body copy, closing CTAs) each
-   get the right animation-range. Stagger children via inline `--i: 1..n`.
+   Reveal — CSS-only, scroll-driven. Two thresholds: one for the section
+   headline, one for the content beneath it. Stagger siblings via `--i`.
    Fallback: visible immediately, no animation.
    ========================================================================= */
-.reveal-hero,
 .reveal-lead,
-.reveal-mid,
-.reveal-tail {
+.reveal-mid {
   opacity: 1;
   transform: none;
 }
@@ -321,143 +254,106 @@ p {
       animation-range: entry 6% entry 45%;
       animation-delay: calc(var(--i, 0) * 60ms);
     }
-    .reveal-hero {
-      animation: reveal-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 25%;
-      animation-delay: calc(var(--i, 0) * 50ms);
-    }
     .reveal-mid {
       animation: reveal-in linear both;
       animation-timeline: view();
       animation-range: entry 18% cover 30%;
       animation-delay: calc(var(--i, 0) * 70ms);
     }
-    .reveal-tail {
-      animation: reveal-in linear both;
-      animation-timeline: view();
-      animation-range: cover 20% cover 55%;
-      animation-delay: calc(var(--i, 0) * 80ms);
-    }
   }
 }
 
 /* =========================================================================
-   Stage beams — large colored rotated gradients that drift behind hero.
+   ARQUIVO — the three picture registers.
    ========================================================================= */
-.stage-beams {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: screen;
-}
-.stage-beams::before,
-.stage-beams::after {
-  content: '';
-  position: absolute;
-  inset: -20% -40%;
-  background-image: linear-gradient(
-    78deg,
-    transparent 38%,
-    oklch(68% 0.28 340 / 0.35) 46%,
-    transparent 54%,
-    oklch(62% 0.24 20 / 0.42) 60%,
-    transparent 66%,
-    oklch(82% 0.16 195 / 0.32) 72%,
-    transparent 80%
-  );
-  filter: blur(40px);
-  animation: beam-drift 18s var(--ease-stage) infinite;
-  transform-origin: center;
-}
-.stage-beams::after {
-  animation-duration: 26s;
-  animation-direction: reverse;
-  opacity: 0.75;
+
+/* Stage photography. Contrast lifted a touch; saturation left alone, because
+   the magenta/cyan/yellow of the lighting rig is the argument. */
+.grade-live {
+  filter: contrast(1.06) saturate(1.04);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .stage-beams::before,
-  .stage-beams::after {
-    animation: none;
-  }
+/* Event flyers. Deliberately a no-op — they are printed artefacts, and
+   filtering them just makes them look like damaged JPEGs. */
+.grade-poster {
+  filter: none;
 }
 
-
-/* =========================================================================
-   Horizontal scroll snap (used by Historia + Servicos)
-   ========================================================================= */
-/* Layered so per-breakpoint utilities on the element (e.g. lg:gap-8) can
-   override the defaults below. */
-@layer components {
-  .h-snap {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: min(82vw, 640px);
-    gap: clamp(1.5rem, 3vw, 3rem);
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: clamp(1rem, 6vw, 5rem);
-    scrollbar-width: none;
-  }
-}
-.h-snap::-webkit-scrollbar {
-  display: none;
-}
-.h-snap > * {
-  scroll-snap-align: start;
+/* Pre-digital band shots. */
+.grade-vintage {
+  filter: sepia(0.18) saturate(0.7) contrast(1.15) hue-rotate(-4deg) brightness(0.92);
 }
 
-/* Static-lg variant: when the content fits on wide screens (e.g. 3 service
-   cards at lg), stop behaving like a scroll runway and become a clean
-   3-col grid. Mobile / tablet still get the snap experience. */
-@media (min-width: 1024px) {
-  .h-snap[data-static-lg] {
-    grid-auto-flow: row;
-    grid-auto-columns: initial;
-    grid-template-columns: repeat(var(--static-lg-cols, 3), minmax(0, 1fr));
-    overflow-x: visible;
-    scroll-snap-type: none;
-  }
+/* Scrim behind type set over a photograph.
+   Two layers, because one is not enough: the vertical pass seats the section
+   on the page background, and the horizontal pass guarantees a dark ground
+   under the type column whatever the picture happens to be doing there. Stage
+   photography has bright blown highlights in unpredictable places — the hero
+   shot is brightest exactly where the eyebrow sits. */
+.photo-scrim {
+  background-image:
+    linear-gradient(
+      to right,
+      var(--color-bg) 0%,
+      color-mix(in oklab, var(--color-bg), transparent 22%) 34%,
+      color-mix(in oklab, var(--color-bg), transparent 62%) 58%,
+      transparent 78%
+    ),
+    linear-gradient(
+      to top,
+      var(--color-bg) 0%,
+      color-mix(in oklab, var(--color-bg), transparent 35%) 30%,
+      color-mix(in oklab, var(--color-bg), transparent 78%) 62%,
+      transparent 100%
+    );
 }
 
-/* =========================================================================
-   Aurora WhatsApp pill
-   ========================================================================= */
-.aurora {
+/* Poster wall — a strict grid holding very loud artwork. The posters supply
+   the energy; restraint is the container's job. */
+.poster-wall {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+/* `outline` rather than `border` so the rule sits outside the artwork and
+   never eats a pixel of it. */
+.poster-frame {
   position: relative;
-  isolation: isolate;
-  background: linear-gradient(90deg, oklch(68% 0.2 150), oklch(72% 0.18 170));
-  color: var(--color-void-950);
   overflow: hidden;
+  background: var(--color-bg-high);
+  outline: 1px solid var(--color-border);
+  outline-offset: -1px;
+  transition:
+    outline-color var(--dur-400) var(--ease-stage),
+    transform var(--dur-400) var(--ease-stage);
 }
-.aurora::before {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background: conic-gradient(
-    from var(--aurora-angle),
-    oklch(72% 0.19 155) 0deg,
-    oklch(82% 0.16 195) 70deg,
-    oklch(62% 0.24 20) 140deg,
-    oklch(68% 0.28 340) 200deg,
-    oklch(82% 0.14 75) 260deg,
-    oklch(72% 0.19 155) 360deg
-  );
-  filter: blur(24px) saturate(1.2);
-  opacity: 0.55;
-  z-index: -1;
-  animation: aurora 10s linear infinite;
+.poster-card:hover .poster-frame,
+.poster-card:focus-within .poster-frame {
+  outline-color: var(--color-brand);
+  transform: translate3d(0, -4px, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .poster-frame,
+  .poster-card:hover .poster-frame,
+  .poster-card:focus-within .poster-frame {
+    transform: none;
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .aurora::before {
-    animation: none;
-  }
+/* Section top gradient divider */
+.section-glow-top {
+  position: relative;
+}
+.section-glow-top::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-brand), transparent);
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 /* Mesh background — subtle gold radial washes for <Section variant="mesh"> */
@@ -474,21 +370,6 @@ p {
       color-mix(in oklab, var(--color-gold), transparent 93%),
       transparent 65%
     );
-}
-
-/* Section top gradient divider */
-.section-glow-top {
-  position: relative;
-}
-.section-glow-top::before {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-brand), transparent);
-  opacity: 0.2;
-  pointer-events: none;
 }
 
 /* =========================================================================
@@ -509,126 +390,8 @@ p {
 }
 
 /* =========================================================================
-   Cinematic photo grading — scene-aware filter chains used by <CinematicImage>.
-   ========================================================================= */
-.grade-vintage {
-  filter: sepia(0.18) saturate(0.7) contrast(1.15) hue-rotate(-4deg) brightness(0.92);
-}
-.grade-stage {
-  filter: saturate(1.15) contrast(1.12) brightness(0.95);
-}
-.grade-warm {
-  filter: saturate(0.9) contrast(1.05) hue-rotate(3deg) brightness(1.02);
-}
-.grade-cool {
-  filter: saturate(0.85) contrast(1.08) hue-rotate(-6deg);
-}
-.grade-neon {
-  filter: saturate(1.35) contrast(1.2) brightness(1.02);
-}
-.grade-cinema {
-  filter: saturate(0.85) contrast(1.08) brightness(0.82);
-}
-.grade-mono {
-  filter: saturate(0) contrast(1.1) brightness(0.95);
-}
-
-/* grade-scrub — animates from B&W to saturated as the element enters view */
-.grade-scrub {
-  filter: saturate(var(--grade-sat)) contrast(calc(1.15 - (var(--grade-sat) * 0.1)));
-}
-
-.chromatic-hover {
-  transition: filter var(--dur-400) var(--ease-stage);
-}
-.chromatic-hover:hover {
-  filter: drop-shadow(2px 0 0 rgba(255, 0, 0, 0.4)) 
-          drop-shadow(-2px 0 0 rgba(0, 255, 255, 0.4)) 
-          saturate(1.2);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .grade-scrub {
-      animation: grade-scrub linear both;
-      animation-timeline: view();
-      animation-range: entry 20% cover 40%;
-    }
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .grade-scrub {
-    --grade-sat: 1;
-  }
-}
-
-/* =========================================================================
-   Parallax — scroll-driven translate used by CinematicImage parallax="soft|strong".
-   Capped at ±24px to avoid snap-container jank on Safari iOS. Both
-   intensities share one rule today; keep the two class names so the
-   CinematicImage API stays stable.
-   ========================================================================= */
-.parallax-soft,
-.parallax-strong {
-  transform: translate3d(0, var(--parallax-y), 0);
-  overflow-anchor: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .parallax-soft,
-    .parallax-strong {
-      animation: parallax-drift linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-  }
-}
-
-/* =========================================================================
-   Masonry-12 — intentional asymmetric grid for Ato II gallery.
-   12-col grid with dense auto-flow; span classes applied per tile.
-   ========================================================================= */
-.masonry-12 {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-auto-rows: auto;
-  grid-auto-flow: dense;
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  padding-inline: var(--section-inline-pad);
-}
-.masonry-12 > * {
-  grid-column: span 12; /* mobile: full width */
-  overflow-anchor: none;
-}
-@media (min-width: 768px) {
-  .masonry-12 > [data-span='4'] {
-    grid-column: span 4;
-  }
-  .masonry-12 > [data-span='5'] {
-    grid-column: span 5;
-  }
-  .masonry-12 > [data-span='6'] {
-    grid-column: span 6;
-  }
-  .masonry-12 > [data-span='7'] {
-    grid-column: span 7;
-  }
-  .masonry-12 > [data-span='8'] {
-    grid-column: span 8;
-  }
-  .masonry-12 > [data-span='12'] {
-    grid-column: span 12;
-  }
-  .masonry-12 > [data-row='2'] {
-    grid-row: span 2;
-  }
-}
-
-/* =========================================================================
-   Marquee fade masks — replaces inline gradient DIVs in Artistas/Parceiros.
-   Fade color defaults to the page bg; sections on a raised background set
-   --fade-color (e.g. [--fade-color:var(--color-bg-raise)]) so the edges
-   blend into the actual surface behind the marquee.
+   Marquee — fade masks and the running track. Sections on a raised surface
+   set --fade-color so the edges blend into the actual background behind it.
    ========================================================================= */
 .marquee-fade {
   position: relative;
@@ -684,8 +447,6 @@ p {
     display: none !important;
   }
   .grain,
-  .scanlines::after,
-  .stage-beams,
   .section-glow-top::before {
     display: none !important;
   }

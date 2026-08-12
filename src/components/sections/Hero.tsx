@@ -1,140 +1,101 @@
 // src/components/sections/Hero.tsx
-"use client";
-
-import { motion } from 'framer-motion';
-import { contact, pageCopy } from '@/data/content';
-import { StageBeams } from '@/components/ui/StageBeams';
-import { WhatsAppCta } from '@/components/ui/WhatsAppCta';
+// Full-bleed stage photograph carrying the fold, in colour.
+//
+// The previous hero buried its photo at 20% opacity behind a stack of drifting
+// gradients and a scanline overlay, then wrote "A Experiência Definitiva" over
+// it — a fold that could have belonged to any events company. Here the picture
+// is the fold, and the type says which band this is, since when, and what it
+// actually plays.
 import Image from 'next/image';
+import { contact, pageCopy } from '@/data/content';
+import { images } from '@/data/images';
+import { WhatsAppCta } from '@/components/ui/WhatsAppCta';
 
 export function Hero() {
   const copy = pageCopy.hero;
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } },
-  };
 
   return (
-    <section
-      id="hero"
-      className="relative isolate flex min-h-[100svh] w-full flex-col overflow-hidden bg-void-950"
-    >
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 -z-30 h-full w-full bg-black">
-        {/* Decorative texture (20% opacity behind the headline) — empty alt,
-            no preload: the real LCP is the <h1>. */}
+    <section id="hero" className="relative isolate flex min-h-[100svh] flex-col">
+      {/* The photograph. festa-308 is the highest-resolution frame in the
+          archive (2560px) and the only one that survives a full-bleed crop. */}
+      <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/banda-freeband.jpg"
-          alt=""
+          src={images.festa308}
+          alt="Vocalista da Internacional Freeband de braços erguidos diante do painel de LED durante um show"
           fill
+          priority
           sizes="100vw"
-          loading="eager"
-          quality={75}
-          className="object-cover opacity-20 scale-105"
+          quality={90}
+          className="grade-live object-cover"
+          style={{ objectPosition: 'center 38%' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/80 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--color-gold),transparent_90%)_0%,transparent_70%)]" />
+        <div aria-hidden className="photo-scrim absolute inset-0" />
       </div>
 
-      {/* Stage beams — activated! */}
-      <StageBeams />
+      <div className="max-w-container px-section mx-auto flex w-full flex-1 flex-col justify-end pb-[clamp(3rem,7vi,6rem)] pt-32">
+        <p className="font-mono text-[0.68rem] uppercase tracking-[0.3em] text-brand">
+          {copy.badge}
+        </p>
 
-      {/* Modern Vignette & Scanlines */}
-      <div aria-hidden className="absolute inset-0 z-[5] pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]" />
-      <div aria-hidden className="scanlines absolute inset-0 z-[5] pointer-events-none mix-blend-overlay opacity-30" />
-
-      {/* Top Left Branding (Logo) */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 1 }}
-        // No brightness/contrast filter: the asset is now white-on-transparent.
-        // It used to ship as an opaque white plate, and brightness(2) was what
-        // blew that plate out — which is why a white rectangle sat on the hero.
-        className="absolute top-24 left-4 sm:left-12 z-20 w-24 sm:w-32"
-      >
-        <Image
-          src="/images/dj-buru-logo.webp"
-          alt="DJ Buru"
-          width={150}
-          height={119}
-          className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-        />
-      </motion.div>
-
-      {/* Center Hero Content */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-4 pt-20"
-      >
-        <motion.div variants={itemVariants} className="mb-8 inline-flex items-center gap-3 border border-white/20 bg-black/40 backdrop-blur-md px-5 py-2 rounded-full glow-gold-soft">
-          <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
-          <span className="font-sans text-xs font-bold tracking-[0.25em] text-gold uppercase">
-            {copy.badge}
-          </span>
-          <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
-        </motion.div>
-
-        <motion.h1 variants={itemVariants} className="flex flex-col items-center leading-[0.85]">
-          <span className="font-display text-[clamp(3rem,8vw,6rem)] font-bold text-white drop-shadow-2xl mix-blend-screen">
-            {copy.wordmarkMain}
-          </span>
-          <span className="font-display text-[clamp(1.5rem,4vw,3rem)] font-light tracking-[0.2em] text-gold mt-2">
+        <h1 className="mt-6 flex flex-col leading-[0.82]">
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.42em] text-text-muted">
             {copy.wordmarkSub}
           </span>
-        </motion.h1>
+          <span
+            className="font-display font-semibold -tracking-[0.03em] text-text"
+            style={{ fontSize: 'var(--text-6xl)' }}
+          >
+            {copy.wordmarkMain}
+          </span>
+        </h1>
 
-        <motion.p variants={itemVariants} className="mt-8 font-sans text-[clamp(0.9rem,1.5vw,1.1rem)] font-medium tracking-wide text-text-muted max-w-2xl text-balance leading-relaxed drop-shadow-md">
+        <p
+          className="mt-6 font-display italic text-brand"
+          style={{ fontSize: 'var(--text-xl)' }}
+        >
+          {copy.kicker}
+        </p>
+
+        <p
+          className="mt-6 max-w-[52ch] text-text-muted text-pretty"
+          style={{ fontSize: 'var(--text-base)', lineHeight: 1.65 }}
+        >
           {copy.leadParagraph}
-        </motion.p>
+        </p>
 
-        <motion.div variants={itemVariants} className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row w-full sm:w-auto">
-          <WhatsAppCta href={contact.whatsappLink} className="w-full sm:w-auto">
-            {copy.ctaPrimary}
-            <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </WhatsAppCta>
-
+        <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+          <WhatsAppCta href={contact.whatsappLink}>{copy.ctaPrimary}</WhatsAppCta>
           <a
-            href="#pacotes"
-            className="group px-8 py-4 font-sans text-sm font-bold tracking-widest text-white border border-white/30 rounded-md backdrop-blur-sm transition-all hover:bg-white/10 w-full sm:w-auto"
+            href="#arquivo"
+            className="inline-flex min-h-11 items-center justify-center border border-border-strong px-8 py-4 font-sans text-sm font-bold tracking-widest text-text transition-colors hover:border-brand hover:text-brand"
           >
             {copy.ctaSecondary}
           </a>
-        </motion.div>
+        </div>
+      </div>
 
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">{copy.scrollLabel}</span>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="h-10 w-6 rounded-full border border-white/20 flex justify-center p-1"
-        >
-          <div className="h-2 w-1.5 bg-gold rounded-full" />
-        </motion.div>
-      </motion.div>
+      {/* Credential strip — the numbers a buyer weighs, before any prose. */}
+      <div className="border-t border-border bg-bg/80 backdrop-blur-sm">
+        <dl className="max-w-container px-section mx-auto grid w-full grid-cols-2 gap-x-8 gap-y-6 py-8 sm:grid-cols-4">
+          {copy.proof.map((item) => (
+            <div key={item.label} className="flex flex-col gap-1">
+              <dt className="sr-only">{item.label}</dt>
+              <dd
+                className="font-display font-semibold -tracking-[0.03em] text-text"
+                style={{ fontSize: 'var(--text-3xl)', lineHeight: 1 }}
+              >
+                {item.value}
+              </dd>
+              <span
+                aria-hidden
+                className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted"
+              >
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </dl>
+      </div>
     </section>
   );
 }

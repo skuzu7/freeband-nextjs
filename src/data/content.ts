@@ -245,94 +245,94 @@ export const pageCopy = {
 
   nav: {
     // Shared array: consumed by NavBar (with num) and Footer (label-only).
+    // Every entry points at a section whose own headline uses the same word,
+    // and #pacotes is in here now — it is what a buyer actually comes for.
     sections: [
-      { num: 'I', label: 'SOBRE', href: '#sobre' },
-      { num: 'II', label: 'GALERIA', href: '#galeria' },
-      { num: 'III', label: 'PALCOS', href: '#palcos' },
-      { num: 'IV', label: 'SERVIÇOS', href: '#servicos' },
-      { num: 'V', label: 'CONTATO', href: '#contato' },
+      { num: '01', label: 'PALCO', href: '#palco' },
+      { num: '02', label: 'ARQUIVO', href: '#arquivo' },
+      { num: '03', label: 'HISTÓRIA', href: '#historia' },
+      { num: '04', label: 'PACOTES', href: '#pacotes' },
+      { num: '05', label: 'CONTATO', href: '#contato' },
     ],
-    ctaLabel: 'AGENDAR',
+    ctaLabel: 'ORÇAMENTO',
     brandLine: `Desde ${bandInfo.founded} · ${bandInfo.location}`,
   },
 
+  // The old hero said "A Experiência Definitiva" and "entretenimento premium",
+  // which describes no particular business. This one says what the band is,
+  // since when, and where it plays — all of it backed by the poster archive
+  // further down the page.
   hero: {
-    badge: 'A Experiência Definitiva',
+    badge: `Banda de baile e show · desde ${bandInfo.founded}`,
     wordmarkMain: 'FREEBAND',
-    wordmarkSub: '& DJ BURU',
+    wordmarkSub: 'INTERNACIONAL',
+    kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
     leadParagraph:
-      'Transforme seu evento em um espetáculo inesquecível. Tecnologia de ponta, repertório explosivo e uma performance que desafia os limites do entretenimento premium.',
-    ctaPrimary: 'SOLICITAR ORÇAMENTO',
-    ctaSecondary: 'VER PACOTES',
-    scrollLabel: 'Scroll',
+      'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
+    ctaPrimary: 'Pedir orçamento',
+    ctaSecondary: 'Ver o arquivo',
+    scrollLabel: 'Role',
+    // Credential strip directly under the fold — the numbers a buyer weighs.
+    proof: [
+      { value: String(bandInfo.founded), label: 'fundada em Jaú/SP' },
+      { value: String(bandLineup.total), label: 'integrantes no palco' },
+      { value: '7+', label: 'estados brasileiros' },
+      { value: '2', label: 'turnês internacionais' },
+    ],
   },
 
-  pacotes: {
-    eyebrow: 'Orçamentos',
-    // Split like every other act's headline so <SectionHeadline> can italicize
-    // the emphasis. Reads "Pacotes premium." — deliberately not "Serviços
-    // Premium", which collided with the nav's SERVIÇOS entry (that points at
-    // #servicos, a different section).
-    headlinePrefix: 'Pacotes ',
-    headlineEmphasis: 'premium',
+  palco: {
+    eyebrowNumber: '01',
+    eyebrowLabel: 'O palco',
+    headlinePrefix: 'É isto que chega na ',
+    headlineEmphasis: 'sua festa',
     headlineSuffix: '.',
-    lead: 'Escolha o formato ideal para transformar sua noite em um verdadeiro espetáculo.',
-    highlightBadge: 'Mais popular',
-    ctaLabel: 'Consultar Valores',
-    whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
+    lead: 'Onze pessoas no palco, naipe de vocais, bailarinos, painel de LED e luz cênica. As fotos abaixo são de shows nossos — sem banco de imagens.',
   },
 
-  atoI: {
-    eyebrowNumber: 'I',
-    eyebrowLabel: 'História & Legado',
-    headlinePrefix: 'Desde 1969, o legado de ',
-    headlineEmphasis: 'Antônio Morales',
-    headlineSuffix: ' vive em cada palco.',
+  arquivo: {
+    eyebrowNumber: '02',
+    eyebrowLabel: 'O arquivo',
+    headlinePrefix: 'Cartazes de quem ',
+    headlineEmphasis: 'já tocou',
+    headlineSuffix: '.',
+    lead: 'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
+    municipalNote: 'Realização da prefeitura',
+    footnote: 'Um recorte do arquivo — a agenda completa vai por WhatsApp.',
+  },
+
+  historia: {
+    eyebrowNumber: '03',
+    eyebrowLabel: 'A história',
+    headlinePrefix: 'Começou em 1969, num fim de semana em ',
+    headlineEmphasis: 'Jaú',
+    headlineSuffix: '.',
     numberScrubLabel: 'fundação em Jaú/SP',
-  },
-
-  atoII: {
-    eyebrowNumber: 'II',
-    eyebrowLabel: 'Contact sheet',
-    headlinePrefix: 'Quadros de um ',
-    headlineEmphasis: 'show',
-    headlineSuffix: '.',
-    lead: 'Uma seleção curada do arquivo — cada cena com sua própria paleta cinematográfica. Clique para ampliar.',
-  },
-
-  atoIII: {
-    eyebrowNumber: 'III',
-    eyebrowLabel: 'Palcos compartilhados',
-    headlinePrefix: 'Já dividimos o palco com ',
-    headlineEmphasis: 'estes nomes',
-    headlineSuffix: '.',
-    lead: 'Artistas, clubes, prefeituras e eventos — a cada linha, uma cadência diferente. Pause com o mouse ou navegue com as setas do teclado.',
+    namesEyebrow: 'Palcos divididos',
+    namesLead: 'Nomes com quem a Freeband já dividiu o palco.',
     valuesLine: 'Pontualidade · honestidade · profissionalismo',
   },
 
-  atoIV: {
-    eyebrowNumber: 'IV',
-    eyebrowLabel: 'Eventos',
-    headlinePrefix: 'Atendemos com ',
-    headlineEmphasis: 'excelência',
+  pacotes: {
+    eyebrowNumber: '04',
+    eyebrowLabel: 'Pacotes',
+    headlinePrefix: 'Dois formatos, ',
+    headlineEmphasis: 'nenhum terceirizado',
     headlineSuffix: '.',
-    lead: 'Casamentos, formaturas e eventos corporativos premium — três formatos com o mesmo rigor de palco.',
-    includedEyebrow: 'O que está incluso',
-    includedHeadlinePrefix: '',
-    includedHeadlineEmphasis: 'Full premium',
-    includedHeadlineSuffix: ', tudo nosso.',
-    includedLead:
-      'Som, luz, logística, DJ pós-show e backup — investimos em tecnologia sem terceirizar o padrão.',
-    dragHint: '← Arraste ou use as setas',
+    lead: 'O que entra no caminhão em cada um. Valores por WhatsApp, porque dependem de data, distância e estrutura do local.',
+    highlightBadge: 'Mais pedido',
+    ctaLabel: 'Pedir valores',
+    whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
+    formatsEyebrow: 'Formatos atendidos',
   },
 
-  atoV: {
-    eyebrowNumber: 'V',
+  contato: {
+    eyebrowNumber: '05',
     eyebrowLabel: `CNPJ ${bandInfo.cnpj} · ${contact.address}`,
-    headlinePrefix: 'Vamos ',
-    headlineEmphasis: 'entrar no palco',
-    headlineSuffix: ' juntos?',
-    lead: 'Conta pra gente o formato, a data e o sonho. Retornamos com uma proposta sob medida — som, luz, logística, backup, DJ pós-show. Tudo nosso.',
+    headlinePrefix: 'Qual é a ',
+    headlineEmphasis: 'data',
+    headlineSuffix: '?',
+    lead: 'Conta o formato, a data e a cidade. Devolvemos uma proposta fechada — som, luz, palco, logística, backup e DJ depois do show.',
     phoneScrubLabel: 'Fale com a produção',
     whatsappCta: 'Falar pelo WhatsApp',
   },

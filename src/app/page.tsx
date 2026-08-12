@@ -1,13 +1,15 @@
-import { NavBar } from "@/components/layout/NavBar";
-import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { AtoI_Manifesto } from "@/components/sections/AtoI_Manifesto";
-import { AtoII_Galeria } from "@/components/sections/AtoII_Galeria";
-import { AtoIII_Palcos } from "@/components/sections/AtoIII_Palcos";
-import { AtoIV_Eventos } from "@/components/sections/AtoIV_Eventos";
-import { Ato_Servicos } from "@/components/sections/Ato_Servicos";
-import { AtoV_Contato } from "@/components/sections/AtoV_Contato";
+import { NavBar } from '@/components/layout/NavBar';
+import { Footer } from '@/components/layout/Footer';
+import { Hero } from '@/components/sections/Hero';
+import { Palco } from '@/components/sections/Palco';
+import { Arquivo } from '@/components/sections/Arquivo';
+import { Historia } from '@/components/sections/Historia';
+import { Pacotes } from '@/components/sections/Pacotes';
+import { Contato } from '@/components/sections/Contato';
 
+// Order is an argument, not a menu: show what arrives (Palco), prove it has
+// arrived for 57 years (Arquivo), explain where that came from (Historia),
+// then price it (Pacotes) and take the booking (Contato).
 export default function HomePage() {
   return (
     <>
@@ -22,12 +24,11 @@ export default function HomePage() {
       <NavBar />
       <main id="conteudo">
         <Hero />
-        <AtoI_Manifesto />
-        <Ato_Servicos />
-        <AtoII_Galeria />
-        <AtoIII_Palcos />
-        <AtoIV_Eventos />
-        <AtoV_Contato />
+        <Palco />
+        <Arquivo />
+        <Historia />
+        <Pacotes />
+        <Contato />
       </main>
       <Footer />
     </>
