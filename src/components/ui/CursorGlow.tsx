@@ -26,7 +26,7 @@ export function CursorGlow() {
     let py = 50;
 
     const flush = () => {
-      el.style.background = `radial-gradient(600px circle at ${px}% ${py}%, oklch(62% 0.26 25 / 0.04), transparent 40%)`;
+      el.style.background = `radial-gradient(600px circle at ${px}% ${py}%, color-mix(in oklab, var(--color-gold), transparent 96%), transparent 40%)`;
       rafId = 0;
     };
 

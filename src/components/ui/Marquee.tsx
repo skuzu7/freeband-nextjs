@@ -18,7 +18,7 @@
 //   - Arrow keys translate the track by ±5% (reversible)
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useCallback, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
 
 export type MarqueeItem = string | ReactNode;
 
@@ -38,7 +38,7 @@ const variantItemClass: Record<Variant, string> = {
   solid: 'font-display font-semibold text-text -tracking-[0.02em] leading-[0.9]',
   italic: 'font-display italic font-medium text-text -tracking-[0.01em] leading-[0.9]',
   outline:
-    'font-mono uppercase tracking-[0.2em] text-transparent [-webkit-text-stroke:1px_oklch(72%_0.19_240/0.5)]',
+    'font-mono uppercase tracking-[0.2em] text-transparent [-webkit-text-stroke:1px_color-mix(in_oklch,var(--color-brand)_50%,transparent)]',
   mono: 'font-mono uppercase tracking-[0.28em] text-text-muted',
 };
 
@@ -64,6 +64,9 @@ export function Marquee({
   // Duplicate content for the seamless loop — rendered track is 2× items.
   const doubled = useMemo(() => [...items, ...items], [items]);
 
+  // Arrow nudge writes the CSS `translate` property, which composes with the
+  // `transform` the marquee animation animates — an inline transform would be
+  // overridden by the running animation and never move the track.
   const handleKey = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (!kbdControl) return;
@@ -75,17 +78,10 @@ export function Marquee({
       const delta = e.key === 'ArrowRight' ? -5 : 5;
       const next = current + delta;
       track.dataset.nudge = String(next);
-      track.style.setProperty('--nudge', `${next}%`);
+      track.style.translate = `${next}% 0`;
     },
     [kbdControl],
   );
-
-  // Pause CSS animation while user is nudging via keyboard
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    track.style.transform = 'translate3d(var(--nudge, 0%), 0, 0)';
-  }, []);
 
   return (
     <div

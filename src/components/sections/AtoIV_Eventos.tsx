@@ -1,9 +1,7 @@
 // src/components/sections/AtoIV_Eventos.tsx
 // PALCO II — Ato IV: renamed from Servicos.
 // Three service cards in a horizontal scroll-snap stack (<SnapProgress>
-// indicator below) + the rich "O que está incluso" grid wrapped in
-// <SpotlightCursor> so the radial gradient follows the cursor across
-// the feature cards — contextual, not decorative.
+// indicator below) + the rich "O que está incluso" grid.
 'use client';
 
 import { useRef } from 'react';
@@ -13,7 +11,6 @@ import { Section } from '@/components/ui/Section';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { SectionHeadline } from '@/components/ui/SectionHeadline';
 import { SnapProgress } from '@/components/ui/SnapProgress';
-import { SpotlightCursor } from '@/components/ui/SpotlightCursor';
 
 export function AtoIV_Eventos() {
   const snapRef = useRef<HTMLDivElement | null>(null);
@@ -120,7 +117,6 @@ export function AtoIV_Eventos() {
           </div>
 
           <div className="relative isolate">
-            <SpotlightCursor />
             <ul className="relative z-[2] grid gap-5 sm:grid-cols-2">
               {includedFeatures.map((feature, i) => (
                 <li
