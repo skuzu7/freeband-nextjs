@@ -1,28 +1,47 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import {
+  SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  createSession,
+  verifySession,
+  secretsMatch,
+} from '@/lib/session';
 
-export function middleware(request: NextRequest) {
-  // Only gate /orcamento routes
-  if (!request.nextUrl.pathname.startsWith('/orcamento')) {
-    return NextResponse.next();
-  }
-
-  // Check cookie
-  const adminCookie = request.cookies.get('freeband_admin');
-  if (adminCookie?.value === '1') {
-    return NextResponse.next();
-  }
-
-  // Check if URL contains valid token (backward compat)
-  const segments = request.nextUrl.pathname.split('/');
-  const token = segments[2]; // /orcamento/[token]
+export async function middleware(request: NextRequest) {
+  const secret = process.env.SESSION_SECRET;
   const expectedToken = process.env.ORCAMENTO_TOKEN;
-  if (token && expectedToken && token === expectedToken) {
+  const loginUrl = new URL('/admin', request.url);
+
+  // Fail closed when the deployment is missing its secrets.
+  if (!secret) {
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const cookie = request.cookies.get(SESSION_COOKIE)?.value;
+  if (await verifySession(cookie, secret)) {
     return NextResponse.next();
   }
 
-  // Redirect to admin login
-  return NextResponse.redirect(new URL('/admin', request.url));
+  // Legacy share links: /orcamento/<token>, exactly one extra segment.
+  // A valid token is exchanged for a signed session cookie and redirected,
+  // so the secret leaves the address bar.
+  const segments = request.nextUrl.pathname.split('/').filter(Boolean);
+  if (segments.length === 2 && expectedToken) {
+    if (await secretsMatch(segments[1], expectedToken, secret)) {
+      const response = NextResponse.redirect(new URL('/orcamento', request.url));
+      response.cookies.set(SESSION_COOKIE, await createSession(secret), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: SESSION_TTL_SECONDS,
+        path: '/',
+      });
+      return response;
+    }
+  }
+
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {

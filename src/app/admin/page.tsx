@@ -1,36 +1,11 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { loginAction } from './actions';
 import { LoginForm } from './login-form';
 
-async function loginAction(
-  _prev: { error: string } | null,
-  formData: FormData,
-): Promise<{ error: string } | null> {
-  'use server';
-
-  const password = formData.get('password');
-
-  if (typeof password !== 'string' || !password) {
-    return { error: 'Informe a senha.' };
-  }
-
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected || password !== expected) {
-    return { error: 'Senha incorreta.' };
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set('freeband_admin', '1', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  });
-
-  const token = process.env.ORCAMENTO_TOKEN;
-  redirect(`/orcamento/${token}`);
-}
+export const metadata: Metadata = {
+  title: 'Acesso à produção — Internacional Freeband',
+  robots: { index: false, follow: false },
+};
 
 export default function AdminPage() {
   return (

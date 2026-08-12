@@ -23,8 +23,11 @@ This project uses Next.js 16, which may differ from your training data. When uns
 
 ## Environment variables
 
-- `ORCAMENTO_TOKEN` — secret URL token that unlocks `/orcamento/[token]`
+See `.env.example`. All three are required for the protected area to work:
+
+- `ORCAMENTO_TOKEN` — secret token accepted once via legacy `/orcamento/<token>` links (exchanged for a session cookie)
 - `ADMIN_PASSWORD` — password for the `/admin` login
+- `SESSION_SECRET` — HMAC key that signs the `freeband_admin` session cookie
 
 ## Architecture
 
@@ -34,8 +37,8 @@ Next.js App Router + TypeScript, Tailwind CSS 4, Framer Motion. Path alias `@/*`
 
 - `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus the `Ato*` sections from `src/components/sections/`.
 - `/portfolio` — public page to download the band's portfolio PDF.
-- `/admin` — login form; a server action checks `ADMIN_PASSWORD`, sets the `freeband_admin` cookie (7 days), and redirects to `/orcamento/{ORCAMENTO_TOKEN}`.
-- `/orcamento/[token]` — quote builder (split-pane form + live A4 preview). `src/middleware.ts` gates every `/orcamento` path: requests pass with the admin cookie or when the URL token equals `ORCAMENTO_TOKEN`; anything else redirects to `/admin`. The route page re-validates the token via `src/lib/token.ts` and redirects home on mismatch.
+- `/admin` — login form; the `loginAction` server action (`src/app/admin/actions.ts`) rate-limits attempts, compares the password in constant time, sets a signed `freeband_admin` session cookie (HMAC-SHA256, 7 days — see `src/lib/session.ts`, Web Crypto only so it runs in both Edge and Node) and redirects to `/orcamento`.
+- `/orcamento` — quote builder (split-pane form + live A4 preview). `src/middleware.ts` gates every `/orcamento` path: a valid signed cookie passes; a legacy `/orcamento/<token>` link whose token equals `ORCAMENTO_TOKEN` is exchanged for a session cookie and redirected to `/orcamento` (the secret leaves the URL); anything else redirects to `/admin`. Logout button in the editor header calls `logoutAction`.
 
 ### PDF generation
 

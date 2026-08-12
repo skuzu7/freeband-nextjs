@@ -10,7 +10,11 @@ import { OrcamentoPreview } from "./OrcamentoPreview";
 import { defaultOrcamento } from "@/types/orcamento";
 import type { OrcamentoData } from "@/types/orcamento";
 
-export function OrcamentoPage() {
+interface OrcamentoPageProps {
+  onLogout?: () => Promise<void>;
+}
+
+export function OrcamentoPage({ onLogout }: OrcamentoPageProps) {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);
 
   function handlePrint() {
@@ -35,12 +39,24 @@ export function OrcamentoPage() {
             Gerador de <span className="serif-italic text-brand">proposta</span>
           </span>
         </div>
-        <Link
-          href="/"
-          className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted transition-colors hover:text-brand"
-        >
-          ← Voltar ao site
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/"
+            className="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted transition-colors hover:text-brand"
+          >
+            ← Voltar ao site
+          </Link>
+          {onLogout ? (
+            <form action={onLogout}>
+              <button
+                type="submit"
+                className="cursor-pointer border border-border px-4 py-2 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted transition-colors hover:border-brand hover:text-brand"
+              >
+                Sair
+              </button>
+            </form>
+          ) : null}
+        </div>
       </header>
 
       <div className="print-unclip grid min-h-[calc(100vh-96px)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
