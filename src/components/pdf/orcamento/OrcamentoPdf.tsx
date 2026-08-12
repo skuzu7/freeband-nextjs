@@ -3,6 +3,7 @@
 // streamed through PDFDownloadLink inside OrcamentoPreview.
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
 import { bandInfo, contact } from "@/data/content";
+import { colors } from "@/components/pdf/portfolio/pdfTheme";
 import type { OrcamentoData } from "@/types/orcamento";
 import {
   formatCurrency,
@@ -11,7 +12,8 @@ import {
   calcSaldo,
 } from "@/lib/format";
 
-const gold = "#C9A84C";
+// Single gold definition shared with the portfolio PDF.
+const gold = colors.gold;
 
 const styles = StyleSheet.create({
   page: {

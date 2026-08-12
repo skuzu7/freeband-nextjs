@@ -2,45 +2,31 @@
 
 /* =========================================================================
    FREEBAND — design system "PALCO"
-   Red + ink editorial-kinetic identity derived from the band's own archive.
-   Brand red echoes the historical freeband wordmark; stage beams echo the
-   live-show lighting rig; paper theme scopes the orcamento proposal editor.
+   Gold + ink editorial-kinetic identity. Gold is the single brand accent
+   (site and PDFs); the historical red/blue wordmark colors survive only on
+   the /admin login screen; stage beams echo the live-show lighting rig;
+   paper theme scopes the orcamento proposal editor.
    ========================================================================= */
 
 @theme {
+  /* Historical wordmark colors — /admin login screen only. */
   --color-wordmark-red: #ed1b24;
   --color-wordmark-blue: #00aeef;
 
-  /* ---------------- Palette: FREQUÊNCIA ---------------- */
+  /* ---------------- Palette ---------------- */
   --color-void-950: oklch(6% 0.015 270);
   --color-void-900: oklch(10% 0.02 270);
   --color-void-800: oklch(14% 0.02 265);
-  --color-void-700: oklch(18% 0.02 260);
-  --color-void-600: oklch(24% 0.02 260);
-  --color-void-500: oklch(34% 0.02 260);
-  --color-void-400: oklch(48% 0.02 260);
-  --color-void-300: oklch(62% 0.015 260);
-  --color-void-200: oklch(78% 0.01 260);
-  --color-void-100: oklch(90% 0.005 260);
 
-  /* Neon spectrum — extracted from real stage photos */
-  --color-neon-green: oklch(78% 0.22 155);
-  --color-neon-magenta: oklch(68% 0.28 340);
-  --color-neon-blue: oklch(72% 0.19 240);
-  --color-neon-purple: oklch(58% 0.24 300);
-  --color-neon-red: oklch(62% 0.26 25);
-  --color-neon-amber: oklch(82% 0.16 80);
-
-  --color-brand: #ed1b24;
-  --color-brand-hot: oklch(68% 0.3 30);
-  --color-brand-deep: oklch(52% 0.26 25);
-  --color-red-500: #ed1b24;
-  --color-blue-500: #00aeef;
-
-  /* Gold — premium accent introduced by the 2026 revamp (Hero/Serviços). */
+  /* Gold — the brand accent. --color-brand aliases it so every PALCO
+     component (focus ring, ::selection, eyebrows, marquee) follows. */
   --color-gold: #c59e57;
   --color-gold-light: #d8b975;
   --color-gold-deep: #8b6f3d;
+
+  --color-brand: var(--color-gold);
+  --color-brand-hot: var(--color-gold-light);
+  --color-brand-deep: var(--color-gold-deep);
 
   /* Paper — light palette consumed by [data-theme='paper'] (/orcamento). */
   --color-paper-50: oklch(97% 0.008 85);
@@ -77,27 +63,13 @@
   --text-4xl: clamp(2.2rem, 1.5rem + 3.5vi, 4rem);
   --text-5xl: clamp(2.6rem, 1.5rem + 5vi, 5.5rem);
   --text-6xl: clamp(3.2rem, 1.6rem + 7.5vi, 7.5rem);
-  --text-7xl: clamp(3.8rem, 1.2rem + 12vi, 10rem);
-  --text-hero: clamp(3.5rem, -1rem + 18vi, 15rem);
 
   /* ---------------- Motion ----------------
-     Six easing curves, six durations. Each curve has a clear purpose so
-     PALCO II never falls back to a single "ease" for everything. */
+     Named curves with a clear purpose each — never a generic "ease". */
   --ease-stage: cubic-bezier(0.2, 1, 0.3, 1);
-  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-morph: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-drift: cubic-bezier(0.45, 0, 0.15, 1);
-  --ease-snap: cubic-bezier(0.85, 0, 0.15, 1);
-  --ease-settle: cubic-bezier(0.22, 1.12, 0.36, 1);
-  /* CSS linear() spring — used by MagneticField cursor return + Button magnet */
-  --ease-spring: linear(0, 0.27 9%, 0.65 19%, 1.02 30%, 1.09 36%, 1.02 45%, 0.99 54%, 1 71%, 1);
 
-  --dur-150: 150ms;
-  --dur-250: 250ms;
   --dur-400: 400ms;
-  --dur-600: 600ms;
-  --dur-900: 900ms;
-  --dur-1400: 1400ms;
 
   /* ---------------- Layout ----------------
      Container width + inline padding used by NavBar, Footer, Hero,
@@ -151,37 +123,6 @@
       transform: translate3d(0, 0, 0);
     }
   }
-  @keyframes kinetic-axes {
-    0% {
-      font-variation-settings:
-        'wght' 320,
-        'opsz' 10,
-        'SOFT' 0;
-      letter-spacing: 0.05em;
-    }
-    50% {
-      font-variation-settings:
-        'wght' 900,
-        'opsz' 144,
-        'SOFT' 50;
-      letter-spacing: -0.05em;
-    }
-    100% {
-      font-variation-settings:
-        'wght' 480,
-        'opsz' 80,
-        'SOFT' 100;
-      letter-spacing: 0;
-    }
-  }
-  @keyframes saturate-in {
-    from {
-      filter: saturate(0) contrast(1.1);
-    }
-    to {
-      filter: saturate(1) contrast(1);
-    }
-  }
   @keyframes parallax-drift {
     from {
       --parallax-y: -24px;
@@ -198,66 +139,6 @@
       --grade-sat: 1;
     }
   }
-  @keyframes kinetic-paragraph {
-    0% {
-      --kwp-wght: 300;
-      --kwp-opsz: 14;
-    }
-    50% {
-      --kwp-wght: 460;
-      --kwp-opsz: 48;
-    }
-    100% {
-      --kwp-wght: 400;
-      --kwp-opsz: 36;
-    }
-  }
-  @keyframes num-count {
-    from {
-      --n: 0;
-    }
-    to {
-      --n: var(--n-target, 100);
-    }
-  }
-  @keyframes glitch-clip {
-    0% {
-      clip-path: inset(40% 0 61% 0);
-    }
-    20% {
-      clip-path: inset(92% 0 1% 0);
-    }
-    40% {
-      clip-path: inset(43% 0 1% 0);
-    }
-    60% {
-      clip-path: inset(25% 0 58% 0);
-    }
-    80% {
-      clip-path: inset(54% 0 7% 0);
-    }
-    100% {
-      clip-path: inset(58% 0 43% 0);
-    }
-  }
-  @keyframes glitch-skew {
-    0%,
-    100% {
-      transform: skewX(0deg);
-    }
-    20% {
-      transform: skewX(-2deg);
-    }
-    40% {
-      transform: skewX(0.5deg);
-    }
-    60% {
-      transform: skewX(-0.3deg);
-    }
-    80% {
-      transform: skewX(1deg);
-    }
-  }
 }
 
 /* =========================================================================
@@ -269,43 +150,13 @@
   inherits: false;
   initial-value: 0deg;
 }
-@property --ripple-scale {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
-}
 @property --parallax-y {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-@property --mag-x {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
-@property --mag-y {
   syntax: '<length>';
   inherits: false;
   initial-value: 0px;
 }
 @property --grade-sat {
   syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
-}
-@property --kwp-wght {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 400;
-}
-@property --kwp-opsz {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 24;
-}
-@property --n {
-  syntax: '<integer>';
   inherits: false;
   initial-value: 0;
 }
@@ -384,26 +235,9 @@ body {
   z-index: 10;
 }
 
-/* =========================================================================
-   Premium Glassmorphism
-   ========================================================================= */
-.glass {
-  background: color-mix(in oklch, var(--color-bg-raise), transparent 40%);
-  backdrop-filter: blur(16px) saturate(1.8);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 8px 32px 0 oklch(0% 0 0 / 0.2);
-}
-
-.glass-strong {
-  background: color-mix(in oklch, var(--color-bg-high), transparent 20%);
-  backdrop-filter: blur(24px) saturate(2);
-  border: 1px solid var(--color-border-strong);
-  box-shadow: 0 12px 48px 0 oklch(0% 0 0 / 0.4);
-}
-
 ::selection {
   background: var(--color-brand);
-  color: #ffffff;
+  color: var(--color-void-950);
 }
 
 /* Layout utilities — single source of truth for container width + inline
@@ -416,7 +250,19 @@ body {
   padding-inline: var(--section-inline-pad);
 }
 
-/* Force strict red ring on focus-visible across the app */
+/* Gold glow shadows — registered as utilities so hover:/focus: variants
+   work. Replaces hardcoded rgba(197,158,87,…) box-shadows. */
+@utility glow-gold-soft {
+  box-shadow: 0 0 20px color-mix(in oklab, var(--color-gold), transparent 85%);
+}
+@utility glow-gold {
+  box-shadow: 0 0 30px color-mix(in oklab, var(--color-gold), transparent 70%);
+}
+@utility glow-gold-strong {
+  box-shadow: 0 0 40px color-mix(in oklab, var(--color-gold), transparent 50%);
+}
+
+/* Force strict brand ring on focus-visible across the app */
 :focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 3px;
@@ -488,49 +334,6 @@ p {
       animation-timeline: view();
       animation-range: cover 20% cover 55%;
       animation-delay: calc(var(--i, 0) * 80ms);
-    }
-  }
-}
-
-/* =========================================================================
-   Kinetic text — morphs Fraunces variable axes (wght, opsz, SOFT) on scroll.
-   Pure CSS; zero hydration. Unsupported browsers fall through to plain type.
-   ========================================================================= */
-@property --kw-wght {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 700;
-}
-@property --kw-opsz {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 80;
-}
-@property --kw-soft {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 50;
-}
-
-.text-kinetic {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: normal;
-  font-variation-settings:
-    'wght' var(--kw-wght),
-    'opsz' var(--kw-opsz),
-    'SOFT' var(--kw-soft);
-  letter-spacing: -0.03em;
-  line-height: 0.82;
-  will-change: font-variation-settings, letter-spacing;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (font-variation-settings: 'wght' 400) {
-    .text-kinetic {
-      animation: kinetic-axes linear both;
-      animation-timeline: view();
-      animation-range: entry 0% exit 100%;
     }
   }
 }
@@ -780,53 +583,22 @@ p {
 
 /* =========================================================================
    Parallax — scroll-driven translate used by CinematicImage parallax="soft|strong".
-   Capped at ±24px to avoid snap-container jank on Safari iOS.
+   Capped at ±24px to avoid snap-container jank on Safari iOS. Both
+   intensities share one rule today; keep the two class names so the
+   CinematicImage API stays stable.
    ========================================================================= */
 .parallax-soft,
 .parallax-strong {
   transform: translate3d(0, var(--parallax-y), 0);
-  will-change: transform;
   overflow-anchor: none;
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .parallax-soft {
-      animation: parallax-drift linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
+    .parallax-soft,
     .parallax-strong {
       animation: parallax-drift linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
-      /* strong uses the same range but no clamp — the child image is bigger */
-    }
-  }
-}
-
-/* =========================================================================
-   Kinetic paragraph — like .text-kinetic but gentler. Morphs wght + opsz for
-   a paragraph-scale body that breathes as it enters view.
-   ========================================================================= */
-.text-kinetic-paragraph {
-  font-family: var(--font-display);
-  font-variation-settings:
-    'wght' var(--kwp-wght),
-    'opsz' var(--kwp-opsz);
-  will-change: font-variation-settings;
-}
-
-.text-kinetic-paragraph:hover {
-  --kwp-wght: 600;
-  --kwp-opsz: 72;
-  transition: --kwp-wght var(--dur-400) var(--ease-stage), --kwp-opsz var(--dur-400) var(--ease-stage);
-}
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (font-variation-settings: 'wght' 400) {
-    .text-kinetic-paragraph {
-      animation: kinetic-paragraph linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 40%;
     }
   }
 }
@@ -872,52 +644,10 @@ p {
 }
 
 /* =========================================================================
-   Button micro-interactions — ripple bloom + magnetic hover.
-   Used by <Button> component. `.btn-ripple` is the base for the ::before
-   overlay; `.btn-magnetic` applies the cursor-follow transform.
-   ========================================================================= */
-.btn-base {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  cursor: pointer;
-  transition:
-    transform var(--dur-400) var(--ease-spring),
-    background-color var(--dur-250) var(--ease-snap),
-    color var(--dur-250) var(--ease-snap);
-}
-.btn-ripple::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--ripple-x, 50%) var(--ripple-y, 50%),
-    oklch(98% 0 0 / 0.45),
-    oklch(98% 0 0 / 0) 55%
-  );
-  transform: scale(var(--ripple-scale, 0));
-  opacity: calc(1 - var(--ripple-scale, 0) * 0.5);
-  transition:
-    transform var(--dur-600) var(--ease-snap),
-    opacity var(--dur-600) var(--ease-snap);
-  z-index: 1;
-}
-.btn-magnetic {
-  transform: translate3d(var(--mag-x, 0), var(--mag-y, 0), 0);
-}
-
-@media (prefers-reduced-motion: reduce), (pointer: coarse) {
-  .btn-magnetic {
-    transform: none !important;
-  }
-  .btn-ripple::before {
-    display: none;
-  }
-}
-
-/* =========================================================================
    Marquee fade masks — replaces inline gradient DIVs in Artistas/Parceiros.
+   Fade color defaults to the page bg; sections on a raised background set
+   --fade-color (e.g. [--fade-color:var(--color-bg-raise)]) so the edges
+   blend into the actual surface behind the marquee.
    ========================================================================= */
 .marquee-fade {
   position: relative;
@@ -933,11 +663,11 @@ p {
 }
 .marquee-fade::before {
   inset-inline-start: 0;
-  background: linear-gradient(to right, var(--color-bg), transparent);
+  background: linear-gradient(to right, var(--fade-color, var(--color-bg)), transparent);
 }
 .marquee-fade::after {
   inset-inline-end: 0;
-  background: linear-gradient(to left, var(--color-bg), transparent);
+  background: linear-gradient(to left, var(--fade-color, var(--color-bg)), transparent);
 }
 
 .marquee-track {
@@ -947,7 +677,6 @@ p {
   width: max-content;
   animation: marquee-x linear infinite;
   animation-duration: var(--marquee-duration, 60s);
-  will-change: transform;
 }
 .marquee-track[data-direction='r'] {
   animation-name: marquee-x-reverse;
@@ -960,15 +689,6 @@ p {
   .marquee-track {
     animation: none !important;
   }
-}
-
-/* Hide scrollbar but keep functionality */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 /* =========================================================================

@@ -8,8 +8,9 @@ export const colors = {
   bgPrimary: "#000000",
   bgSecondary: "#111111",
   bgCard: "#1a1a1a",
-  gold: "#C9A84C",
-  goldLight: "#E8CC7A",
+  // Mirrors --color-gold / --color-gold-light in globals.css @theme.
+  gold: "#C59E57",
+  goldLight: "#D8B975",
   white: "#FFFFFF",
   textSecondary: "#E0E0E0",
   textMuted: "#999999",

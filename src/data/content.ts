@@ -179,6 +179,48 @@ export const partners = [
   'Prefeituras Municipais',
 ];
 
+// Pacotes comerciais exibidos na seção #pacotes (Ato_Servicos).
+export interface ServicePackage {
+  id: string;
+  name: string;
+  description: string;
+  highlighted: boolean;
+  features: string[];
+}
+
+export const servicePackages: ServicePackage[] = [
+  {
+    id: 'premium',
+    name: 'PACOTE PREMIUM',
+    description: 'A experiência completa e definitiva para eventos inesquecíveis.',
+    highlighted: true,
+    features: [
+      'Som Completo (PA compatível com local e público)',
+      'Banda Freeband',
+      'DJ Buru + Estrutura de DJ',
+      'Painel de Led 3x2 P3 com efeitos 3D',
+      'Pista de Led 15m² (ex. 3x5)',
+      'Estrutura de Boate (Box truss 4x3)',
+      '04 Moving Head com canhões de luz e efeitos',
+      'Máquinas de fumaça + Máquina de Sparkles (02 un.)',
+      'Letreiro NEON 15 Anos / Parabéns',
+    ],
+  },
+  {
+    id: 'classic',
+    name: 'PACOTE CLASSIC',
+    description: 'Alta performance com um setup elegante e eficiente.',
+    highlighted: false,
+    features: [
+      'Som Completo (PA compatível)',
+      'Banda Freeband ou DJ Buru',
+      'Iluminação Básica (LEDs)',
+      'Estrutura de Boate Padrão',
+      'Máquina de fumaça',
+    ],
+  },
+];
+
 export const contact = {
   phone: '(16) 99773-2749',
   whatsapp: '(16) 99773-2749',
@@ -223,14 +265,23 @@ export const pageCopy = {
   },
 
   hero: {
-    eyebrow: `DESDE ${bandInfo.founded}`,
-    wordmarkPre: 'INTERNACIONAL',
+    badge: 'A Experiência Definitiva',
     wordmarkMain: 'FREEBAND',
-    wordmarkSub: '',
-    leadParagraph: `DESDE ${bandInfo.founded} CRIANDO EXPERIÊNCIAS MUSICAIS INESQUECÍVEIS`,
-    statusLabel: `Status: Live in ${bandInfo.location.split('/')[0]}`,
-    ctaPrimary: 'AGENDAR SHOW',
-    ctaSecondary: 'VER PORTFÓLIO',
+    wordmarkSub: '& DJ BURU',
+    leadParagraph:
+      'Transforme seu evento em um espetáculo inesquecível. Tecnologia de ponta, repertório explosivo e uma performance que desafia os limites do entretenimento premium.',
+    ctaPrimary: 'SOLICITAR ORÇAMENTO',
+    ctaSecondary: 'VER PACOTES',
+    scrollLabel: 'Scroll',
+  },
+
+  pacotes: {
+    eyebrow: 'Orçamentos',
+    title: 'Serviços Premium',
+    lead: 'Escolha o formato ideal para transformar sua noite em um verdadeiro espetáculo.',
+    highlightBadge: 'Mais popular',
+    ctaLabel: 'Consultar Valores',
+    whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
   },
 
   atoI: {

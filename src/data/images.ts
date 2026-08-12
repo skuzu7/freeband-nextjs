@@ -23,7 +23,6 @@ export const images = {
   anos70: "/images/freeband-anos-70.jpeg",
   anos90: "/images/freeband-anos-90.jpeg",
   antigas: "/images/freeband-antigas.jpeg",
-  antidas: "/images/freeband-antidas.jpeg",
   fbJau: "/images/freeband-jau.jpeg",
   // Promotional
   fb2015: "/images/freeband-2015.jpeg",
@@ -36,41 +35,6 @@ export const images = {
 } as const;
 
 export type ImageKey = keyof typeof images;
-
-export const galleryImages: { src: string; alt: string }[] = [
-  { src: images.festa55, alt: "Show Freeband" },
-  { src: images.festa70, alt: "Show com dançarinas" },
-  { src: images.festa82, alt: "Show especial" },
-  { src: images.festa209, alt: "Apresentação em festa" },
-  { src: images.festa308, alt: "Palco iluminado" },
-  { src: images.img0437, alt: "Apresentação ao vivo" },
-  { src: images.img0679, alt: "Performance" },
-  { src: images.img0690, alt: "Palco" },
-  { src: images.img0867, alt: "Show noturno" },
-  { src: images.joao, alt: "Músico João" },
-  { src: images.baileTabatinga, alt: "Baile Tabatinga" },
-  { src: images.barraBonita, alt: "Show em Barra Bonita" },
-  { src: images.nauticoAraraquara, alt: "Náutico Araraquara" },
-  { src: images.reveillomIacanga, alt: "Reveillon Iacanga" },
-  { src: images.reveillomItatinga, alt: "Reveillon Itatinga" },
-  { src: images.reveillomParanapanema, alt: "Reveillon Paranapanema" },
-  { src: images.anos70, alt: "Freeband anos 70" },
-  { src: images.anos90, alt: "Freeband anos 90" },
-  { src: images.antigas, alt: "Freeband antigas" },
-  { src: images.antidas, alt: "Freeband - arquivo histórico" },
-  { src: images.fbJau, alt: "Freeband em Jaú" },
-  { src: images.fb2015, alt: "Freeband 2015" },
-  { src: images.cartazCosmopolitano, alt: "Cartaz Cosmopolitano" },
-  { src: images.social, alt: "Freeband - divulgação" },
-];
-
-// Curated set used in the Historia timeline section
-export const historiaImages = [
-  { src: images.anos70, caption: "1969-1979 - Os primeiros anos" },
-  { src: images.anos90, caption: "Década de 90 - Consolidação" },
-  { src: images.fb2015, caption: "2015 - Nova geração" },
-  { src: images.festa55, caption: "Hoje - Mais de 55 anos de estrada" },
-];
 
 // PALCO II — aggressively curated masonry (13 of 24 shots), each tagged
 // with a scene-aware grade class, masonry span, aspect, parallax intensity

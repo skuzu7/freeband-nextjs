@@ -39,7 +39,7 @@ export function NavBar() {
           aria-label="Internacional Freeband — início"
         >
           <div className="flex flex-col">
-            <span className="font-display text-xl font-bold tracking-wide text-white transition-colors hover:text-[#C59E57]">
+            <span className="font-display text-xl font-bold tracking-wide text-white transition-colors hover:text-gold">
               Internacional Freeband
             </span>
           </div>
@@ -50,14 +50,14 @@ export function NavBar() {
             <a
               key={link.label}
               href={link.href}
-              className="group text-xs font-bold uppercase tracking-widest text-white transition-colors hover:text-[#C59E57]"
+              className="group text-xs font-bold uppercase tracking-widest text-white transition-colors hover:text-gold"
             >
               {link.label}
             </a>
           ))}
           <a
             href="#contato"
-            className="inline-flex items-center justify-center bg-[#C59E57] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#b08b47]"
+            className="inline-flex items-center justify-center bg-gold px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-gold-deep"
           >
             {pageCopy.nav.ctaLabel}
           </a>

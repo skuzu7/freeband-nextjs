@@ -37,7 +37,8 @@ export function AtoIII_Palcos() {
         />
       </Container>
 
-      <div className="marquee-stack reveal-tail mt-[clamp(3rem,6vi,5rem)] flex flex-col gap-6">
+      {/* Section renders on bg-raise — point the marquee edge fades at it. */}
+      <div className="reveal-tail mt-[clamp(3rem,6vi,5rem)] flex flex-col gap-6 [--fade-color:var(--color-bg-raise)]">
         <Marquee
           items={artists}
           speed={35}

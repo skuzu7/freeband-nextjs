@@ -49,13 +49,13 @@ export function AtoI_Manifesto() {
             >
               <span className="lg:block">
                 {copy.headlinePrefix}
-                <span className="text-[#C59E57] mx-2">{copy.headlineEmphasis}</span>
+                <span className="text-gold mx-2">{copy.headlineEmphasis}</span>
                 {copy.headlineSuffix}
               </span>
             </h2>
 
             <div
-              className="flex flex-col gap-6 text-gray-300 max-w-[62ch]"
+              className="flex flex-col gap-6 text-text-muted max-w-[62ch]"
               style={{ fontSize: 'var(--text-base)', lineHeight: 1.7 }}
             >
               {paragraphs.map((para, i) => (
@@ -69,9 +69,9 @@ export function AtoI_Manifesto() {
               {release.values.map((v) => (
                 <span
                   key={v}
-                  className="inline-flex items-center gap-2 border border-white/10 bg-white/5 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-gray-400 backdrop-blur-sm transition-colors hover:border-[#C59E57]/50 hover:text-white"
+                  className="inline-flex items-center gap-2 border border-white/10 bg-white/5 px-4 py-2 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-text-muted backdrop-blur-sm transition-colors hover:border-gold/50 hover:text-white"
                 >
-                  <span aria-hidden className="inline-block h-1 w-1 rotate-45 bg-[#C59E57]" />
+                  <span aria-hidden className="inline-block h-1 w-1 rotate-45 bg-gold" />
                   {v}
                 </span>
               ))}
