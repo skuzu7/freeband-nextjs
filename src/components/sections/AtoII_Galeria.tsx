@@ -7,10 +7,11 @@
 // only fires when the decoded image is ready (avoids empty-snapshot jank).
 'use client';
 
-import { useCallback, useState } from 'react';
-import Lightbox from 'yet-another-react-lightbox';
+import { useCallback, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Lightbox, { type RenderSlideProps } from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
-import { curatedGallery } from '@/data/images';
+import { curatedGallery, sizesForSpan } from '@/data/images';
 import { pageCopy } from '@/data/content';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
@@ -18,9 +19,30 @@ import { SectionHeadline } from '@/components/ui/SectionHeadline';
 import { CinematicImage } from '@/components/ui/CinematicImage';
 import { useViewTransition } from '@/lib/useViewTransition';
 
+// Serve lightbox zooms through next/image (AVIF/WebP, responsive candidates)
+// instead of yet-another-react-lightbox's raw <img> of the original file.
+function renderLightboxSlide({ slide }: RenderSlideProps) {
+  if (typeof slide.src !== 'string') return undefined;
+  return (
+    <div className="relative h-full w-full">
+      <Image
+        src={slide.src}
+        alt={slide.alt ?? ''}
+        fill
+        sizes="100vw"
+        quality={90}
+        className="object-contain"
+      />
+    </div>
+  );
+}
+
 export function AtoII_Galeria() {
   const [index, setIndex] = useState(-1);
-  const slides = curatedGallery.map((img) => ({ src: img.src, alt: img.alt }));
+  const slides = useMemo(
+    () => curatedGallery.map((img) => ({ src: img.src, alt: img.alt })),
+    [],
+  );
   const withVT = useViewTransition();
 
   const open = useCallback(
@@ -67,8 +89,7 @@ export function AtoII_Galeria() {
               crop={img.crop ?? 'center'}
               aspect={img.aspect}
               fill
-              sizes="(min-width: 1024px) 55vw, (min-width: 768px) 70vw, 100vw"
-              quality={90}
+              sizes={sizesForSpan(img.span)}
               wrapperClassName="transition-[transform,filter] duration-[900ms] ease-[var(--ease-drift)] group-hover:scale-[1.03] grayscale group-hover:grayscale-0 chromatic-hover"
             />
             {/* Overlay — only covers the image on hover to reveal metadata */}
@@ -85,7 +106,13 @@ export function AtoII_Galeria() {
         ))}
       </div>
 
-      <Lightbox open={index >= 0} close={close} index={index} slides={slides} />
+      <Lightbox
+        open={index >= 0}
+        close={close}
+        index={index}
+        slides={slides}
+        render={{ slide: renderLightboxSlide }}
+      />
     </Section>
   );
 }

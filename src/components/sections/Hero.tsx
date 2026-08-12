@@ -30,11 +30,15 @@ export function Hero() {
     >
       {/* Dynamic Background */}
       <div className="absolute inset-0 -z-30 h-full w-full bg-black">
+        {/* Decorative texture (20% opacity behind the headline) — empty alt,
+            no preload: the real LCP is the <h1>. */}
         <Image
           src="/images/banda-freeband.jpg"
-          alt="Banda Freeband"
+          alt=""
           fill
-          priority
+          sizes="100vw"
+          loading="eager"
+          quality={75}
           className="object-cover opacity-20 scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-950/80 to-transparent" />
@@ -56,10 +60,10 @@ export function Hero() {
         className="absolute top-24 left-4 sm:left-12 z-20 w-24 sm:w-32 brightness-200 contrast-125 saturate-0"
       >
         <Image
-          src="/images/dj-buru-logo.png"
+          src="/images/dj-buru-logo.webp"
           alt="DJ Buru"
           width={150}
-          height={60}
+          height={119}
           className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
         />
       </motion.div>

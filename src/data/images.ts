@@ -99,7 +99,9 @@ export interface CuratedTile {
 export const curatedGallery: CuratedTile[] = [
   { src: images.festa55,               alt: "Show Freeband no palco",               grade: "stage",   span: 7, rowSpan: 2, aspect: "16/9", parallax: "soft"   },
   { src: images.img0867,               alt: "Show noturno — vocalistas",            grade: "stage",   span: 5, rowSpan: 2, aspect: "4/5",  parallax: "strong" },
-  { src: images.festa308,              alt: "Palco iluminado — luzes neon",         grade: "neon",    span: 4,             aspect: "4/5",  parallax: "soft"   },
+  // cartaz-cosmopolitano is a 400×300 scan — keep it in a small tile so it
+  // isn't blown up past its resolution.
+  { src: images.cartazCosmopolitano,   alt: "Cartaz — Cosmopolitano FC",            grade: "warm",    span: 4,             aspect: "4/3",  parallax: "none"   },
   { src: images.img0437,               alt: "Apresentação ao vivo",                 grade: "stage",   span: 4,             aspect: "1/1",  parallax: "none"   },
   { src: images.img0690,               alt: "Freeband no palco",                    grade: "stage",   span: 4,             aspect: "4/5",  parallax: "soft"   },
   { src: images.reveillomIacanga,      alt: "Réveillon em Iacanga",                 grade: "cool",    span: 6,             aspect: "16/9", parallax: "strong" },
@@ -109,5 +111,16 @@ export const curatedGallery: CuratedTile[] = [
   { src: images.anos70,                alt: "Freeband nos anos 70",                 grade: "vintage", span: 4,             aspect: "500/350",  parallax: "none" },
   { src: images.anos90,                alt: "Freeband nos anos 90",                 grade: "vintage", span: 4,             aspect: "500/350",  parallax: "soft"   },
   { src: images.fb2015,                alt: "Freeband em 2015",                     grade: "vintage", span: 4,             aspect: "500/350",  parallax: "none"   },
-  { src: images.cartazCosmopolitano,   alt: "Cartaz — Cosmopolitano FC",            grade: "warm",    span: 12,            aspect: "21/9", parallax: "strong", crop: "center top" },
+  // festa-308 is the highest-resolution shot in the set (2560px) — it earns
+  // the full-width banner slot.
+  { src: images.festa308,              alt: "Palco iluminado — luzes neon",         grade: "neon",    span: 12,            aspect: "21/9", parallax: "strong" },
 ];
+
+// Tailored `sizes` per masonry span so small tiles stop downloading
+// full-width image candidates. Mirrors the .masonry-12 breakpoints:
+// below 768px every tile is full width.
+export function sizesForSpan(span: CuratedTile["span"]): string {
+  if (span === 12) return "100vw";
+  const desktopVw = Math.ceil((span / 12) * 100);
+  return `(min-width: 768px) ${desktopVw}vw, 100vw`;
+}

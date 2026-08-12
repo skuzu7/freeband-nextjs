@@ -4,8 +4,8 @@
 //   - optional scroll-driven parallax translate (capped at ±24px via CSS)
 //   - aspect-ratio + object-position crop overrides
 //
-// Respects next.config.ts:images.qualities: [75, 90] by enforcing quality=90
-// at the type level.
+// Respects next.config.ts:images.qualities: [75, 90] at the type level;
+// defaults to 75 — pass quality={90} only where the extra weight is earned.
 //
 // Usage:
 //   <CinematicImage src="…" alt="…" grade="stage" aspect="16/9" fill />
@@ -45,7 +45,7 @@ export function CinematicImage({
   aspect,
   crop = "center",
   fit = "cover",
-  quality = 90,
+  quality = 75,
   wrapperClassName = "",
   imgClassName = "",
   alt,

@@ -89,7 +89,6 @@ export function AtoI_Manifesto() {
             fill
             fit="cover"
             sizes="(min-width: 1024px) 55vw, 100vw"
-            quality={90}
             wrapperClassName="reveal-mid w-full ring-1 ring-inset ring-border"
             aspect="500/350"
             imgClassName="chromatic-hover"

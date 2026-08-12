@@ -59,9 +59,11 @@
   --color-text-muted: oklch(68% 0.01 260);
   --color-text-low: oklch(48% 0.01 260);
 
-  /* ---------------- Fonts ---------------- */
-  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* ---------------- Fonts ----------------
+     Single mapping from next/font private variables (set on <html> in
+     layout.tsx) to the semantic tokens the whole design system consumes. */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* ---------------- Fluid type scale ---------------- */
