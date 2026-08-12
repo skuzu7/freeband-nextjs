@@ -5,6 +5,7 @@
 // isolated behind PortfolioDownloadButton + dynamic(ssr:false), keeping the
 // PDF toolkit out of this route's app-ssr module graph.
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useState } from "react";
 
 const PortfolioDownloadButton = dynamic(
@@ -45,12 +46,12 @@ export default function PortfolioPage() {
         )}
 
         <div className="mt-8">
-          <a
+          <Link
             href="/"
             className="text-sm text-text-2 no-underline transition-colors hover:text-white"
           >
             &larr; Voltar ao site
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -43,8 +43,7 @@ export function SnapProgress({
   useEffect(() => {
     const el = targetRef.current;
     if (!el) return;
-    update();
-    let raf: number | null = null;
+    let raf: number | null = requestAnimationFrame(update);
     const onScroll = () => {
       if (raf !== null) cancelAnimationFrame(raf);
       raf = requestAnimationFrame(update);

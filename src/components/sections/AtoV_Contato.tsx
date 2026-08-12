@@ -11,7 +11,6 @@ import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { NumberScrub } from '@/components/ui/NumberScrub';
-import { Button } from '@/components/ui/Button';
 
 const InstagramIcon = () => (
   <svg

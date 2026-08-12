@@ -3,7 +3,7 @@
 
 import { motion } from 'framer-motion';
 import { contact } from '@/data/content';
-import { Check, Star, Zap, Crown } from 'lucide-react';
+import { Check, Star, Crown } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
 const packages = [

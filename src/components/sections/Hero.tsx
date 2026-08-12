@@ -2,13 +2,11 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { bandInfo, contact, pageCopy } from '@/data/content';
+import { contact } from '@/data/content';
 import { StageBeams } from '@/components/ui/StageBeams';
 import Image from 'next/image';
 
 export function Hero() {
-  const copy = pageCopy.hero;
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

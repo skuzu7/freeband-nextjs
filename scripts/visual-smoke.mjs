@@ -1,11 +1,11 @@
 // Visual smoke test for the redesign.
 // Loads home (top + mid scroll) and the orcamento page, saves PNGs to
-// /tmp/. Not wired into vitest — run with `node scripts/visual-smoke.mjs`
-// while `npm run dev` is up.
+// ./screenshots/ (gitignored). Not wired into vitest — run with
+// `node scripts/visual-smoke.mjs` while `npm run dev` is up.
 import puppeteer from "puppeteer";
 import { mkdirSync } from "node:fs";
 
-const OUT = "/tmp/freeband-smoke";
+const OUT = process.env.SMOKE_OUT ?? "screenshots";
 mkdirSync(OUT, { recursive: true });
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
