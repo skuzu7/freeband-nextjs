@@ -59,7 +59,10 @@ export function Hero() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1, duration: 1 }}
-        className="absolute top-24 left-4 sm:left-12 z-20 w-24 sm:w-32 brightness-200 contrast-125 saturate-0"
+        // No brightness/contrast filter: the asset is now white-on-transparent.
+        // It used to ship as an opaque white plate, and brightness(2) was what
+        // blew that plate out — which is why a white rectangle sat on the hero.
+        className="absolute top-24 left-4 sm:left-12 z-20 w-24 sm:w-32"
       >
         <Image
           src="/images/dj-buru-logo.webp"

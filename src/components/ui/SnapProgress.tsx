@@ -101,7 +101,10 @@ export function SnapProgress({
             onClick={() => step(i - activeIndex)}
             aria-label={`Ir para ${labels?.[i] ?? `cartão ${i + 1}`}`}
             aria-current={isActive ? "true" : undefined}
-            className={`flex items-center gap-2 transition-colors ${
+            // min-h-11 + py-3: the row is 16px of type, which left the tap
+            // target under the 24px WCAG 2.5.8 floor on exactly the breakpoint
+            // where it is the only way to drive the carousel.
+            className={`flex min-h-11 items-center gap-2 py-3 transition-colors ${
               isActive ? "text-brand" : "hover:text-text"
             }`}
           >

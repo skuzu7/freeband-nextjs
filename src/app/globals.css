@@ -43,7 +43,11 @@
   --color-border-strong: oklch(100% 0 0 / 0.16);
   --color-text: oklch(96% 0.005 260);
   --color-text-muted: oklch(68% 0.01 260);
-  --color-text-low: oklch(48% 0.01 260);
+  /* 59%, not 48%: at 48% this lands on 3.2:1 against --color-bg, and it
+     carries real body copy (era descriptions, highlight labels), not just
+     decoration. 59% clears 4.5:1 against the *lightest* surface it sits on
+     (--color-bg-high, the ink-deep sections) and still reads below -muted. */
+  --color-text-low: oklch(59% 0.01 260);
 
   /* ---------------- Fonts ----------------
      Single mapping from next/font private variables (set on <html> in

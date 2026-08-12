@@ -38,6 +38,7 @@ export function NavBar() {
 
   return (
     <nav
+      aria-label="Principal"
       className={`fixed inset-x-0 top-0 z-[100] transition-[padding,background,backdrop-filter] duration-500 ease-[var(--ease-stage)] ${
         scrolled || open ? 'bg-bg/85 py-3 backdrop-blur-xl' : 'bg-transparent py-6'
       }`}
@@ -70,7 +71,7 @@ export function NavBar() {
           ))}
           <a
             href="#contato"
-            className="inline-flex items-center justify-center bg-gold px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-gold-deep"
+            className="inline-flex items-center justify-center bg-gold px-4 py-2 text-xs font-bold uppercase tracking-widest text-void-950 transition-colors hover:bg-gold-light"
           >
             {pageCopy.nav.ctaLabel}
           </a>
@@ -137,7 +138,7 @@ export function NavBar() {
             <a
               href="#contato"
               onClick={() => setOpen(false)}
-              className="block bg-brand px-8 py-5 text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-white"
+              className="block bg-brand px-8 py-5 text-center font-mono text-xs font-semibold uppercase tracking-[0.3em] text-void-950"
             >
               {pageCopy.nav.ctaLabel}
             </a>

@@ -269,7 +269,13 @@ export const pageCopy = {
 
   pacotes: {
     eyebrow: 'Orçamentos',
-    title: 'Serviços Premium',
+    // Split like every other act's headline so <SectionHeadline> can italicize
+    // the emphasis. Reads "Pacotes premium." — deliberately not "Serviços
+    // Premium", which collided with the nav's SERVIÇOS entry (that points at
+    // #servicos, a different section).
+    headlinePrefix: 'Pacotes ',
+    headlineEmphasis: 'premium',
+    headlineSuffix: '.',
     lead: 'Escolha o formato ideal para transformar sua noite em um verdadeiro espetáculo.',
     highlightBadge: 'Mais popular',
     ctaLabel: 'Consultar Valores',
