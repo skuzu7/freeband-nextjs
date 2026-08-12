@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "smoke": "node scripts/visual-smoke.mjs"
+    "smoke": "node scripts/visual-smoke.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.4.0",
