@@ -1,6 +1,6 @@
 "use client";
 
-// Client page shown inside the token-protected /orcamento/[token] route.
+// Client page shown inside the session-protected /orcamento route.
 // Paper-themed split-pane proposal editor: form on the left, live A4
 // preview on the right.
 import Link from "next/link";

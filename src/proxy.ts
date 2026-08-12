@@ -8,7 +8,7 @@ import {
   secretsMatch,
 } from '@/lib/session';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const secret = process.env.SESSION_SECRET;
   const expectedToken = process.env.ORCAMENTO_TOKEN;
   const loginUrl = new URL('/admin', request.url);

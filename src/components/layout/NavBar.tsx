@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { pageCopy } from '@/data/content';
 
 const LINKS = pageCopy.nav.sections;
@@ -8,6 +8,7 @@ const LINKS = pageCopy.nav.sections;
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 32);
@@ -17,9 +18,21 @@ export function NavBar() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [open]);
 
@@ -64,10 +77,12 @@ export function NavBar() {
         </div>
 
         <button
+          ref={menuButtonRef}
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          aria-label="Menu"
+          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={open}
+          aria-controls="mobile-menu"
           className="relative z-[110] flex h-10 w-10 flex-col items-center justify-center gap-[6px] lg:hidden"
         >
           <span
@@ -90,6 +105,9 @@ export function NavBar() {
 
       {/* Mobile overlay */}
       <div
+        id="mobile-menu"
+        aria-hidden={!open}
+        inert={!open}
         className={`fixed inset-0 z-[105] bg-bg transition-[clip-path] duration-[600ms] ease-[var(--ease-stage)] lg:hidden ${
           open ? '[clip-path:circle(150%_at_100%_0)]' : '[clip-path:circle(0%_at_100%_0)]'
         }`}

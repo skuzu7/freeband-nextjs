@@ -10,6 +10,7 @@ mkdirSync(OUT, { recursive: true });
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const TOKEN = process.env.ORCAMENTO_TOKEN ?? "dev-token";
+const SETTLE_MS = Number(process.env.SMOKE_SETTLE_MS ?? 2500);
 
 async function waitForFonts(page) {
   try {
@@ -17,6 +18,10 @@ async function waitForFonts(page) {
   } catch {
     /* fonts may fail to load in sandbox; continue */
   }
+}
+
+async function waitForSettledUi() {
+  await new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
 }
 
 async function run() {
@@ -34,6 +39,7 @@ async function run() {
   console.log("> home (top)");
   await page.goto(`${BASE}/`, { waitUntil: "networkidle0", timeout: 60000 });
   await waitForFonts(page);
+  await waitForSettledUi();
   await page.screenshot({ path: `${OUT}/home-top.png`, fullPage: false });
 
   console.log("> home (full)");
@@ -43,6 +49,7 @@ async function run() {
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   await page.goto(`${BASE}/`, { waitUntil: "networkidle0", timeout: 60000 });
   await waitForFonts(page);
+  await waitForSettledUi();
   await page.screenshot({ path: `${OUT}/home-mobile.png`, fullPage: false });
 
   console.log("> orcamento");

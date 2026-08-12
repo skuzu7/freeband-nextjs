@@ -11,7 +11,11 @@ export function LoginForm({ action }: LoginFormProps) {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      <label htmlFor="admin-password" className="sr-only">
+        Senha
+      </label>
       <input
+        id="admin-password"
         type="password"
         name="password"
         placeholder="Senha"
@@ -29,7 +33,11 @@ export function LoginForm({ action }: LoginFormProps) {
         {isPending ? 'Entrando...' : 'Entrar'}
       </button>
 
-      {state?.error && <p className="text-sm text-red-500 text-center">{state.error}</p>}
+      {state?.error && (
+        <p role="alert" aria-live="polite" className="text-sm text-red-500 text-center">
+          {state.error}
+        </p>
+      )}
     </form>
   );
 }

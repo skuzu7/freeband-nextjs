@@ -163,14 +163,6 @@ export const includedFeatures = [
 // Flat version derived from includedFeatures for PDF / legacy consumers.
 export const serviceIncludes = includedFeatures.flatMap((f) => f.items);
 
-// Condições comerciais padrão impressas no portfolio "Orçamento Exclusivo".
-export const proposalTerms = {
-  entradaPct: 30,
-  entradaLabel: '30% de entrada para reservar a data',
-  saldoLabel: 'Saldo restante até o dia do evento',
-  validadeDias: 7,
-  validadeLabel: 'Validade deste orçamento: 7 dias',
-};
 
 export const partners = [
   'Clube Náutico Araraquara',

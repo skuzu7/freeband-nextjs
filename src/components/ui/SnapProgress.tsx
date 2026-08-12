@@ -88,8 +88,9 @@ export function SnapProgress({
 
   return (
     <div
+      role="navigation"
       className={`flex items-center gap-3 font-mono text-[0.65rem] uppercase tracking-[0.3em] text-text-muted ${className}`.trim()}
-      aria-hidden
+      aria-label="Navegação dos cartões"
     >
       {Array.from({ length: count }).map((_, i) => {
         const isActive = i === activeIndex;
@@ -98,6 +99,8 @@ export function SnapProgress({
             key={i}
             type="button"
             onClick={() => step(i - activeIndex)}
+            aria-label={`Ir para ${labels?.[i] ?? `cartão ${i + 1}`}`}
+            aria-current={isActive ? "true" : undefined}
             className={`flex items-center gap-2 transition-colors ${
               isActive ? "text-brand" : "hover:text-text"
             }`}

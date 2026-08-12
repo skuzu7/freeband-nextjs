@@ -1,6 +1,6 @@
 "use client";
 
-// Controlled form used inside the token-protected /orcamento/[token] route.
+// Controlled form used inside the session-protected /orcamento route.
 // Emits a new OrcamentoData snapshot on every change so the adjacent preview
 // and PDF can re-render reactively. Paper-themed.
 import type { OrcamentoData } from "@/types/orcamento";
@@ -39,8 +39,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </header>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Nome do Contratante</label>
+        <label htmlFor="contratante" className={labelClasses}>Nome do Contratante</label>
         <input
+          id="contratante"
           className={inputClasses}
           type="text"
           value={data.contratante}
@@ -50,8 +51,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Tipo de Evento</label>
+        <label htmlFor="tipo-evento" className={labelClasses}>Tipo de Evento</label>
         <select
+          id="tipo-evento"
           className={`${inputClasses} cursor-pointer appearance-none`}
           value={data.tipoEvento}
           onChange={(e) => set("tipoEvento", e.target.value)}
@@ -68,8 +70,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col">
-          <label className={labelClasses}>Data do Evento</label>
+          <label htmlFor="data-evento" className={labelClasses}>Data do Evento</label>
           <input
+            id="data-evento"
             className={inputClasses}
             type="date"
             value={data.dataEvento}
@@ -77,8 +80,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
           />
         </div>
         <div className="flex flex-col">
-          <label className={labelClasses}>Local / Cidade</label>
+          <label htmlFor="local-evento" className={labelClasses}>Local / Cidade</label>
           <input
+            id="local-evento"
             className={inputClasses}
             type="text"
             value={data.local}
@@ -90,8 +94,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="flex flex-col">
-          <label className={labelClasses}>Início</label>
+          <label htmlFor="horario-inicio" className={labelClasses}>Início</label>
           <input
+            id="horario-inicio"
             className={inputClasses}
             type="time"
             value={data.horarioInicio}
@@ -99,8 +104,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
           />
         </div>
         <div className="flex flex-col">
-          <label className={labelClasses}>Fim</label>
+          <label htmlFor="horario-fim" className={labelClasses}>Fim</label>
           <input
+            id="horario-fim"
             className={inputClasses}
             type="time"
             value={data.horarioFim}
@@ -108,8 +114,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
           />
         </div>
         <div className="flex flex-col">
-          <label className={labelClasses}>Convidados</label>
+          <label htmlFor="convidados" className={labelClasses}>Convidados</label>
           <input
+            id="convidados"
             className={inputClasses}
             type="number"
             value={data.numConvidados}
@@ -120,8 +127,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Valor do Cachê (R$)</label>
+        <label htmlFor="cache" className={labelClasses}>Valor do Cachê (R$)</label>
         <input
+          id="cache"
           className={inputClasses}
           type="number"
           value={data.cache}
@@ -132,8 +140,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col">
-          <label className={labelClasses}>Entrada (%)</label>
+          <label htmlFor="entrada-pct" className={labelClasses}>Entrada (%)</label>
           <input
+            id="entrada-pct"
             className={inputClasses}
             type="number"
             min="0"
@@ -144,8 +153,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
           />
         </div>
         <div className="flex flex-col">
-          <label className={labelClasses}>Data da Entrada</label>
+          <label htmlFor="entrada-data" className={labelClasses}>Data da Entrada</label>
           <input
+            id="entrada-data"
             className={inputClasses}
             type="date"
             value={data.entradaData}
@@ -155,8 +165,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Data do Saldo</label>
+        <label htmlFor="saldo-data" className={labelClasses}>Data do Saldo</label>
         <input
+          id="saldo-data"
           className={inputClasses}
           type="date"
           value={data.saldoData}
@@ -165,8 +176,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Itens Inclusos</label>
+        <label htmlFor="itens-inclusos" className={labelClasses}>Itens Inclusos</label>
         <textarea
+          id="itens-inclusos"
           className={`${inputClasses} min-h-[100px]`}
           style={{ fieldSizing: "content" } as React.CSSProperties}
           value={data.itensInclusos}
@@ -175,8 +187,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Observações</label>
+        <label htmlFor="observacoes" className={labelClasses}>Observações</label>
         <textarea
+          id="observacoes"
           className={`${inputClasses} min-h-[80px]`}
           style={{ fieldSizing: "content" } as React.CSSProperties}
           value={data.observacoes}
@@ -185,8 +198,9 @@ export function OrcamentoForm({ data, onChange }: OrcamentoFormProps) {
       </div>
 
       <div className={fieldClasses}>
-        <label className={labelClasses}>Validade da Proposta</label>
+        <label htmlFor="validade" className={labelClasses}>Validade da Proposta</label>
         <input
+          id="validade"
           className={inputClasses}
           type="date"
           value={data.validade}

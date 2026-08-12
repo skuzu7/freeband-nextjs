@@ -1,4 +1,4 @@
-// Token-less quote-builder route. Access control lives in src/middleware.ts:
+// Token-less quote-builder route. Access control lives in src/proxy.ts:
 // a signed session cookie (from /admin login or a legacy token link) is
 // required to reach this page at all.
 import type { Metadata } from "next";

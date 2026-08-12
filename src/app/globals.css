@@ -381,29 +381,6 @@ p {
   }
 }
 
-/* =========================================================================
-   Spotlight cursor — radial gradient that follows pointer on desktop.
-   ========================================================================= */
-.stage-spot {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(
-    circle 360px at var(--spot-x, 50%) var(--spot-y, 35%),
-    oklch(98% 0 0 / 0.18),
-    oklch(62% 0.24 20 / 0.1) 30%,
-    transparent 60%
-  );
-  mix-blend-mode: screen;
-  transition: background-position 120ms linear;
-}
-
-@media (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .stage-spot {
-    display: none;
-  }
-}
 
 /* =========================================================================
    Horizontal scroll snap (used by Historia + Servicos)

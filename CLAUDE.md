@@ -38,7 +38,7 @@ Next.js App Router + TypeScript, Tailwind CSS 4, Framer Motion. Path alias `@/*`
 - `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus the `Ato*` sections from `src/components/sections/`.
 - `/portfolio` — public page to download the band's portfolio PDF.
 - `/admin` — login form; the `loginAction` server action (`src/app/admin/actions.ts`) rate-limits attempts, compares the password in constant time, sets a signed `freeband_admin` session cookie (HMAC-SHA256, 7 days — see `src/lib/session.ts`, Web Crypto only so it runs in both Edge and Node) and redirects to `/orcamento`.
-- `/orcamento` — quote builder (split-pane form + live A4 preview). `src/middleware.ts` gates every `/orcamento` path: a valid signed cookie passes; a legacy `/orcamento/<token>` link whose token equals `ORCAMENTO_TOKEN` is exchanged for a session cookie and redirected to `/orcamento` (the secret leaves the URL); anything else redirects to `/admin`. Logout button in the editor header calls `logoutAction`.
+- `/orcamento` — quote builder (split-pane form + live A4 preview). `src/proxy.ts` gates every `/orcamento` path: a valid signed cookie passes; a legacy `/orcamento/<token>` link whose token equals `ORCAMENTO_TOKEN` is exchanged for a session cookie and redirected to `/orcamento` (the secret leaves the URL); anything else redirects to `/admin`. Logout button in the editor header calls `logoutAction`.
 
 ### PDF generation
 

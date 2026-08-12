@@ -1,7 +1,6 @@
 // src/lib/session.ts
-// Signed admin session cookie. Edge-safe: only Web Crypto (crypto.subtle),
-// so the exact same code runs in the middleware (Edge runtime) and in
-// server actions (Node runtime).
+// Signed admin session cookie using Web Crypto (crypto.subtle), so the same
+// implementation works in the Next.js proxy and in server actions.
 //
 // Cookie format: "<expEpochSeconds>.<base64url HMAC-SHA256 of exp>"
 // Forging it requires SESSION_SECRET; tampering with exp breaks the MAC.
