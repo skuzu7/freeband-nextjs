@@ -69,7 +69,7 @@ export function Hero() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex h-full flex-col items-center justify-center text-center px-4 pt-20"
+        className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-4 pt-20"
       >
         <motion.div variants={itemVariants} className="mb-8 inline-flex items-center gap-3 border border-white/20 bg-black/40 backdrop-blur-md px-5 py-2 rounded-full shadow-[0_0_20px_rgba(197,158,87,0.15)]">
           <span className="h-2 w-2 rounded-full bg-[#C59E57] animate-pulse" />
@@ -110,7 +110,7 @@ export function Hero() {
           </a>
 
           <a
-            href="#servicos"
+            href="#pacotes"
             className="group px-8 py-4 font-sans text-sm font-bold tracking-widest text-white border border-white/30 rounded-md backdrop-blur-sm transition-all hover:bg-white/10 w-full sm:w-auto"
           >
             VER PACOTES

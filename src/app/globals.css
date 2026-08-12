@@ -37,6 +37,18 @@
   --color-red-500: #ed1b24;
   --color-blue-500: #00aeef;
 
+  /* Gold — premium accent introduced by the 2026 revamp (Hero/Serviços). */
+  --color-gold: #c59e57;
+  --color-gold-light: #d8b975;
+  --color-gold-deep: #8b6f3d;
+
+  /* Paper — light palette consumed by [data-theme='paper'] (/orcamento). */
+  --color-paper-50: oklch(97% 0.008 85);
+  --color-paper-100: oklch(94% 0.012 85);
+  --color-paper-300: oklch(72% 0.02 82);
+  --color-paper-500: oklch(48% 0.025 80);
+  --color-paper-900: oklch(22% 0.03 78);
+
   /* ---------------- Semantic aliases (dark-first) ---------------- */
   --color-bg: var(--color-void-950);
   --color-bg-raise: var(--color-void-900);
@@ -348,8 +360,12 @@ body {
   90% { transform: translate(-10%, 10%); }
 }
 
-.scanlines {
-  position: relative;
+/* Layered so Tailwind utilities (e.g. `absolute` on the Hero overlay) win
+   over the default positioning below. Unlayered CSS beats every @layer. */
+@layer components {
+  .scanlines {
+    position: relative;
+  }
 }
 .scanlines::after {
   content: '';
@@ -587,17 +603,21 @@ p {
 /* =========================================================================
    Horizontal scroll snap (used by Historia + Servicos)
    ========================================================================= */
-.h-snap {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min(82vw, 640px);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: clamp(1rem, 6vw, 5rem);
-  scrollbar-width: none;
+/* Layered so per-breakpoint utilities on the element (e.g. lg:gap-8) can
+   override the defaults below. */
+@layer components {
+  .h-snap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(82vw, 640px);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(1rem, 6vw, 5rem);
+    scrollbar-width: none;
+  }
 }
 .h-snap::-webkit-scrollbar {
   display: none;
@@ -626,7 +646,7 @@ p {
   position: relative;
   isolation: isolate;
   background: linear-gradient(90deg, oklch(68% 0.2 150), oklch(72% 0.18 170));
-  color: var(--color-ink-950);
+  color: var(--color-void-950);
   overflow: hidden;
 }
 .aurora::before {
@@ -652,6 +672,22 @@ p {
   .aurora::before {
     animation: none;
   }
+}
+
+/* Mesh background — subtle gold radial washes for <Section variant="mesh"> */
+.mesh-bg {
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(
+      60% 50% at 12% 0%,
+      color-mix(in oklab, var(--color-gold), transparent 92%),
+      transparent 65%
+    ),
+    radial-gradient(
+      50% 45% at 88% 100%,
+      color-mix(in oklab, var(--color-gold), transparent 93%),
+      transparent 65%
+    );
 }
 
 /* Section top gradient divider */
@@ -937,6 +973,10 @@ p {
    Print — clean paper output for the proposal.
    ========================================================================= */
 @media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
   .no-print {
     display: none !important;
   }
@@ -949,6 +989,21 @@ p {
   html,
   body {
     background: #ffffff !important;
+  }
+  /* Undo the on-screen preview chrome: the scale wrapper uses an inline
+     transform (only !important can beat it) and the panes clip with
+     max-height/overflow, which would truncate the printed page. */
+  .print-scale-reset {
+    transform: none !important;
+    height: auto !important;
+    width: auto !important;
+  }
+  .print-unclip {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
   }
   #print-area {
     box-shadow: none !important;

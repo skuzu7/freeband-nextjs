@@ -43,7 +43,7 @@ const packages = [
 
 export function Ato_Servicos() {
   return (
-    <section id="servicos" className="relative bg-void-950 py-24 sm:py-32 overflow-hidden">
+    <section id="pacotes" className="relative bg-void-950 py-24 sm:py-32 overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(197,158,87,0.05)_0%,rgba(0,0,0,0)_50%)]" />

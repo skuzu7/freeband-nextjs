@@ -1,82 +1,106 @@
 import { describe, it, expect } from "vitest";
-import { formatCurrency, formatDate, calcSaldo, calcEntrada } from "../format";
+import {
+  parseReais,
+  formatCurrency,
+  formatDate,
+  calcSaldo,
+  calcEntrada,
+} from "../format";
 
 // Non-breaking space character used by Intl.NumberFormat pt-BR between "R$" and value
-const NBSP = "\u00A0";
+const NBSP = " ";
+
+describe("parseReais", () => {
+  it("parses whole reais", () => {
+    expect(parseReais("5000")).toBe(5000);
+  });
+
+  it("parses decimal reais with dot separator (type=number canonical form)", () => {
+    expect(parseReais("5000.5")).toBe(5000.5);
+  });
+
+  it("returns null for empty input", () => {
+    expect(parseReais("")).toBeNull();
+    expect(parseReais("   ")).toBeNull();
+  });
+
+  it("returns null for non-numeric input", () => {
+    expect(parseReais("abc")).toBeNull();
+  });
+});
 
 describe("formatCurrency", () => {
-  it("should format digit-only string as BRL when value is valid", () => {
-    expect(formatCurrency("1000000")).toBe(`R$${NBSP}10.000,00`);
+  it("treats the input as reais, not centavos", () => {
+    expect(formatCurrency("5000")).toBe(`R$${NBSP}5.000,00`);
   });
 
-  it("should strip non-digit characters before parsing", () => {
-    expect(formatCurrency("R$ 10.000,00")).toBe(`R$${NBSP}10.000,00`);
+  it("keeps the decimal part", () => {
+    expect(formatCurrency("5000.5")).toBe(`R$${NBSP}5.000,50`);
   });
 
-  it("should return placeholder when input has no digits", () => {
+  it("formats zero", () => {
+    expect(formatCurrency("0")).toBe(`R$${NBSP}0,00`);
+  });
+
+  it("returns placeholder for non-numeric input", () => {
     expect(formatCurrency("abc")).toBe("R$ —");
   });
 
-  it("should return placeholder when input is empty", () => {
+  it("returns placeholder for empty input", () => {
     expect(formatCurrency("")).toBe("R$ —");
-  });
-
-  it("should format small values correctly", () => {
-    expect(formatCurrency("150")).toBe(`R$${NBSP}1,50`);
   });
 });
 
 describe("formatDate", () => {
-  it("should convert ISO date string to dd/mm/yyyy", () => {
+  it("converts ISO date string to dd/mm/yyyy", () => {
     expect(formatDate("2026-04-10")).toBe("10/04/2026");
   });
 
-  it("should return placeholder when value is empty", () => {
+  it("returns placeholder when value is empty", () => {
     expect(formatDate("")).toBe("—");
   });
 
-  it("should preserve single-digit day and month segments", () => {
+  it("preserves single-digit day and month segments", () => {
     expect(formatDate("2026-01-05")).toBe("05/01/2026");
+  });
+
+  it("returns non-ISO input unchanged instead of mangling it", () => {
+    expect(formatDate("10/04/2026")).toBe("10/04/2026");
   });
 });
 
 describe("calcSaldo", () => {
-  it("should compute remaining balance after percentage down payment", () => {
-    // 10000,00 total, 50% entrada → saldo = 5000,00
-    expect(calcSaldo("1000000", "50")).toBe(`R$${NBSP}5.000,00`);
+  it("computes remaining balance after percentage down payment", () => {
+    expect(calcSaldo("10000", "50")).toBe(`R$${NBSP}5.000,00`);
   });
 
-  it("should return full total when down payment is 0%", () => {
-    expect(calcSaldo("1000000", "0")).toBe(`R$${NBSP}10.000,00`);
+  it("returns full total when down payment is 0%", () => {
+    expect(calcSaldo("10000", "0")).toBe(`R$${NBSP}10.000,00`);
   });
 
-  it("should return zero when down payment is 100%", () => {
-    expect(calcSaldo("1000000", "100")).toBe(`R$${NBSP}0,00`);
+  it("returns zero when down payment is 100%", () => {
+    expect(calcSaldo("10000", "100")).toBe(`R$${NBSP}0,00`);
   });
 
-  it("should return placeholder when percentage is not numeric", () => {
-    expect(calcSaldo("1000000", "abc")).toBe("R$ —");
+  it("returns placeholder when percentage is not numeric", () => {
+    expect(calcSaldo("10000", "abc")).toBe("R$ —");
   });
 
-  it("should return placeholder when cache is empty", () => {
+  it("returns placeholder when cache is empty", () => {
     expect(calcSaldo("", "50")).toBe("R$ —");
   });
 });
 
 describe("calcEntrada", () => {
-  it("should compute down payment amount from percentage", () => {
-    expect(calcEntrada("1000000", "50")).toBe(`R$${NBSP}5.000,00`);
+  it("computes down payment amount from percentage", () => {
+    expect(calcEntrada("10000", "50")).toBe(`R$${NBSP}5.000,00`);
   });
 
-  it("should return zero when down payment is 0%", () => {
-    expect(calcEntrada("1000000", "0")).toBe(`R$${NBSP}0,00`);
+  it("supports the official 30% default", () => {
+    expect(calcEntrada("10000", "30")).toBe(`R$${NBSP}3.000,00`);
   });
 
-  it("should return full total when down payment is 100%", () => {
-    expect(calcEntrada("1000000", "100")).toBe(`R$${NBSP}10.000,00`);
-  });
-
-  it("should return placeholder when cache has no digits", () => {
+  it("returns placeholder when cache is empty", () => {
     expect(calcEntrada("", "50")).toBe("R$ —");
   });
 });

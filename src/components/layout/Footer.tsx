@@ -33,7 +33,7 @@ export function Footer() {
               Internacional
             </span>
             <span
-              className="font-display text-text -tracking-[0.02em] text-glow-red"
+              className="font-display text-text -tracking-[0.02em]"
               style={{ fontSize: 'var(--text-4xl)' }}
             >
               freeband

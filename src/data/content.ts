@@ -213,8 +213,8 @@ export const pageCopy = {
     // Shared array: consumed by NavBar (with num) and Footer (label-only).
     sections: [
       { num: 'I', label: 'SOBRE', href: '#sobre' },
-      { num: 'II', label: 'HISTÓRIA', href: '#historia' },
-      { num: 'III', label: 'GALERIA', href: '#galeria' },
+      { num: 'II', label: 'GALERIA', href: '#galeria' },
+      { num: 'III', label: 'PALCOS', href: '#palcos' },
       { num: 'IV', label: 'SERVIÇOS', href: '#servicos' },
       { num: 'V', label: 'CONTATO', href: '#contato' },
     ],

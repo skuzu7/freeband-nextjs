@@ -43,11 +43,11 @@ export function OrcamentoPage() {
         </Link>
       </header>
 
-      <div className="grid min-h-[calc(100vh-96px)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+      <div className="print-unclip grid min-h-[calc(100vh-96px)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         <div className="no-print max-h-[calc(100vh-96px)] overflow-y-auto border-r border-border bg-bg">
           <OrcamentoForm data={data} onChange={setData} />
         </div>
-        <div className="max-h-[calc(100vh-96px)] overflow-y-auto bg-bg-raise p-[clamp(1.25rem,3vi,2.5rem)]">
+        <div className="print-unclip max-h-[calc(100vh-96px)] overflow-y-auto bg-bg-raise p-[clamp(1.25rem,3vi,2.5rem)]">
           <OrcamentoPreview data={data} onPrint={handlePrint} />
         </div>
       </div>

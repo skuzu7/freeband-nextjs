@@ -2,6 +2,7 @@
 // @react-pdf/renderer version of the proposal, generated client-side and
 // streamed through PDFDownloadLink inside OrcamentoPreview.
 import { Document, Page, View, Text, StyleSheet } from "@react-pdf/renderer";
+import { bandInfo, contact } from "@/data/content";
 import type { OrcamentoData } from "@/types/orcamento";
 import {
   formatCurrency,
@@ -161,9 +162,9 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
             <Text style={styles.headerNameGold}>Freeband</Text>
           </View>
           <View style={styles.headerRight}>
-            <Text>Desde 1969</Text>
-            <Text>Trabiju, SP</Text>
-            <Text style={styles.headerPhone}>(16) 99171-2996</Text>
+            <Text>Desde {bandInfo.founded}</Text>
+            <Text>{bandInfo.location}</Text>
+            <Text style={styles.headerPhone}>{contact.phone}</Text>
           </View>
         </View>
 
@@ -188,10 +189,10 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
             <Text style={styles.infoValue}>{data.local || "\u2014"}</Text>
           </View>
           <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Horario</Text>
+            <Text style={styles.infoLabel}>Hor\u00e1rio</Text>
             <Text style={styles.infoValue}>
               {data.horarioInicio && data.horarioFim
-                ? `${data.horarioInicio} as ${data.horarioFim}`
+                ? `${data.horarioInicio} \u00e0s ${data.horarioFim}`
                 : "\u2014"}
             </Text>
           </View>
@@ -214,7 +215,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Condicoes de Pagamento</Text>
+          <Text style={styles.sectionTitle}>Condições de Pagamento</Text>
           <View style={styles.paymentGrid}>
             <View style={styles.paymentCard}>
               <Text style={styles.paymentLabel}>
@@ -227,7 +228,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
               </Text>
               {data.entradaData ? (
                 <Text style={styles.paymentDate}>
-                  ate {formatDate(data.entradaData)}
+                  até {formatDate(data.entradaData)}
                 </Text>
               ) : null}
             </View>
@@ -238,7 +239,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
               </Text>
               {data.saldoData ? (
                 <Text style={styles.paymentDate}>
-                  ate {formatDate(data.saldoData)}
+                  até {formatDate(data.saldoData)}
                 </Text>
               ) : null}
             </View>
@@ -254,7 +255,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
 
         {data.observacoes ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Observacoes</Text>
+            <Text style={styles.sectionTitle}>Observações</Text>
             <Text style={styles.bodyText}>{data.observacoes}</Text>
           </View>
         ) : null}
@@ -262,12 +263,12 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
         <View style={styles.footer}>
           <View>
             {data.validade ? (
-              <Text>Proposta valida ate {formatDate(data.validade)}</Text>
+              <Text>Proposta válida até {formatDate(data.validade)}</Text>
             ) : null}
           </View>
           <View style={styles.footerRight}>
-            <Text>Internacional Freeband</Text>
-            <Text style={styles.footerPhone}>(16) 99171-2996</Text>
+            <Text>{bandInfo.name}</Text>
+            <Text style={styles.footerPhone}>{contact.phone}</Text>
           </View>
         </View>
       </Page>

@@ -43,7 +43,7 @@ export function OrcamentoPreview({ data, onPrint }: OrcamentoPreviewProps) {
             <button
               type="button"
               onClick={() => setPdfReady(true)}
-              className="cursor-pointer bg-brand px-6 py-3 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-ink-950 transition-colors hover:bg-brand-hot"
+              className="cursor-pointer bg-brand px-6 py-3 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white transition-colors hover:bg-brand-hot"
             >
               Gerar PDF
             </button>
@@ -54,11 +54,11 @@ export function OrcamentoPreview({ data, onPrint }: OrcamentoPreviewProps) {
       </div>
 
       <div
-        className="origin-top overflow-hidden border border-border bg-bg-high shadow-[0_20px_60px_-20px_color-mix(in_oklch,var(--color-paper-900)_35%,transparent)]"
+        className="print-unclip origin-top overflow-hidden border border-border bg-bg-high shadow-[0_20px_60px_-20px_color-mix(in_oklch,var(--color-paper-900)_35%,transparent)]"
         style={{ containerType: "inline-size" }}
       >
         <div
-          className="w-[210mm] max-w-none origin-top-left"
+          className="print-scale-reset w-[210mm] max-w-none origin-top-left"
           style={{
             transform: "scale(var(--preview-scale, 1))",
             transformOrigin: "top left",

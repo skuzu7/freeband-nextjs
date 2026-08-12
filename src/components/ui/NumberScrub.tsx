@@ -1,12 +1,8 @@
 // src/components/ui/NumberScrub.tsx
-// Oversized scroll-driven number. Two variants:
-//   - "counter": animates --n from 0 → value as the element crosses the viewport
-//   - "phone":   static render, monospace digits (counting a phone number up
-//                would be corny — phone just renders big and proud)
-//
-// Implementation uses CSS `counter()` + `@property --n` for the counter variant.
-// Fallback: static final value. Reduced-motion: static final value.
-import type { CSSProperties, ReactNode } from "react";
+// Oversized editorial number. Two variants:
+//   - "counter": big brand-colored figure with an optional label underneath
+//   - "phone":   static render, monospace digits
+import type { ReactNode } from "react";
 
 interface NumberScrubProps {
   value: number | string;
@@ -42,20 +38,11 @@ export function NumberScrub({
   const numeric =
     typeof value === "string" ? parseInt(value, 10) || 0 : value;
 
-  const style = {
-    "--n-target": String(numeric),
-    counterReset: `n ${numeric}`,
-  } as CSSProperties;
-
   return (
     <div className={`flex flex-col items-start leading-none ${className}`}>
       <span
-        aria-hidden
-        className="number-scrub font-display font-semibold text-brand -tracking-[0.06em] leading-[0.75]"
-        style={{
-          ...style,
-          fontSize: "clamp(6rem, 22vi, 22rem)",
-        }}
+        className="font-display font-semibold text-brand -tracking-[0.06em] leading-[0.75]"
+        style={{ fontSize: "clamp(6rem, 22vi, 22rem)" }}
       >
         {numeric}
       </span>

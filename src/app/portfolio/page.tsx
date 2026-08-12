@@ -22,13 +22,13 @@ export default function PortfolioPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-bg px-6">
       <div className="max-w-lg text-center">
-        <div className="mb-2 text-xs uppercase tracking-[0.15em] text-text-2">
+        <div className="mb-2 text-xs uppercase tracking-[0.15em] text-text-muted">
           Internacional Freeband
         </div>
         <h1 className="mb-4 font-display text-4xl font-bold text-gold">
           Portfolio Digital
         </h1>
-        <p className="mb-10 leading-relaxed text-text-2">
+        <p className="mb-10 leading-relaxed text-text-muted">
           Baixe nosso portfolio completo com historia, galeria, servicos e
           informacoes de contato.
         </p>
@@ -48,7 +48,7 @@ export default function PortfolioPage() {
         <div className="mt-8">
           <Link
             href="/"
-            className="text-sm text-text-2 no-underline transition-colors hover:text-white"
+            className="text-sm text-text-muted no-underline transition-colors hover:text-white"
           >
             &larr; Voltar ao site
           </Link>
