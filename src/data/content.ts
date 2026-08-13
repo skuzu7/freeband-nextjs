@@ -33,14 +33,23 @@ export const bandLineup = {
   ],
 };
 
+// The band's own one-line description of what it delivers. Canonical: the meta
+// description, the Palco lead and the closing paragraph of the release all read
+// from here, so the sentence is edited in exactly one place.
+const RELEASE_SHORT =
+  'Composta por onze integrantes, oferecemos excelência em som, iluminação moderna, painel de LED e performance vocal, com palco, logística e estrutura completa.';
+
 export const release = {
+  short: RELEASE_SHORT,
   full: `Fundada em 1969 na cidade de Jaú/SP por um grupo de amigos com uma proposta inovadora para a época, a Internacional Freeband nasceu para tocar aos finais de semana — todos os integrantes mantinham compromissos profissionais — e rapidamente se tornou uma das trajetórias mais duradouras da música brasileira, ainda presente no cenário até hoje.
 
 Com visão à frente do seu tempo, sempre antenada às tendências tecnológicas, seu fundador S.R. Antônio Lourenço Morales posicionou a Freeband de forma sólida e definitiva no mercado nacional, conquistando espaço nos melhores clubes do Brasil e em empresas dos mais variados segmentos.
 
 A banda realizou duas turnês internacionais ao lado de Jimmy Cliff e Cris Duran e participou de shows de nível nacional com nomes como Lulu Santos, Roupa Nova, Skank, Daniel, Cristian e Ralf, Ultraje a Rigor, Raça Negra, Erasmo Carlos, César e Paulinho, 14Bis, Beth Carvalho e Jorge Aragão, entre outros. Já se apresentou na maioria dos municípios do estado de São Paulo e em mais de sete estados brasileiros.
 
-Hoje, sediada em Trabiju/SP, a Freeband é totalmente independente em infraestrutura e logística, com equipamentos próprios da mais alta tecnologia — padrão que lhe rendeu vários prêmios de nível nacional e que continua sendo renovado por investimentos constantes.`,
+Hoje, sediada em Trabiju/SP, a Freeband é totalmente independente em infraestrutura e logística, com equipamentos próprios da mais alta tecnologia — padrão que lhe rendeu vários prêmios de nível nacional e que continua sendo renovado por investimentos constantes.
+
+${RELEASE_SHORT}`,
   highlights: [
     { value: `${new Date().getFullYear() - 1969}+`, label: 'anos de estrada' },
     { value: '11', label: 'integrantes no palco' },
@@ -236,11 +245,9 @@ export const contact = {
 export const pageCopy = {
   seo: {
     title: 'Internacional Freeband — Desde 1969',
-    description:
-      'Experiências musicais de alto padrão para eventos inesquecíveis. Portfolio e orçamentos.',
+    description: RELEASE_SHORT,
     ogTitle: 'Internacional Freeband',
-    ogDescription:
-      'Mais de meio século dividindo o mesmo pulso com o Brasil — réveillon, casamento, formatura, show municipal.',
+    ogDescription: RELEASE_SHORT,
   },
 
   nav: {
@@ -249,10 +256,11 @@ export const pageCopy = {
     // and #pacotes is in here now — it is what a buyer actually comes for.
     sections: [
       { num: '01', label: 'PALCO', href: '#palco' },
-      { num: '02', label: 'ARQUIVO', href: '#arquivo' },
-      { num: '03', label: 'HISTÓRIA', href: '#historia' },
-      { num: '04', label: 'PACOTES', href: '#pacotes' },
-      { num: '05', label: 'CONTATO', href: '#contato' },
+      { num: '02', label: 'VÍDEO', href: '#video' },
+      { num: '03', label: 'ARQUIVO', href: '#arquivo' },
+      { num: '04', label: 'HISTÓRIA', href: '#historia' },
+      { num: '05', label: 'PACOTES', href: '#pacotes' },
+      { num: '06', label: 'CONTATO', href: '#contato' },
     ],
     ctaLabel: 'ORÇAMENTO',
     brandLine: `Desde ${bandInfo.founded} · ${bandInfo.location}`,
@@ -287,11 +295,29 @@ export const pageCopy = {
     headlinePrefix: 'É isto que chega na ',
     headlineEmphasis: 'sua festa',
     headlineSuffix: '.',
-    lead: 'Onze pessoas no palco, naipe de vocais, bailarinos, painel de LED e luz cênica. As fotos abaixo são de shows nossos — sem banco de imagens.',
+    lead: `${RELEASE_SHORT} As fotos abaixo são de shows nossos — sem banco de imagens.`,
+    figurinosEyebrow: 'Figurinos',
+    figurinosLead:
+      'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
+  },
+
+  // The reel: four clips filmed at the band's own shows, no sound, no edit.
+  // Photographs prove the structure exists; only moving pictures prove the
+  // room fills up and the light rig actually does something.
+  video: {
+    eyebrowNumber: '02',
+    eyebrowLabel: 'O show',
+    headlinePrefix: 'E é assim que ele ',
+    headlineEmphasis: 'se move',
+    headlineSuffix: '.',
+    lead: 'Quatro trechos gravados em shows nossos, sem trilha e sem edição — luz cênica, painel de LED, bailarinos e o naipe de vocais em movimento.',
+    pauseLabel: 'Pausar os vídeos',
+    playLabel: 'Reproduzir os vídeos',
+    footnote: 'Gravações de celular, feitas na pista. O material em alta resolução vai por WhatsApp.',
   },
 
   arquivo: {
-    eyebrowNumber: '02',
+    eyebrowNumber: '03',
     eyebrowLabel: 'O arquivo',
     headlinePrefix: 'Cartazes de quem ',
     headlineEmphasis: 'já tocou',
@@ -302,7 +328,7 @@ export const pageCopy = {
   },
 
   historia: {
-    eyebrowNumber: '03',
+    eyebrowNumber: '04',
     eyebrowLabel: 'A história',
     headlinePrefix: 'Começou em 1969, num fim de semana em ',
     headlineEmphasis: 'Jaú',
@@ -314,7 +340,7 @@ export const pageCopy = {
   },
 
   pacotes: {
-    eyebrowNumber: '04',
+    eyebrowNumber: '05',
     eyebrowLabel: 'Pacotes',
     headlinePrefix: 'Dois formatos, ',
     headlineEmphasis: 'nenhum terceirizado',
@@ -327,7 +353,7 @@ export const pageCopy = {
   },
 
   contato: {
-    eyebrowNumber: '05',
+    eyebrowNumber: '06',
     eyebrowLabel: `CNPJ ${bandInfo.cnpj} · ${contact.address}`,
     headlinePrefix: 'Qual é a ',
     headlineEmphasis: 'data',

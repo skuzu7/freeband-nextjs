@@ -39,9 +39,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: pageCopy.seo.ogTitle,
     description: pageCopy.seo.ogDescription,
-    images: ['/images/festa-55.jpeg'],
+    // /og.jpg is generated from the wordmark and the hero frame — a 1200×630
+    // card, not a raw show photo cropped by whoever is rendering the preview.
+    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: pageCopy.seo.ogTitle }],
     locale: 'pt_BR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: pageCopy.seo.ogTitle,
+    description: pageCopy.seo.ogDescription,
+    images: ['/og.jpg'],
   },
   other: {
     'theme-color': '#0a0a0f',

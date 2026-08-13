@@ -35,7 +35,7 @@ Next.js App Router + TypeScript, Tailwind CSS 4. Path alias `@/*` → `src/*`.
 
 ### Routes & access control
 
-- `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus `Palco`, `Arquivo`, `Historia`, `Pacotes`, and `Contato` from `src/components/sections/`.
+- `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus `Palco`, `Video`, `Arquivo`, `Historia`, `Pacotes`, and `Contato` from `src/components/sections/`.
 - `/portfolio` — public page to download the band's portfolio PDF.
 - `/admin` — login form; the `loginAction` server action (`src/app/admin/actions.ts`) rate-limits attempts, compares the password in constant time, sets a signed `freeband_admin` session cookie (HMAC-SHA256, 7 days — see `src/lib/session.ts`, Web Crypto only so it runs in both Edge and Node) and redirects to `/orcamento`.
 - `/orcamento` — quote builder (split-pane form + live A4 preview). `src/proxy.ts` gates every `/orcamento` path: a valid signed cookie passes; a legacy `/orcamento/<token>` link whose token equals `ORCAMENTO_TOKEN` is exchanged for a session cookie and redirected to `/orcamento` (the secret leaves the URL); anything else redirects to `/admin`. Logout button in the editor header calls `logoutAction`.
@@ -46,7 +46,15 @@ Two documents are built with `@react-pdf/renderer`: the portfolio (`src/componen
 
 ### Content & data
 
-`src/data/content.ts` is the single source of truth for all band copy and metadata (Portuguese, extracted from the official brochure); `src/data/images.ts` maps every image path used on the site and in PDFs. Don't hardcode copy or image paths in components.
+`src/data/content.ts` is the single source of truth for all band copy and metadata (Portuguese, extracted from the official brochure); `src/data/images.ts` maps every image path used on the site and in PDFs, plus the `stageFrames` / `posters` / `heritage` / `figurinos` / `reels` collections. Don't hardcode copy or image paths in components. `RELEASE_SHORT` in `content.ts` is the band's official one-line description — the meta description, the Palco lead and the last paragraph of `release.full` all read from it, so edit the sentence there and nowhere else.
+
+### The wordmark
+
+`src/components/ui/Wordmark.tsx` is the band's logo, redrawn as vector from a photograph of its stage backdrop: geometric monoline lowercase on a documented grid (x-height 100, stroke 19, ascender 127, bowls exactly one x-height wide), built from circles, quarter-arcs and stems. It paints in `currentColor` and is the only thing allowed to use `--color-logo-red`; gold stays the interface accent. `src/app/icon.svg` and `apple-icon.png` carry the same `f`. Never set the wordmark in a font — there is no font that matches it.
+
+### Video
+
+`public/video/reel-*.mp4` are ten-second silent clips (H.264, ~1 MB each) with a matching `.jpg` poster cut from their own first frame. `Video.tsx` attaches sources only on intersection (`preload="none"` + `data-src`), autoplays muted in view, honours `prefers-reduced-motion`, and exposes one pause control for all four (WCAG 2.2.2). Re-encode new clips at the same budget — `-crf 30 -preset veryslow -an -vf "fps=25,hqdn3d=1.5:1.2:4:3"` — or the page starts paying megabytes for decoration.
 
 ### Design system ("PALCO")
 

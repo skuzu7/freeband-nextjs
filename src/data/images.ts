@@ -15,6 +15,20 @@
 //   heritage    — the pre-digital band shots. Already faded; graded warm.
 
 export const images = {
+  // 2026 batch — the current line-up, shot at full shows. These are the
+  // highest-resolution frames in the archive and carry the fold.
+  vocalDouradoPalco: "/images/vocal-dourado-palco.jpeg",
+  vocalEspelhado: "/images/vocal-espelhado.jpeg",
+  palcoBandaCompleta: "/images/palco-banda-completa.jpeg",
+  palcoLedCoracoes: "/images/palco-led-coracoes.jpeg",
+  palcoAsasLed: "/images/palco-asas-led.jpeg",
+  palcoCountryLed: "/images/palco-country-led.jpeg",
+  palcoAnos70: "/images/palco-anos-70.jpeg",
+  palcoCabare: "/images/palco-cabare.jpeg",
+  // Wardrobe — shot backstage, one per block of the show.
+  figurinoPlumas: "/images/figurino-plumas.jpeg",
+  figurinoAnos50: "/images/figurino-anos-50.jpeg",
+  figurinoCountry: "/images/figurino-country.jpeg",
   // Show photos
   festa55: "/images/festa-55.jpeg",
   festa70: "/images/festa-70.jpeg",
@@ -67,51 +81,131 @@ export interface StageFrame {
 // Six frames, not nine. Every picture here runs at least 460px tall, so nine
 // of them made the section five thousand pixels of photo dump rather than an
 // edit. `lead` frames are cropped to 16/9 so they read as cinematic bands
-// instead of near-square walls; the two strongest shots in the archive
-// (festa-308, festa-209) are spent on the hero and the closing section.
+// instead of near-square walls; the strongest shot in the archive
+// (vocal-dourado-palco) is spent on the hero and festa-209 on the closer.
+//
+// The 2026 batch replaced the older frames wholesale: it shows the current
+// line-up, the LED wall and the light rig — which is what the copy promises —
+// and it is sharper. The retired frames stay in `images` for the PDF.
 export const stageFrames: StageFrame[] = [
   {
-    src: images.festa70,
-    alt: "Banda completa e bailarinas em figurino sob luz azul de palco",
-    caption: "Banda completa · 11 no palco",
+    src: images.vocalDouradoPalco,
+    alt: "Vocalista da Internacional Freeband cantando ao microfone sob a luz de palco",
+    caption: "Frente de palco",
     weight: "lead",
     aspect: "16/9",
+    crop: "center 40%",
   },
   {
-    src: images.img0690,
-    alt: "Duas vocalistas cantando lado a lado ao microfone",
-    caption: "Dois vocais na frente",
+    src: images.palcoLedCoracoes,
+    alt: "Bailarina em figurino azul diante do painel de LED durante o show",
+    caption: "Painel de LED · efeitos 3D",
     weight: "beat",
     aspect: "3/2",
+    crop: "center 40%",
   },
   {
-    src: images.img0679,
-    alt: "Cantora ao microfone sob luz de palco",
-    caption: "Vocal",
+    src: images.palcoCountryLed,
+    alt: "Dupla em figurino country dançando à frente da banda e do painel de LED",
+    caption: "Bloco country",
     weight: "beat",
     aspect: "3/2",
-    crop: "center 35%",
+    crop: "center 42%",
   },
   {
-    src: images.festa82,
-    alt: "Apresentação com plumas vermelhas e a banda ao fundo",
-    caption: "Bloco de dança · figurino",
+    src: images.palcoAsasLed,
+    alt: "Bailarinos com asas iluminadas e vocalista diante do painel de LED",
+    caption: "Luz cênica e efeitos",
     weight: "lead",
     aspect: "16/9",
+    crop: "center 40%",
   },
   {
-    src: images.img0867,
-    alt: "Guitarrista tocando sob feixes de luz amarela",
-    caption: "Guitarra",
+    src: images.palcoCabare,
+    alt: "Vocalista em figurino de cabaré à frente da banda e do painel de LED",
+    caption: "Bloco cabaré",
     weight: "beat",
     aspect: "3/2",
+    crop: "center 38%",
   },
   {
-    src: images.img0437,
-    alt: "Baterista tocando com a bateria iluminada em verde",
-    caption: "Bateria",
+    src: images.palcoAnos70,
+    alt: "Bloco anos 70 com plumas laranja diante do painel de LED",
+    caption: "Bloco anos 70",
     weight: "beat",
     aspect: "3/2",
+    crop: "center 40%",
+  },
+];
+
+// =============================================================================
+// figurinos — the wardrobe, shot backstage. Three frames, run small and in a
+// row: they are evidence that the show has blocks, not a gallery of their own.
+// =============================================================================
+
+export interface WardrobeShot {
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+export const figurinos: WardrobeShot[] = [
+  {
+    src: images.figurinoPlumas,
+    alt: "Bailarinos em figurino vermelho com plumas e chapéus",
+    caption: "Plumas",
+  },
+  {
+    src: images.figurinoAnos50,
+    alt: "Bailarinos em figurino anos 50 de poá com luvas brancas",
+    caption: "Anos 50",
+  },
+  {
+    src: images.figurinoCountry,
+    alt: "Dupla em figurino country dourado com franjas e chapéu",
+    caption: "Country",
+  },
+];
+
+// =============================================================================
+// reels — ten-second clips cut from full-show recordings. Vertical, silent and
+// deliberately tiny (under 1.5 MB each): they are proof of movement, not a
+// broadcast. `poster` is the clip's own first frame, so nothing pops when the
+// video takes over.
+// =============================================================================
+
+export interface Reel {
+  src: string;
+  poster: string;
+  /** What the clip shows — read out to anyone who can't watch it. */
+  alt: string;
+  caption: string;
+}
+
+export const reels: Reel[] = [
+  {
+    src: "/video/reel-baile.mp4",
+    poster: "/video/reel-baile.jpg",
+    alt: "Vocalista à frente da banda sob luz magenta, com o painel de LED aceso ao fundo",
+    caption: "Baile · luz cênica",
+  },
+  {
+    src: "/video/reel-led.mp4",
+    poster: "/video/reel-led.jpg",
+    alt: "Dois vocais cantando diante do painel de LED colorido, com a banda ao fundo",
+    caption: "Painel de LED",
+  },
+  {
+    src: "/video/reel-dancarinos.mp4",
+    poster: "/video/reel-dancarinos.jpg",
+    alt: "Bailarinos com asas iluminadas atravessando o palco sob lasers",
+    caption: "Bailarinos e efeitos",
+  },
+  {
+    src: "/video/reel-vocal.mp4",
+    poster: "/video/reel-vocal.jpg",
+    alt: "Bloco anos 70 dançando com plumas laranja sob feixes de luz",
+    caption: "Bloco anos 70",
   },
 ];
 

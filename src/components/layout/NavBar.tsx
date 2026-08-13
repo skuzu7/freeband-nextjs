@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { pageCopy } from '@/data/content';
+import { Wordmark } from '@/components/ui/Wordmark';
 
 const LINKS = pageCopy.nav.sections;
 
@@ -47,16 +48,17 @@ export function NavBar() {
       }}
     >
       <div className="max-w-container px-section mx-auto flex w-full items-center justify-between">
+        {/* The mark keeps its own colour here — it is the logo, not a link
+            style — so it does not shift on hover. */}
         <a
           href="#"
           className="group relative flex items-center gap-3 leading-none transition-transform active:scale-95"
           aria-label="Internacional Freeband — início"
         >
-          <div className="flex flex-col">
-            <span className="font-display text-xl font-bold tracking-wide text-white transition-colors hover:text-gold">
-              Internacional Freeband
-            </span>
-          </div>
+          <span className="hidden font-mono text-[0.55rem] uppercase leading-none tracking-[0.4em] text-text-muted sm:inline">
+            Internacional
+          </span>
+          <Wordmark className="h-[1.35rem] w-auto text-logo-red sm:h-6" />
         </a>
 
         <div className="hidden items-center gap-8 lg:flex">

@@ -1,4 +1,5 @@
 import { bandInfo, contact, pageCopy, yearRibbon } from '@/data/content';
+import { Wordmark } from '@/components/ui/Wordmark';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,34 +11,28 @@ export function Footer() {
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand to-transparent opacity-60"
       />
 
-      {/* Giant background wordmark */}
+      {/* Giant background wordmark — the real mark now, dropped to a whisper
+          so it reads as a watermark rather than a second logo. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-[-4vi] flex select-none items-end justify-center"
+        className="pointer-events-none absolute inset-x-0 bottom-[-2vi] flex select-none items-end justify-center overflow-hidden"
       >
-        <span
-          className="font-display font-semibold leading-[0.7] -tracking-[0.05em] text-transparent"
-          style={{
-            fontSize: 'clamp(8rem, 22vi, 22rem)',
-            WebkitTextStroke: '1px color-mix(in oklch, var(--color-brand) 25%, transparent)',
-          }}
-        >
-          freeband
-        </span>
+        <Wordmark className="w-[130%] max-w-none text-logo-red/[0.07]" />
       </div>
 
       <div className="max-w-container px-section relative mx-auto flex w-full flex-col gap-16 pb-24">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div className="flex flex-col gap-4">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-text-muted">
-              Internacional
+            <span className="flex items-center gap-4">
+              <span className="font-mono text-[0.65rem] uppercase leading-none tracking-[0.35em] text-text-muted">
+                Internacional
+              </span>
+              <span aria-hidden className="h-px flex-1 bg-logo-red/40" />
             </span>
-            <span
-              className="font-display text-text -tracking-[0.02em]"
-              style={{ fontSize: 'var(--text-4xl)' }}
-            >
-              freeband
-            </span>
+            <Wordmark
+              className="h-[clamp(2rem,4vi,2.75rem)] w-auto self-start text-logo-red"
+              title={bandInfo.name}
+            />
             <p className="mt-2 max-w-[36ch] text-text-muted">
               {pageCopy.footer.brandTagline} {pageCopy.footer.brandTaglineLong}
             </p>

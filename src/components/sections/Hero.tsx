@@ -10,24 +10,27 @@ import Image from 'next/image';
 import { contact, pageCopy } from '@/data/content';
 import { images } from '@/data/images';
 import { WhatsAppCta } from '@/components/ui/WhatsAppCta';
+import { Wordmark } from '@/components/ui/Wordmark';
 
 export function Hero() {
   const copy = pageCopy.hero;
 
   return (
     <section id="hero" className="relative isolate flex min-h-[100svh] flex-col">
-      {/* The photograph. festa-308 is the highest-resolution frame in the
-          archive (2560px) and the only one that survives a full-bleed crop. */}
+      {/* The photograph has to make the sale before a word is read, so it is
+          the one frame that shows the entire offer at once — eleven on stage,
+          bailarinos, the LED wall and the lighting rig — and whose left third
+          is dark enough to seat the type column over it. */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src={images.festa308}
-          alt="Vocalista da Internacional Freeband de braços erguidos diante do painel de LED durante um show"
+          src={images.palcoBandaCompleta}
+          alt="Banda completa da Internacional Freeband no palco com bailarinos, painel de LED e luz cênica"
           fill
           priority
           sizes="100vw"
           quality={90}
           className="grade-live object-cover"
-          style={{ objectPosition: 'center 38%' }}
+          style={{ objectPosition: 'center 50%' }}
         />
         <div aria-hidden className="photo-scrim absolute inset-0" />
       </div>
@@ -37,16 +40,22 @@ export function Hero() {
           {copy.badge}
         </p>
 
-        <h1 className="mt-6 flex flex-col leading-[0.82]">
-          <span className="font-mono text-[0.7rem] uppercase tracking-[0.42em] text-text-muted">
-            {copy.wordmarkSub}
+        {/* The band's own mark carries the fold — set as the H1 itself, with
+            the "INTERNACIONAL" line and the rule it hangs from, exactly as
+            they are printed on the stage backdrop. */}
+        <h1 className="mt-6 flex max-w-4xl flex-col gap-3">
+          <span className="flex items-center gap-4">
+            <span className="font-mono text-[0.7rem] uppercase leading-none tracking-[0.42em] text-text-muted">
+              {copy.wordmarkSub}
+            </span>
+            <span aria-hidden className="h-px flex-1 bg-logo-red/50" />
           </span>
-          <span
-            className="font-display font-semibold -tracking-[0.03em] text-text"
-            style={{ fontSize: 'var(--text-6xl)' }}
-          >
-            {copy.wordmarkMain}
-          </span>
+          {/* self-start, or the flex column stretches the SVG box to the full
+              column width and preserveAspectRatio centres the mark inside it. */}
+          <Wordmark
+            className="h-[clamp(3rem,11vi,7.5rem)] w-auto self-start text-logo-red"
+            title={`${copy.wordmarkSub} ${copy.wordmarkMain}`}
+          />
         </h1>
 
         <p

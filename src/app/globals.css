@@ -16,8 +16,11 @@
    ========================================================================= */
 
 @theme {
-  /* Historical wordmark colors — /admin login screen only. */
-  --color-wordmark-red: #ed1b24;
+  /* freeband red — the wordmark's own colour, sampled off the band's printed
+     stage backdrop. It belongs to the logo and to nothing else: gold below is
+     still the only interface accent. */
+  --color-logo-red: #ee3524;
+  /* Sister colour of the "Freeband Produções" roundel — /admin only. */
   --color-wordmark-blue: #00aeef;
 
   /* ---------------- Palette ---------------- */
@@ -291,21 +294,35 @@ p {
    photography has bright blown highlights in unpredictable places — the hero
    shot is brightest exactly where the eyebrow sits. */
 .photo-scrim {
-  background-image:
-    linear-gradient(
-      to right,
-      var(--color-bg) 0%,
-      color-mix(in oklab, var(--color-bg), transparent 22%) 34%,
-      color-mix(in oklab, var(--color-bg), transparent 62%) 58%,
-      transparent 78%
-    ),
-    linear-gradient(
+  --scrim-x: linear-gradient(
+    to right,
+    var(--color-bg) 0%,
+    color-mix(in oklab, var(--color-bg), transparent 22%) 34%,
+    color-mix(in oklab, var(--color-bg), transparent 62%) 58%,
+    transparent 78%
+  );
+  --scrim-y: linear-gradient(
+    to top,
+    var(--color-bg) 0%,
+    color-mix(in oklab, var(--color-bg), transparent 35%) 30%,
+    color-mix(in oklab, var(--color-bg), transparent 78%) 62%,
+    transparent 100%
+  );
+  background-image: var(--scrim-x), var(--scrim-y);
+}
+
+/* On a phone the type runs the full width, so it leaves the horizontal pass
+   behind and the vertical one has to hold the whole column on its own. */
+@media (width < 48rem) {
+  .photo-scrim {
+    --scrim-y: linear-gradient(
       to top,
       var(--color-bg) 0%,
-      color-mix(in oklab, var(--color-bg), transparent 35%) 30%,
-      color-mix(in oklab, var(--color-bg), transparent 78%) 62%,
-      transparent 100%
+      color-mix(in oklab, var(--color-bg), transparent 12%) 40%,
+      color-mix(in oklab, var(--color-bg), transparent 45%) 70%,
+      color-mix(in oklab, var(--color-bg), transparent 82%) 100%
     );
+  }
 }
 
 /* Poster wall — a strict grid holding very loud artwork. The posters supply

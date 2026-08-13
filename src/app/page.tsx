@@ -2,14 +2,16 @@ import { NavBar } from '@/components/layout/NavBar';
 import { Footer } from '@/components/layout/Footer';
 import { Hero } from '@/components/sections/Hero';
 import { Palco } from '@/components/sections/Palco';
+import { Video } from '@/components/sections/Video';
 import { Arquivo } from '@/components/sections/Arquivo';
 import { Historia } from '@/components/sections/Historia';
 import { Pacotes } from '@/components/sections/Pacotes';
 import { Contato } from '@/components/sections/Contato';
 
-// Order is an argument, not a menu: show what arrives (Palco), prove it has
-// arrived for 57 years (Arquivo), explain where that came from (Historia),
-// then price it (Pacotes) and take the booking (Contato).
+// Order is an argument, not a menu: show what arrives (Palco), show it moving
+// (Video), prove it has been arriving for 57 years (Arquivo), explain where
+// that came from (Historia), then price it (Pacotes) and take the booking
+// (Contato).
 export default function HomePage() {
   return (
     <>
@@ -25,6 +27,7 @@ export default function HomePage() {
       <main id="conteudo">
         <Hero />
         <Palco />
+        <Video />
         <Arquivo />
         <Historia />
         <Pacotes />

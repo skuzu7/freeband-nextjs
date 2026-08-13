@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Internacional Freeband</title>
+  <rect width="64" height="64" rx="14" fill="#ee3524"/>
+  <g transform="translate(26.05,-13.14) scale(0.3307)" fill="none" stroke="#0a0a0f" stroke-width="19" stroke-linecap="butt">
+    <path d="M 9.5 200 L 9.5 117 A 34.5 34.5 0 0 1 44 82.5"/>
+    <path d="M -8 109.5 L 40 109.5"/>
+  </g>
+</svg>
