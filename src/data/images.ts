@@ -36,11 +36,9 @@ export const images = {
   anos70: "/images/freeband-anos-70.jpeg",
   anos90: "/images/freeband-anos-90.jpeg",
   antigas: "/images/freeband-antigas.jpeg",
-  fbJau: "/images/freeband-jau.jpeg",
   // Promotional
   fb2015: "/images/freeband-2015.jpeg",
   cartazCosmopolitano: "/images/cartaz-cosmopolitano.jpeg",
-  social: "/images/freeband-social.jpeg",
   // New Year events
   reveillomIacanga: "/images/reveillom-iacanga.jpeg",
   reveillomItatinga: "/images/reveillom-itatinga.jpeg",

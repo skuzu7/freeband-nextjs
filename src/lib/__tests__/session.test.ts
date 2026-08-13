@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import { createSession, verifySession, secretsMatch } from "../session";
+import { createSession, verifySession, secretsMatch, sessionCookieOptions, SESSION_TTL_SECONDS } from "../session";
 
 const SECRET = "test-secret";
 
@@ -47,5 +47,16 @@ describe("secretsMatch", () => {
   it("rejects different secrets, including different lengths", async () => {
     expect(await secretsMatch("token-123", "token-124", SECRET)).toBe(false);
     expect(await secretsMatch("short", "much-longer-token", SECRET)).toBe(false);
+  });
+});
+
+describe("sessionCookieOptions", () => {
+  it("locks the cookie to httpOnly, lax, and path=/", () => {
+    expect(sessionCookieOptions()).toMatchObject({
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_TTL_SECONDS,
+    });
   });
 });

@@ -77,7 +77,7 @@ export function Footer() {
             <a
               href={contact.instagramUrl}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="w-fit text-text transition-colors hover:text-brand"
             >
               {contact.instagram}

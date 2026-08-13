@@ -6,9 +6,9 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import {
   SESSION_COOKIE,
-  SESSION_TTL_SECONDS,
   createSession,
   secretsMatch,
+  sessionCookieOptions,
 } from '@/lib/session';
 
 const MAX_ATTEMPTS = 5;
@@ -39,16 +39,6 @@ async function clientIp(): Promise<string> {
   return (
     requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
   );
-}
-
-function sessionCookieOptions() {
-  return {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: SESSION_TTL_SECONDS,
-    path: '/',
-  } as const;
 }
 
 export async function loginAction(
@@ -90,6 +80,6 @@ export async function loginAction(
 
 export async function logoutAction(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE);
+  cookieStore.delete({ name: SESSION_COOKIE, path: '/' });
   redirect('/admin');
 }

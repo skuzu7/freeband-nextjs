@@ -90,7 +90,7 @@ export function Contato() {
             <a
               href={contact.instagramUrl}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/60 px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-text backdrop-blur-sm transition-colors hover:border-brand hover:text-brand"
             >
               <InstagramIcon />

@@ -171,7 +171,7 @@ export const partners = [
   'Prefeituras Municipais',
 ];
 
-// Pacotes comerciais exibidos na seção #pacotes (Ato_Servicos).
+// Pacotes comerciais exibidos na seção #pacotes.
 export interface ServicePackage {
   id: string;
   name: string;

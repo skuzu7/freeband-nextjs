@@ -27,8 +27,7 @@ export function LoginForm({ action }: LoginFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md px-4 py-3 text-sm font-mono uppercase tracking-wider text-white transition-opacity disabled:opacity-50"
-        style={{ backgroundColor: 'var(--color-brand)' }}
+        className="w-full rounded-md bg-brand px-4 py-3 text-sm font-mono uppercase tracking-wider text-void-950 transition-opacity disabled:opacity-50"
       >
         {isPending ? 'Entrando...' : 'Entrar'}
       </button>

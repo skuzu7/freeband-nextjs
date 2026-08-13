@@ -8,6 +8,16 @@
 export const SESSION_COOKIE = "freeband_admin";
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
+export function sessionCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    maxAge: SESSION_TTL_SECONDS,
+    path: "/",
+  };
+}
+
 const encoder = new TextEncoder();
 
 function base64url(bytes: ArrayBuffer): string {

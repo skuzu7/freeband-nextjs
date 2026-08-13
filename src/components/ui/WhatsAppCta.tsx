@@ -1,6 +1,6 @@
 // src/components/ui/WhatsAppCta.tsx
 // Gold-gradient WhatsApp call-to-action with the sweeping shine hover,
-// shared by Hero and AtoV_Contato (previously duplicated byte for byte).
+// shared by Hero and Contato (previously duplicated byte for byte).
 //
 // The gradient runs gold-light → gold (not gold → gold-deep) so ink text
 // clears 4.5:1 across the whole sweep: white on gold was 2.5:1, and dark

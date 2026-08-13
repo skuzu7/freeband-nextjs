@@ -29,8 +29,8 @@ export default function PortfolioPage() {
           Portfolio Digital
         </h1>
         <p className="mb-10 leading-relaxed text-text-muted">
-          Baixe nosso portfolio completo com historia, galeria, servicos e
-          informacoes de contato.
+          Baixe nosso portfólio completo com história, galeria, serviços e
+          informações de contato.
         </p>
 
         {!ready ? (

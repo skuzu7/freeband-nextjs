@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import {
   SESSION_COOKIE,
-  SESSION_TTL_SECONDS,
   createSession,
+  sessionCookieOptions,
   verifySession,
   secretsMatch,
 } from '@/lib/session';
@@ -30,13 +30,11 @@ export async function proxy(request: NextRequest) {
   if (segments.length === 2 && expectedToken) {
     if (await secretsMatch(segments[1], expectedToken, secret)) {
       const response = NextResponse.redirect(new URL('/orcamento', request.url));
-      response.cookies.set(SESSION_COOKIE, await createSession(secret), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: SESSION_TTL_SECONDS,
-        path: '/',
-      });
+      response.cookies.set(
+        SESSION_COOKIE,
+        await createSession(secret),
+        sessionCookieOptions(),
+      );
       return response;
     }
   }

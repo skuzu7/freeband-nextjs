@@ -11,7 +11,7 @@ Marketing site + internal quoting tool for Internacional Freeband, a Brazilian b
 - `npm run dev` — dev server at http://localhost:3000
 - `npm run build` — production build
 - `npm run lint` — ESLint
-- `npm test` — run all tests once (Vitest + jsdom + Testing Library; tests live in `src/lib/__tests__/`)
+- `npm test` — run all tests once (Vitest + jsdom + Testing Library; tests live in `src/lib/__tests__/` and `src/components/layout/__tests__/`)
 - `npm run test:watch` — watch mode
 - Single test file: `npx vitest run src/lib/__tests__/format.test.ts`
 
@@ -31,11 +31,11 @@ See `.env.example`. All three are required for the protected area to work:
 
 ## Architecture
 
-Next.js App Router + TypeScript, Tailwind CSS 4, Framer Motion. Path alias `@/*` → `src/*`.
+Next.js App Router + TypeScript, Tailwind CSS 4. Path alias `@/*` → `src/*`.
 
 ### Routes & access control
 
-- `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus the `Ato*` sections from `src/components/sections/`.
+- `/` — single-page landing: `src/app/page.tsx` composes `Hero` plus `Palco`, `Arquivo`, `Historia`, `Pacotes`, and `Contato` from `src/components/sections/`.
 - `/portfolio` — public page to download the band's portfolio PDF.
 - `/admin` — login form; the `loginAction` server action (`src/app/admin/actions.ts`) rate-limits attempts, compares the password in constant time, sets a signed `freeband_admin` session cookie (HMAC-SHA256, 7 days — see `src/lib/session.ts`, Web Crypto only so it runs in both Edge and Node) and redirects to `/orcamento`.
 - `/orcamento` — quote builder (split-pane form + live A4 preview). `src/proxy.ts` gates every `/orcamento` path: a valid signed cookie passes; a legacy `/orcamento/<token>` link whose token equals `ORCAMENTO_TOKEN` is exchanged for a session cookie and redirected to `/orcamento` (the secret leaves the URL); anything else redirects to `/admin`. Logout button in the editor header calls `logoutAction`.
