@@ -1,15 +1,12 @@
 // src/components/sections/Palco.tsx
-// The live photography, full colour, large.
+// The live photography, full colour, whole.
 //
-// The old gallery ran every frame through `grayscale` on the wrapper (whose
-// filter covers the whole subtree) and only lifted it on :hover — so on a
-// phone the band's own show photos were permanently black and white, and the
-// captions, also hover-gated, never appeared at all. Here colour is the
-// default state and the caption is always rendered.
-//
-// Layout alternates one full-width "lead" frame against pairs of "beat"
-// frames, so the rhythm comes from the pictures rather than from a uniform
-// grid. No hooks — this stays a server component.
+// The archive is phone photography and almost all of it is PORTRAIT. The old
+// grid forced every frame into landscape boxes (16/9 leads, 3/2 pairs) and
+// object-cover threw away up to half of each picture. Now the one genuinely
+// landscape frame opens the section full-width at its own 3/2, and the rest
+// flow as masonry columns, each at its native ratio — nothing is cropped.
+// No hooks — this stays a server component.
 import { stageFrames, framesSizes, figurinos } from '@/data/images';
 import { bandLineup, pageCopy } from '@/data/content';
 import { Section } from '@/components/ui/Section';
@@ -18,22 +15,8 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { SectionHeadline } from '@/components/ui/SectionHeadline';
 import { CinematicImage } from '@/components/ui/CinematicImage';
 
-const leads = stageFrames.filter((f) => f.weight === 'lead');
+const lead = stageFrames.find((f) => f.weight === 'lead')!;
 const beats = stageFrames.filter((f) => f.weight === 'beat');
-
-/** One lead frame, then two beats, repeating — built once at module scope. */
-const rows: Array<
-  { kind: 'lead'; frame: (typeof stageFrames)[number] } | { kind: 'pair'; frames: typeof beats }
-> = [];
-{
-  const queue = [...beats];
-  leads.forEach((frame) => {
-    rows.push({ kind: 'lead', frame });
-    const pair = queue.splice(0, 2);
-    if (pair.length) rows.push({ kind: 'pair', frames: pair });
-  });
-  while (queue.length) rows.push({ kind: 'pair', frames: queue.splice(0, 2) });
-}
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
@@ -85,46 +68,54 @@ export function Palco() {
         </div>
 
         <div className="mt-[clamp(3rem,6vi,5rem)] flex flex-col gap-[clamp(1.5rem,3vi,2.5rem)]">
-          {rows.map((row, i) =>
-            row.kind === 'lead' ? (
-              <figure key={row.frame.src} className="reveal-mid">
-                <CinematicImage
-                  src={row.frame.src}
-                  alt={row.frame.alt}
-                  grade="live"
-                  crop={row.frame.crop}
-                  aspect={row.frame.aspect}
-                  fill
-                  sizes={framesSizes(1)}
-                  quality={90}
-                  wrapperClassName="ring-1 ring-inset ring-border"
-                />
-                <Caption>{row.frame.caption}</Caption>
-              </figure>
-            ) : (
-              <div key={i} className="grid gap-[clamp(1.5rem,3vi,2.5rem)] md:grid-cols-2">
-                {row.frames.map((frame, j) => (
-                  <figure
-                    key={frame.src}
-                    className="reveal-mid"
-                    style={{ ['--i' as string]: j } as React.CSSProperties}
-                  >
-                    <CinematicImage
-                      src={frame.src}
-                      alt={frame.alt}
-                      grade="live"
-                      crop={frame.crop}
-                      aspect={frame.aspect}
-                      fill
-                      sizes={framesSizes(0.5)}
-                      wrapperClassName="ring-1 ring-inset ring-border"
-                    />
-                    <Caption>{frame.caption}</Caption>
-                  </figure>
-                ))}
-              </div>
-            ),
-          )}
+          <figure className="reveal-mid">
+            <CinematicImage
+              src={lead.src}
+              alt={lead.alt}
+              grade="live"
+              aspect={lead.aspect}
+              fill
+              sizes={framesSizes(1)}
+              quality={90}
+              wrapperClassName="ring-1 ring-inset ring-border"
+            />
+            <Caption>{lead.caption}</Caption>
+          </figure>
+
+          {/* Masonry: CSS columns, every frame at its native ratio. The gap
+              value is shared between column-gap and each figure's bottom
+              margin so the gutters read even in both axes.
+
+              These images are static-sized (width/height), NOT `fill`:
+              absolutely-positioned children mis-render inside multicol
+              fragmentation in Chromium, painting shorter than their box. The
+              beat aspects in images.ts are the files' pixel dimensions, so
+              they double as the width/height props here. */}
+          <div className="columns-1 gap-[clamp(1.5rem,3vi,2.5rem)] sm:columns-2 lg:columns-3">
+            {beats.map((frame, i) => {
+              const [w, h] = frame.aspect.split('/').map(Number);
+              return (
+                <figure
+                  key={frame.src}
+                  className="reveal-mid mb-[clamp(1.5rem,3vi,2.5rem)] break-inside-avoid"
+                  style={{ ['--i' as string]: i % 3 } as React.CSSProperties}
+                >
+                  <CinematicImage
+                    src={frame.src}
+                    alt={frame.alt}
+                    grade="live"
+                    width={w}
+                    height={h}
+                    sizes="(min-width: 1024px) 31vw, (min-width: 640px) 47vw, 100vw"
+                    quality={90}
+                    imgClassName="h-auto w-full"
+                    wrapperClassName="ring-1 ring-inset ring-border"
+                  />
+                  <Caption>{frame.caption}</Caption>
+                </figure>
+              );
+            })}
+          </div>
         </div>
 
         {/* Wardrobe. Small, in a row, under the show photography: the point is
@@ -144,14 +135,15 @@ export function Palco() {
                 style={{ ['--i' as string]: i } as React.CSSProperties}
               >
                 <figure>
+                  {/* 3/4 is these files' native ratio (±1%) — whole frame. */}
                   <CinematicImage
                     src={shot.src}
                     alt={shot.alt}
                     grade="live"
-                    aspect="4/5"
+                    aspect="3/4"
                     fill
                     sizes="(min-width: 768px) 30vw, 33vw"
-                    crop="center 35%"
+                    quality={90}
                     wrapperClassName="ring-1 ring-inset ring-border"
                   />
                   <Caption>{shot.caption}</Caption>

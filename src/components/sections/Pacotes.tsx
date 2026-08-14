@@ -155,7 +155,10 @@ export function Pacotes() {
             {copy.estruturaLead}
           </p>
 
-          <ul className="mt-8 grid grid-cols-1 gap-[clamp(0.75rem,2vi,1.5rem)] sm:grid-cols-3">
+          {/* Column template 16:16:9 — two 4/3 landscapes and one 3/4
+              portrait land at exactly the same height with every photograph
+              at its native ratio. Nothing here is cropped. */}
+          <ul className="mt-8 grid grid-cols-1 gap-[clamp(0.75rem,2vi,1.5rem)] sm:grid-cols-[16fr_16fr_9fr]">
             {estrutura.map((shot, i) => (
               <li
                 key={shot.src}
@@ -167,9 +170,10 @@ export function Pacotes() {
                     src={shot.src}
                     alt={shot.alt}
                     grade="live"
-                    aspect="4/3"
+                    aspect={shot.aspect}
                     fill
-                    sizes="(min-width: 640px) 30vw, 100vw"
+                    sizes={i < 2 ? '(min-width: 640px) 36vw, 100vw' : '(min-width: 640px) 21vw, 100vw'}
+                    quality={90}
                     wrapperClassName="ring-1 ring-inset ring-border"
                   />
                   <figcaption className="mt-3 flex items-center gap-3 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-text-muted">

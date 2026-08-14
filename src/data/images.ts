@@ -79,87 +79,78 @@ export interface StageFrame {
   /** Short mono caption rendered under the frame — what the picture shows. */
   caption: string;
   weight: "lead" | "beat";
+  /**
+   * The photograph's NATIVE ratio. The gallery renders every frame at its
+   * own aspect — a portrait file never goes into a landscape box, so nothing
+   * gets amputated by object-cover.
+   */
   aspect: string;
   /** object-position, for frames whose subject sits off-centre. */
   crop?: string;
 }
 
-// Six frames, not nine. Every picture here runs at least 460px tall, so nine
-// of them made the section five thousand pixels of photo dump rather than an
-// edit. `lead` frames are cropped to 16/9 so they read as cinematic bands
-// instead of near-square walls; the strongest shot in the archive
-// (vocal-dourado-palco) is spent on the hero and festa-209 on the closer.
-//
-// The 2026 batch replaced the older frames wholesale: it shows the current
-// line-up, the LED wall and the light rig — which is what the copy promises —
-// and it is sharper. The retired frames stay in `images` for the PDF.
+// One landscape lead carries the section open; everything else in the archive
+// is PORTRAIT phone photography, so the rest of the gallery runs as masonry
+// columns with each frame at its native ratio. The previous grid forced these
+// verticals into 3/2 landscape boxes and object-cover amputated half of every
+// picture — dancers without legs, a drummer without his FREEBAND sign.
 export const stageFrames: StageFrame[] = [
   {
     src: images.vocalDouradoPalco,
     alt: "Vocalista da Internacional Freeband cantando ao microfone sob a luz de palco",
     caption: "Frente de palco",
     weight: "lead",
-    aspect: "16/9",
-    crop: "center 40%",
+    aspect: "3/2",
   },
   {
     src: images.palcoLedCoracoes,
     alt: "Bailarina em figurino azul diante do painel de LED durante o show",
     caption: "Painel de LED · efeitos 3D",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 40%",
+    aspect: "1014/1600",
   },
   {
     src: images.palcoCountryLed,
     alt: "Dupla em figurino country dançando à frente da banda e do painel de LED",
     caption: "Bloco country",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 42%",
-  },
-  {
-    src: images.palcoAsasLed,
-    alt: "Bailarinos com asas iluminadas e vocalista diante do painel de LED",
-    caption: "Luz cênica e efeitos",
-    weight: "lead",
-    aspect: "16/9",
-    crop: "center 40%",
+    aspect: "1112/1600",
   },
   {
     src: images.palcoCabare,
     alt: "Vocalista em figurino de cabaré à frente da banda e do painel de LED",
     caption: "Bloco cabaré",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 38%",
+    aspect: "1174/1600",
   },
   {
     src: images.palcoAnos70,
     alt: "Bloco anos 70 com plumas laranja diante do painel de LED",
     caption: "Bloco anos 70",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 40%",
+    aspect: "1074/1600",
   },
-  // The closing pair puts the instrumentalists on the page — every frame
-  // above is vocals and dancers, and the lineup grid just promised guitars
-  // and a drummer.
+  // The instrumentalists — the lineup grid just promised guitars and drums.
   {
     src: images.joao,
     alt: "Vocalista de bandana vermelha à frente, com violão e guitarra ao fundo sob luz vermelha",
     caption: "Vocal e guitarras",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 30%",
+    aspect: "1479/1173",
+  },
+  {
+    src: images.palcoAsasLed,
+    alt: "Bailarinos com asas iluminadas e vocalista diante do painel de LED",
+    caption: "Luz cênica e efeitos",
+    weight: "beat",
+    aspect: "1179/1328",
   },
   {
     src: images.bateriaFreebandNeon,
     alt: "Baterista tocando diante do letreiro FREEBAND em neon no painel de LED",
     caption: "Bateria",
     weight: "beat",
-    aspect: "3/2",
-    crop: "center 32%",
+    aspect: "1086/1448",
   },
 ];
 
@@ -196,23 +187,34 @@ export const figurinos: WardrobeShot[] = [
 // estrutura — the mounted rig, photographed at real setups. This is the
 // receipt for every line the Pacotes section lists: each caption points at a
 // package feature, so a buyer can match claim to photograph one-to-one.
+//
+// Two landscapes and one portrait. The grid template in Pacotes.tsx sizes the
+// columns 16:16:9 so all three render at the SAME height with every frame at
+// its native ratio — no crop on any of them.
 // =============================================================================
 
-export const estrutura: WardrobeShot[] = [
+export interface EstruturaShot extends WardrobeShot {
+  aspect: string;
+}
+
+export const estrutura: EstruturaShot[] = [
   {
     src: images.estruturaBoate,
     alt: "Estrutura de boate montada com pista de LED, painéis e iluminação em neon rosa e azul",
     caption: "Pista e painéis de LED",
+    aspect: "4/3",
   },
   {
     src: images.estruturaSalao,
     alt: "Salão de evento com moving heads, esferas de luz e globos espelhados instalados no teto",
     caption: "Montagem em salão",
+    aspect: "4/3",
   },
   {
     src: images.estruturaLuz,
     alt: "Feixes verdes da iluminação robotizada cruzando a pista de LED durante o ajuste",
     caption: "Iluminação robotizada",
+    aspect: "3/4",
   },
 ];
 

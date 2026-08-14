@@ -142,6 +142,7 @@ export function Historia() {
               {/* The archive's one deliberate black-and-white frame — the
                   editorial register the manifesto speaks in. */}
               <div className="reveal-mid">
+                {/* 3/2 is the file's native ratio — the frame runs whole. */}
                 <CinematicImage
                   src={manifestoFrame.src}
                   alt={manifestoFrame.alt}
@@ -149,7 +150,7 @@ export function Historia() {
                   aspect="3/2"
                   fill
                   sizes="(min-width: 1024px) 34vw, 100vw"
-                  crop="center 30%"
+                  quality={90}
                   wrapperClassName="ring-1 ring-inset ring-border"
                 />
               </div>
