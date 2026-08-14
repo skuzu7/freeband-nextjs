@@ -9,7 +9,7 @@ export const bandInfo = {
   cnpj: '59.457.507/0001-11',
   tagline: 'Sinônimo em padrão de qualidade',
   taglineLong: 'Experiências musicais de alto padrão para eventos inesquecíveis',
-  subtitle: 'Portfolio & Serviços',
+  subtitle: 'Portfólio & Serviços',
   founded: 1969,
   foundedCity: 'Jaú/SP',
   yearsActive: new Date().getFullYear() - 1969,
@@ -19,17 +19,18 @@ export const bandInfo = {
   website: 'www.freeband.com.br',
 };
 
-// On-stage lineup — 11 integrantes, from the official brochure
+// On-stage lineup — 11 integrantes, as the band lists them. The counts have to
+// keep adding up to `total`; the site prints both.
 export const bandLineup = {
   total: 11,
   roles: [
     { count: 2, role: 'Tecladistas' },
     { count: 1, role: 'Baterista' },
     { count: 1, role: 'Baixista' },
-    { count: 2, role: 'Guitarristas' },
+    { count: 1, role: 'Guitarrista' },
     { count: 2, role: 'Cantores' },
     { count: 2, role: 'Cantoras' },
-    { count: 1, role: 'Bailarino' },
+    { count: 2, role: 'Bailarinos' },
   ],
 };
 
@@ -39,19 +40,31 @@ export const bandLineup = {
 const RELEASE_SHORT =
   'Composta por onze integrantes, oferecemos excelência em som, iluminação moderna, painel de LED e performance vocal, com palco, logística e estrutura completa.';
 
+const YEARS_ACTIVE = new Date().getFullYear() - 1969;
+
 export const release = {
   short: RELEASE_SHORT,
   full: `Fundada em 1969 na cidade de Jaú/SP por um grupo de amigos com uma proposta inovadora para a época, a Internacional Freeband nasceu para tocar aos finais de semana — todos os integrantes mantinham compromissos profissionais — e rapidamente se tornou uma das trajetórias mais duradouras da música brasileira, ainda presente no cenário até hoje.
 
 Com visão à frente do seu tempo, sempre antenada às tendências tecnológicas, seu fundador S.R. Antônio Lourenço Morales posicionou a Freeband de forma sólida e definitiva no mercado nacional, conquistando espaço nos melhores clubes do Brasil e em empresas dos mais variados segmentos.
 
-A banda realizou duas turnês internacionais ao lado de Jimmy Cliff e Cris Duran e participou de shows de nível nacional com nomes como Lulu Santos, Roupa Nova, Skank, Daniel, Cristian e Ralf, Ultraje a Rigor, Raça Negra, Erasmo Carlos, César e Paulinho, 14Bis, Beth Carvalho e Jorge Aragão, entre outros. Já se apresentou na maioria dos municípios do estado de São Paulo e em mais de sete estados brasileiros.
+A banda realizou duas turnês internacionais ao lado de Jimmy Cliff e Cris Duran e participou de shows de nível nacional com nomes como Lulu Santos, Roupa Nova, Skank, Daniel, Chrystian & Ralf, Ultraje a Rigor, Raça Negra, Erasmo Carlos, César e Paulinho, 14Bis, Beth Carvalho e Jorge Aragão, entre outros. Já se apresentou na maioria dos municípios do estado de São Paulo e em mais de sete estados brasileiros.
 
 Hoje, sediada em Trabiju/SP, a Freeband é totalmente independente em infraestrutura e logística, com equipamentos próprios da mais alta tecnologia — padrão que lhe rendeu vários prêmios de nível nacional e que continua sendo renovado por investimentos constantes.
 
 ${RELEASE_SHORT}`,
+  // The band's own release, in its own voice — kept verbatim except for the
+  // year, which counts itself so the text never goes stale on the page.
+  manifesto: `Há muitos meios de apresentar a música e todas requerem exposição, carisma, conteúdo e vivência, a maioria quase que copiadas e repetitivas, mas sempre contam com particularidades únicas e próprias, talvez no futuro exauram-se através da existência humana e desvaneçam-se entre os interesses fundamentais do homem.
+
+A FREEBAND, contudo, permanece revestida de pontualidade, de firmeza de propósitos e objetivos sempre moldados de cuidados especiais, equilibrados e excessivamente exigentes — afinal, são ${YEARS_ACTIVE} anos de estrada.
+
+FREEBAND: sempre um clima de expectativa em nossas apresentações. Novos recursos, a mais moderna tecnologia e os experientíssimos músicos fazem com que nossa produção ofereça a você uma continuidade de bailes e shows que misturam realidade com fantasia, evidenciando o esmero e os detalhes que são fundamentais para a satisfação, o sucesso e a sua identificação musical.`,
+  // The line the band closes its own material with.
+  slogan: 'Perto de você, com certeza, sempre haverá alguém que já viu.',
+  sloganFootnote: `${YEARS_ACTIVE} anos de sucesso`,
   highlights: [
-    { value: `${new Date().getFullYear() - 1969}+`, label: 'anos de estrada' },
+    { value: `${YEARS_ACTIVE}+`, label: 'anos de estrada' },
     { value: '11', label: 'integrantes no palco' },
     { value: '7+', label: 'estados brasileiros' },
     { value: '2', label: 'turnês internacionais' },
@@ -102,7 +115,7 @@ export const artists = [
   'Roupa Nova',
   'Skank',
   'Daniel',
-  'Cristian e Ralf',
+  'Chrystian & Ralf',
   'Ultraje a Rigor',
   'Raça Negra',
   'Erasmo Carlos',
@@ -159,7 +172,7 @@ export const includedFeatures = [
   {
     title: 'Iluminação cênica e de pista',
     icon: 'spot',
-    items: ['Moving heads, efeitos e ambientação', 'Clima sofisticado e envolvente'],
+    items: ['Iluminação robotizada via time code', 'Clima sofisticado e envolvente'],
   },
   {
     title: 'Estrutura adicional',
@@ -199,11 +212,11 @@ export const servicePackages: ServicePackage[] = [
       'Som Completo (PA compatível com local e público)',
       'Banda Freeband',
       'DJ Buru + Estrutura de DJ',
-      'Painel de Led 3x2 P3 com efeitos 3D',
-      'Pista de Led 15m² (ex. 3x5)',
-      'Estrutura de Boate (Box truss 4x3)',
-      '04 Moving Head com canhões de luz e efeitos',
-      'Máquinas de fumaça + Máquina de Sparkles (02 un.)',
+      'Painel de LED com efeitos 3D',
+      'Pista de LED',
+      'Estrutura de Boate (Box truss)',
+      'Iluminação robotizada via time code',
+      'Máquinas de fumaça + Máquina de Sparkles',
       'Letreiro NEON 15 Anos / Parabéns',
     ],
   },
@@ -226,6 +239,11 @@ export const contact = {
   phone: '(16) 99773-2749',
   whatsapp: '(16) 99773-2749',
   whatsappLink: 'https://wa.me/5516997732749',
+  // Same number, but the conversation opens with the three answers the
+  // production needs anyway — one less round-trip before a proposal exists.
+  whatsappQuoteLink: `https://wa.me/5516997732749?text=${encodeURIComponent(
+    'Olá! Quero um orçamento da Freeband. O evento é: (formato, data e cidade)',
+  )}`,
   email: 'faleconosco@freeband.com.br',
   city: 'Trabiju/SP',
   address: 'Rua Gabriel Tannuri, 210',
@@ -244,9 +262,11 @@ export const contact = {
 
 export const pageCopy = {
   seo: {
-    title: 'Internacional Freeband — Desde 1969',
+    // "Banda de baile e show" is the phrase a buyer actually types into
+    // Google; the year is the credential no competitor can copy.
+    title: 'Internacional Freeband — Banda de Baile e Show desde 1969',
     description: RELEASE_SHORT,
-    ogTitle: 'Internacional Freeband',
+    ogTitle: 'Internacional Freeband — Banda de Baile e Show',
     ogDescription: RELEASE_SHORT,
   },
 
@@ -296,6 +316,7 @@ export const pageCopy = {
     headlineEmphasis: 'sua festa',
     headlineSuffix: '.',
     lead: `${RELEASE_SHORT} As fotos abaixo são de shows nossos — sem banco de imagens.`,
+    lineupEyebrow: `A formação · ${bandLineup.total} no palco`,
     figurinosEyebrow: 'Figurinos',
     figurinosLead:
       'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
@@ -334,6 +355,7 @@ export const pageCopy = {
     headlineEmphasis: 'Jaú',
     headlineSuffix: '.',
     numberScrubLabel: 'fundação em Jaú/SP',
+    manifestoEyebrow: 'Nas nossas palavras',
     namesEyebrow: 'Palcos divididos',
     namesLead: 'Nomes com quem a Freeband já dividiu o palco.',
     valuesLine: 'Pontualidade · honestidade · profissionalismo',
@@ -350,6 +372,9 @@ export const pageCopy = {
     ctaLabel: 'Pedir valores',
     whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
     formatsEyebrow: 'Formatos atendidos',
+    estruturaEyebrow: 'A estrutura · fotos de montagens nossas',
+    estruturaLead:
+      'O que os pacotes listam é isto aqui, montado: pista e painéis de LED, iluminação robotizada e a boate completa. Nada é terceirizado — a estrutura viaja no nosso caminhão.',
   },
 
   contato: {

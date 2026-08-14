@@ -7,5 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/orcamento"],
     },
+    sitemap: "https://freeband.com.br/sitemap.xml",
   };
 }

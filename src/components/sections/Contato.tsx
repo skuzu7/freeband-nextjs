@@ -81,7 +81,7 @@ export function Contato() {
         </div>
 
         <div className="mt-10 flex flex-col gap-6 md:flex-row md:items-center md:gap-10">
-          <WhatsAppCta href={contact.whatsappLink}>
+          <WhatsAppCta href={contact.whatsappQuoteLink}>
             <WhatsAppIcon />
             {copy.whatsappCta}
           </WhatsAppCta>

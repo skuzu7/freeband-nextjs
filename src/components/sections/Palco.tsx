@@ -11,7 +11,7 @@
 // frames, so the rhythm comes from the pictures rather than from a uniform
 // grid. No hooks — this stays a server component.
 import { stageFrames, framesSizes, figurinos } from '@/data/images';
-import { pageCopy } from '@/data/content';
+import { bandLineup, pageCopy } from '@/data/content';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -58,6 +58,31 @@ export function Palco() {
           suffix={copy.headlineSuffix}
           lead={copy.lead}
         />
+
+        {/* Who is actually on the stage. "Onze integrantes" is a claim; the
+            instrument-by-instrument count is the receipt, and it is the first
+            thing a buyer comparing bands checks. */}
+        <div className="mt-[clamp(2.5rem,5vi,3.5rem)]">
+          <Eyebrow tone="mono">{copy.lineupEyebrow}</Eyebrow>
+          {/* Rules per cell, not a filled grid: seven items never divide
+              evenly into two or four columns, and a gap-px grid would paint
+              the empty cell of the last row as a solid block. */}
+          <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:grid-cols-7">
+            {bandLineup.roles.map((item) => (
+              <div key={item.role} className="flex flex-col gap-1.5 border-t border-border pt-3">
+                <dt className="font-mono text-[0.58rem] uppercase tracking-[0.24em] text-text-muted">
+                  {item.role}
+                </dt>
+                <dd
+                  className="font-display font-semibold -tracking-[0.03em] text-text tabular-nums"
+                  style={{ fontSize: 'var(--text-2xl)', lineHeight: 1 }}
+                >
+                  {String(item.count).padStart(2, '0')}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
 
         <div className="mt-[clamp(3rem,6vi,5rem)] flex flex-col gap-[clamp(1.5rem,3vi,2.5rem)]">
           {rows.map((row, i) =>

@@ -7,11 +7,13 @@
 // the offer four thousand pixels later. One of them was titled "Serviços
 // Premium" while the nav's SERVIÇOS entry pointed at the other. Merged.
 import { contact, includedFeatures, pageCopy, services, servicePackages } from '@/data/content';
+import { estrutura } from '@/data/images';
 import { Check, Crown, Star } from 'lucide-react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { SectionHeadline } from '@/components/ui/SectionHeadline';
+import { CinematicImage } from '@/components/ui/CinematicImage';
 import { cn } from '@/lib/cn';
 
 const packageIcons: Record<string, typeof Crown> = {
@@ -143,6 +145,41 @@ export function Pacotes() {
               </article>
             );
           })}
+        </div>
+
+        {/* The mounted rig — photographic proof for the feature lists above.
+            Each caption names the package line the picture backs up. */}
+        <div className="mt-[clamp(3rem,5vi,4.5rem)] border-t border-border pt-[clamp(2.5rem,4vi,3.5rem)]">
+          <Eyebrow tone="mono">{copy.estruturaEyebrow}</Eyebrow>
+          <p className="mt-4 max-w-[54ch] text-text-muted" style={{ fontSize: 'var(--text-base)' }}>
+            {copy.estruturaLead}
+          </p>
+
+          <ul className="mt-8 grid grid-cols-1 gap-[clamp(0.75rem,2vi,1.5rem)] sm:grid-cols-3">
+            {estrutura.map((shot, i) => (
+              <li
+                key={shot.src}
+                className="reveal-mid"
+                style={{ ['--i' as string]: i } as React.CSSProperties}
+              >
+                <figure>
+                  <CinematicImage
+                    src={shot.src}
+                    alt={shot.alt}
+                    grade="live"
+                    aspect="4/3"
+                    fill
+                    sizes="(min-width: 640px) 30vw, 100vw"
+                    wrapperClassName="ring-1 ring-inset ring-border"
+                  />
+                  <figcaption className="mt-3 flex items-center gap-3 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-text-muted">
+                    <span aria-hidden className="inline-block h-px w-4 shrink-0 bg-brand" />
+                    {shot.caption}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* What ships with either package */}

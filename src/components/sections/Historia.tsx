@@ -8,7 +8,7 @@
 // Jimmy Cliff and Lulu Santos are real credentials and the kinetic row is the
 // best-earning motion on the site.
 import { release, timeline, artists, partners, pageCopy } from '@/data/content';
-import { heritage } from '@/data/images';
+import { heritage, manifestoFrame } from '@/data/images';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -19,6 +19,7 @@ import { Marquee } from '@/components/ui/Marquee';
 export function Historia() {
   const copy = pageCopy.historia;
   const paragraphs = release.full.split('\n\n');
+  const manifesto = release.manifesto.split('\n\n');
 
   return (
     <Section id="historia" variant="ink" pad="xl" className="overflow-hidden">
@@ -114,6 +115,59 @@ export function Historia() {
               </li>
             ))}
           </ol>
+        </div>
+      </Container>
+
+      {/* The band's own release. Set in the display face and indented off a
+          rule, so it reads as a quoted voice rather than more site copy — and
+          it closes on the line the band closes its own material with. */}
+      <Container>
+        <div className="mt-[clamp(4rem,8vi,7rem)] border-t border-border pt-[clamp(2.5rem,4vi,3.5rem)]">
+          <Eyebrow tone="mono">{copy.manifestoEyebrow}</Eyebrow>
+
+          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
+            <div className="flex flex-col gap-6 border-l border-brand/30 pl-[clamp(1.25rem,3vi,2.5rem)]">
+              {manifesto.map((para, i) => (
+                <p
+                  key={i}
+                  className="reveal-mid max-w-[58ch] font-display text-text-muted text-pretty"
+                  style={{ ['--i' as string]: i, fontSize: 'var(--text-lg)', lineHeight: 1.55 }}
+                >
+                  {para}
+                </p>
+              ))}
+            </div>
+
+            <div className="flex flex-col justify-end gap-8 lg:pb-2">
+              {/* The archive's one deliberate black-and-white frame — the
+                  editorial register the manifesto speaks in. */}
+              <div className="reveal-mid">
+                <CinematicImage
+                  src={manifestoFrame.src}
+                  alt={manifestoFrame.alt}
+                  grade="poster"
+                  aspect="3/2"
+                  fill
+                  sizes="(min-width: 1024px) 34vw, 100vw"
+                  crop="center 30%"
+                  wrapperClassName="ring-1 ring-inset ring-border"
+                />
+              </div>
+
+              <figure className="flex flex-col gap-4">
+                <blockquote
+                  className="reveal-mid serif-italic text-balance text-brand"
+                  style={{ fontSize: 'var(--text-2xl)', lineHeight: 1.15 }}
+                >
+                  {release.slogan}
+                </blockquote>
+                <figcaption className="flex items-center gap-3 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
+                  <span aria-hidden className="inline-block h-px w-8 shrink-0 bg-brand" />
+                  {release.sloganFootnote}
+                </figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
       </Container>
 

@@ -12,9 +12,9 @@ import { PdfContact } from "./PdfContact";
 export function PortfolioDocument() {
   return (
     <Document
-      title="Internacional Freeband - Portfolio & Servicos"
+      title="Internacional Freeband - Portfólio & Serviços"
       author="Internacional Freeband"
-      subject="Portfolio profissional da banda Internacional Freeband"
+      subject="Portfólio profissional da banda Internacional Freeband"
     >
       <PdfCover />
       <PdfAbout />

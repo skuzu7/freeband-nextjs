@@ -73,7 +73,7 @@ export function Hero() {
         </p>
 
         <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-          <WhatsAppCta href={contact.whatsappLink}>{copy.ctaPrimary}</WhatsAppCta>
+          <WhatsAppCta href={contact.whatsappQuoteLink}>{copy.ctaPrimary}</WhatsAppCta>
           <a
             href="#arquivo"
             className="inline-flex min-h-11 items-center justify-center border border-border-strong px-8 py-4 font-sans text-sm font-bold tracking-widest text-text transition-colors hover:border-brand hover:text-brand"

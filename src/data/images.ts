@@ -29,6 +29,12 @@ export const images = {
   figurinoPlumas: "/images/figurino-plumas.jpeg",
   figurinoAnos50: "/images/figurino-anos-50.jpeg",
   figurinoCountry: "/images/figurino-country.jpeg",
+  // The rig itself, mounted — the photographic receipt for the Pacotes list.
+  bateriaFreebandNeon: "/images/bateria-freeband-neon.jpeg",
+  vocalRockPb: "/images/vocal-rock-pb.jpeg",
+  estruturaBoate: "/images/estrutura-boate.jpeg",
+  estruturaSalao: "/images/estrutura-salao.jpeg",
+  estruturaLuz: "/images/estrutura-luz.jpeg",
   // Show photos
   festa55: "/images/festa-55.jpeg",
   festa70: "/images/festa-70.jpeg",
@@ -136,6 +142,25 @@ export const stageFrames: StageFrame[] = [
     aspect: "3/2",
     crop: "center 40%",
   },
+  // The closing pair puts the instrumentalists on the page — every frame
+  // above is vocals and dancers, and the lineup grid just promised guitars
+  // and a drummer.
+  {
+    src: images.joao,
+    alt: "Vocalista de bandana vermelha à frente, com violão e guitarra ao fundo sob luz vermelha",
+    caption: "Vocal e guitarras",
+    weight: "beat",
+    aspect: "3/2",
+    crop: "center 30%",
+  },
+  {
+    src: images.bateriaFreebandNeon,
+    alt: "Baterista tocando diante do letreiro FREEBAND em neon no painel de LED",
+    caption: "Bateria",
+    weight: "beat",
+    aspect: "3/2",
+    crop: "center 32%",
+  },
 ];
 
 // =============================================================================
@@ -166,6 +191,37 @@ export const figurinos: WardrobeShot[] = [
     caption: "Country",
   },
 ];
+
+// =============================================================================
+// estrutura — the mounted rig, photographed at real setups. This is the
+// receipt for every line the Pacotes section lists: each caption points at a
+// package feature, so a buyer can match claim to photograph one-to-one.
+// =============================================================================
+
+export const estrutura: WardrobeShot[] = [
+  {
+    src: images.estruturaBoate,
+    alt: "Estrutura de boate montada com pista de LED, painéis e iluminação em neon rosa e azul",
+    caption: "Pista e painéis de LED",
+  },
+  {
+    src: images.estruturaSalao,
+    alt: "Salão de evento com moving heads, esferas de luz e globos espelhados instalados no teto",
+    caption: "Montagem em salão",
+  },
+  {
+    src: images.estruturaLuz,
+    alt: "Feixes verdes da iluminação robotizada cruzando a pista de LED durante o ajuste",
+    caption: "Iluminação robotizada",
+  },
+];
+
+// The one deliberately black-and-white frame in the archive — editorial, not
+// documentary — reserved for the manifesto block in Historia.
+export const manifestoFrame = {
+  src: images.vocalRockPb,
+  alt: "Vocalista de bandana e óculos escuros ao microfone com o braço estendido, em preto e branco",
+} as const;
 
 // =============================================================================
 // reels — ten-second clips cut from full-show recordings. Vertical, silent and

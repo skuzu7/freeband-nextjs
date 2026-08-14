@@ -47,7 +47,7 @@ export default function PortfolioPage() {
           <Wordmark className="h-8 w-auto text-logo-red" title="Internacional Freeband" />
         </div>
         <h1 className="mb-4 font-display text-4xl font-bold text-gold">
-          Portfolio Digital
+          Portfólio Digital
         </h1>
         <p className="mb-10 leading-relaxed text-text-muted">
           Baixe nosso portfólio completo com história, galeria, serviços e

@@ -17,7 +17,7 @@ export function PortfolioDownloadButton() {
       fileName="Internacional-Freeband-Portfolio.pdf"
       className={className}
     >
-      {({ loading }) => (loading ? "Gerando PDF..." : "Baixar Portfolio PDF")}
+      {({ loading }) => (loading ? "Gerando PDF..." : "Baixar Portfólio PDF")}
     </PDFDownloadLink>
   );
 }
