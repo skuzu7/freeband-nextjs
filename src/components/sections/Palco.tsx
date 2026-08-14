@@ -1,34 +1,72 @@
+'use client';
+
 // src/components/sections/Palco.tsx
 // The live photography, full colour, whole.
-//
-// The archive is phone photography and almost all of it is PORTRAIT. The old
-// grid forced every frame into landscape boxes (16/9 leads, 3/2 pairs) and
-// object-cover threw away up to half of each picture. Now the one genuinely
-// landscape frame opens the section full-width at its own 3/2, and the rest
-// flow as masonry columns, each at its native ratio — nothing is cropped.
-// No hooks — this stays a server component.
-import { stageFrames, framesSizes, figurinos } from '@/data/images';
+// Features category filtering, native aspect preservation, and full-screen lightbox.
+import { useState, useMemo } from 'react';
+import { stageFrames, framesSizes, figurinos, StageCategory } from '@/data/images';
 import { bandLineup, pageCopy } from '@/data/content';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { SectionHeadline } from '@/components/ui/SectionHeadline';
 import { CinematicImage } from '@/components/ui/CinematicImage';
+import { LightboxModal, LightboxItem } from '@/components/ui/LightboxModal';
+import { Maximize2, Sparkles } from 'lucide-react';
+import { cn } from '@/lib/cn';
 
-const lead = stageFrames.find((f) => f.weight === 'lead')!;
-const beats = stageFrames.filter((f) => f.weight === 'beat');
+const categories: { key: StageCategory; label: string }[] = [
+  { key: 'todos', label: 'Todos os Momentos' },
+  { key: 'vocais', label: 'Vocais & Guitarras' },
+  { key: 'blocos', label: 'Blocos Temáticos' },
+  { key: 'efeitos', label: 'Luz & Efeitos LED' },
+];
 
 function Caption({ children }: { children: React.ReactNode }) {
   return (
-    <figcaption className="mt-3 flex items-center gap-3 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
-      <span aria-hidden className="inline-block h-px w-6 bg-brand" />
-      {children}
+    <figcaption className="mt-3 flex items-center justify-between gap-3 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
+      <div className="flex items-center gap-2">
+        <span aria-hidden className="inline-block h-px w-5 bg-brand" />
+        <span>{children}</span>
+      </div>
+      <span className="opacity-0 transition-opacity group-hover:opacity-100 text-brand">
+        <Maximize2 className="h-3.5 w-3.5" />
+      </span>
     </figcaption>
   );
 }
 
 export function Palco() {
   const copy = pageCopy.palco;
+  const [activeCategory, setActiveCategory] = useState<StageCategory>('todos');
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const filteredFrames = useMemo(() => {
+    if (activeCategory === 'todos') return stageFrames;
+    return stageFrames.filter((f) => f.category === activeCategory);
+  }, [activeCategory]);
+
+  const lead = stageFrames.find((f) => f.weight === 'lead')!;
+  const beats = useMemo(() => {
+    if (activeCategory === 'todos') {
+      return stageFrames.filter((f) => f.weight === 'beat');
+    }
+    return filteredFrames;
+  }, [activeCategory, filteredFrames]);
+
+  const lightboxItems: LightboxItem[] = useMemo(() => {
+    return (activeCategory === 'todos' ? stageFrames : filteredFrames).map((f) => ({
+      src: f.src,
+      alt: f.alt,
+      caption: f.caption,
+      category: f.category,
+    }));
+  }, [activeCategory, filteredFrames]);
+
+  const handleOpenLightbox = (src: string) => {
+    const idx = lightboxItems.findIndex((item) => item.src === src);
+    if (idx !== -1) setLightboxIndex(idx);
+  };
 
   return (
     <Section id="palco" variant="ink" pad="xl">
@@ -42,14 +80,16 @@ export function Palco() {
           lead={copy.lead}
         />
 
-        {/* Who is actually on the stage. "Onze integrantes" is a claim; the
-            instrument-by-instrument count is the receipt, and it is the first
-            thing a buyer comparing bands checks. */}
+        {/* Who is actually on the stage: 11 integrantes */}
         <div className="mt-[clamp(2.5rem,5vi,3.5rem)]">
-          <Eyebrow tone="mono">{copy.lineupEyebrow}</Eyebrow>
-          {/* Rules per cell, not a filled grid: seven items never divide
-              evenly into two or four columns, and a gap-px grid would paint
-              the empty cell of the last row as a solid block. */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Eyebrow tone="mono">{copy.lineupEyebrow}</Eyebrow>
+            <span className="inline-flex items-center gap-2 border border-brand/30 bg-bg-raise/60 px-3 py-1 font-mono text-[0.62rem] uppercase tracking-widest text-brand backdrop-blur-sm">
+              <Sparkles className="h-3 w-3 text-brand" />
+              100% Ao Vivo
+            </span>
+          </div>
+
           <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:grid-cols-7">
             {bandLineup.roles.map((item) => (
               <div key={item.role} className="flex flex-col gap-1.5 border-t border-border pt-3">
@@ -67,50 +107,76 @@ export function Palco() {
           </dl>
         </div>
 
-        <div className="mt-[clamp(3rem,6vi,5rem)] flex flex-col gap-[clamp(1.5rem,3vi,2.5rem)]">
-          <figure className="reveal-mid">
-            <CinematicImage
-              src={lead.src}
-              alt={lead.alt}
-              grade="live"
-              aspect={lead.aspect}
-              fill
-              sizes={framesSizes(1)}
-              quality={90}
-              wrapperClassName="ring-1 ring-inset ring-border"
-            />
-            <Caption>{lead.caption}</Caption>
-          </figure>
+        {/* Interactive Filter Pills */}
+        <div className="mt-[clamp(3rem,6vi,4.5rem)] flex flex-wrap items-center gap-2.5 border-y border-border py-4">
+          <span className="mr-2 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
+            Filtrar acervo:
+          </span>
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              type="button"
+              onClick={() => setActiveCategory(cat.key)}
+              className={cn(
+                'min-h-9 px-4 py-2 font-mono text-[0.64rem] uppercase tracking-[0.22em] transition-all cursor-pointer',
+                activeCategory === cat.key
+                  ? 'bg-brand text-void-950 font-bold glow-gold-soft'
+                  : 'border border-border bg-bg-raise/50 text-text-muted hover:border-brand/50 hover:text-text',
+              )}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Masonry: CSS columns, every frame at its native ratio. The gap
-              value is shared between column-gap and each figure's bottom
-              margin so the gutters read even in both axes.
+        {/* Photography Grid */}
+        <div className="mt-8 flex flex-col gap-[clamp(1.5rem,3vi,2.5rem)]">
+          {/* Lead Photo (displayed when "todos" is active) */}
+          {activeCategory === 'todos' && (
+            <figure
+              className="group relative cursor-pointer reveal-mid"
+              onClick={() => handleOpenLightbox(lead.src)}
+            >
+              <div className="overflow-hidden">
+                <CinematicImage
+                  src={lead.src}
+                  alt={lead.alt}
+                  grade="live"
+                  aspect={lead.aspect}
+                  fill
+                  sizes={framesSizes(1)}
+                  quality={90}
+                  wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 group-hover:scale-[1.01]"
+                />
+              </div>
+              <Caption>{lead.caption}</Caption>
+            </figure>
+          )}
 
-              These images are static-sized (width/height), NOT `fill`:
-              absolutely-positioned children mis-render inside multicol
-              fragmentation in Chromium, painting shorter than their box. The
-              beat aspects in images.ts are the files' pixel dimensions, so
-              they double as the width/height props here. */}
+          {/* Masonry Columns */}
           <div className="columns-1 gap-[clamp(1.5rem,3vi,2.5rem)] sm:columns-2 lg:columns-3">
             {beats.map((frame, i) => {
               const [w, h] = frame.aspect.split('/').map(Number);
               return (
                 <figure
-                  key={frame.src}
-                  className="reveal-mid mb-[clamp(1.5rem,3vi,2.5rem)] break-inside-avoid"
+                  key={frame.id || frame.src}
+                  onClick={() => handleOpenLightbox(frame.src)}
+                  className="group relative cursor-pointer reveal-mid mb-[clamp(1.5rem,3vi,2.5rem)] break-inside-avoid"
                   style={{ ['--i' as string]: i % 3 } as React.CSSProperties}
                 >
-                  <CinematicImage
-                    src={frame.src}
-                    alt={frame.alt}
-                    grade="live"
-                    width={w}
-                    height={h}
-                    sizes="(min-width: 1024px) 31vw, (min-width: 640px) 47vw, 100vw"
-                    quality={90}
-                    imgClassName="h-auto w-full"
-                    wrapperClassName="ring-1 ring-inset ring-border"
-                  />
+                  <div className="overflow-hidden">
+                    <CinematicImage
+                      src={frame.src}
+                      alt={frame.alt}
+                      grade="live"
+                      width={w}
+                      height={h}
+                      sizes="(min-width: 1024px) 31vw, (min-width: 640px) 47vw, 100vw"
+                      quality={90}
+                      imgClassName="h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
+                      wrapperClassName="ring-1 ring-inset ring-border"
+                    />
+                  </div>
                   <Caption>{frame.caption}</Caption>
                 </figure>
               );
@@ -118,34 +184,34 @@ export function Palco() {
           </div>
         </div>
 
-        {/* Wardrobe. Small, in a row, under the show photography: the point is
-            that the show has blocks and each one has its own costume — not
-            three more pictures competing with the frames above. */}
+        {/* Wardrobe (Figurinos) Backstage */}
         <div className="mt-[clamp(3.5rem,7vi,6rem)] border-t border-border pt-[clamp(2.5rem,4vi,3.5rem)]">
           <Eyebrow tone="mono">{copy.figurinosEyebrow}</Eyebrow>
           <p className="mt-4 max-w-[54ch] text-text-muted" style={{ fontSize: 'var(--text-base)' }}>
             {copy.figurinosLead}
           </p>
 
-          <ul className="mt-8 grid grid-cols-3 gap-[clamp(0.75rem,2vi,1.5rem)]">
+          <ul className="mt-8 grid grid-cols-1 gap-[clamp(0.75rem,2vi,1.5rem)] sm:grid-cols-3">
             {figurinos.map((shot, i) => (
               <li
                 key={shot.src}
-                className="reveal-mid"
+                className="group cursor-pointer reveal-mid"
+                onClick={() => handleOpenLightbox(shot.src)}
                 style={{ ['--i' as string]: i } as React.CSSProperties}
               >
                 <figure>
-                  {/* 3/4 is these files' native ratio (±1%) — whole frame. */}
-                  <CinematicImage
-                    src={shot.src}
-                    alt={shot.alt}
-                    grade="live"
-                    aspect="3/4"
-                    fill
-                    sizes="(min-width: 768px) 30vw, 33vw"
-                    quality={90}
-                    wrapperClassName="ring-1 ring-inset ring-border"
-                  />
+                  <div className="overflow-hidden">
+                    <CinematicImage
+                      src={shot.src}
+                      alt={shot.alt}
+                      grade="live"
+                      aspect="3/4"
+                      fill
+                      sizes="(min-width: 768px) 30vw, 100vw"
+                      quality={90}
+                      wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
                   <Caption>{shot.caption}</Caption>
                 </figure>
               </li>
@@ -153,6 +219,14 @@ export function Palco() {
           </ul>
         </div>
       </Container>
+
+      {/* Lightbox Modal */}
+      <LightboxModal
+        items={lightboxItems}
+        currentIndex={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onSelectIndex={(idx) => setLightboxIndex(idx)}
+      />
     </Section>
   );
 }

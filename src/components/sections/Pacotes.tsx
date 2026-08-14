@@ -1,14 +1,8 @@
 // src/components/sections/Pacotes.tsx
 // The whole commercial argument in one section.
-//
-// This used to be split in two — #pacotes (the two packages) and #servicos
-// (the event formats plus "o que está incluso") — separated on the page by the
-// gallery and a marquee, so a buyer met the price, forgot it, and rediscovered
-// the offer four thousand pixels later. One of them was titled "Serviços
-// Premium" while the nav's SERVIÇOS entry pointed at the other. Merged.
 import { contact, includedFeatures, pageCopy, services, servicePackages } from '@/data/content';
 import { estrutura } from '@/data/images';
-import { Check, Crown, Star } from 'lucide-react';
+import { Check, Crown, Star, Sparkles, MessageCircle } from 'lucide-react';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -36,15 +30,14 @@ export function Pacotes() {
           lead={copy.lead}
         />
 
-        {/* Formats — three lines, not three cards. They are a qualifier for the
-            packages below, not a competing offer. */}
+        {/* Formats */}
         <div className="mt-[clamp(2.5rem,5vi,4rem)]">
           <Eyebrow tone="mono">{copy.formatsEyebrow}</Eyebrow>
           <ul className="mt-5 grid gap-px border border-border bg-border sm:grid-cols-3">
             {services.map((service, i) => (
               <li
                 key={service.title}
-                className="reveal-mid flex flex-col gap-2 bg-bg-raise p-6"
+                className="reveal-mid flex flex-col gap-2 bg-bg-raise p-6 transition-colors hover:bg-bg-high"
                 style={{ ['--i' as string]: i } as React.CSSProperties}
               >
                 <div className="flex items-baseline gap-3">
@@ -75,10 +68,10 @@ export function Pacotes() {
                 key={pkg.id}
                 style={{ ['--i' as string]: i } as React.CSSProperties}
                 className={cn(
-                  'reveal-mid relative flex flex-col border bg-bg-high p-[clamp(1.5rem,2.5vi,2.5rem)] transition-colors duration-500',
+                  'reveal-mid relative flex flex-col border bg-bg-high p-[clamp(1.5rem,2.5vi,2.5rem)] transition-all duration-500',
                   pkg.highlighted
-                    ? 'border-brand/50 glow-gold-soft'
-                    : 'border-border hover:border-brand',
+                    ? 'border-brand/70 glow-gold-soft ring-1 ring-brand/30'
+                    : 'border-border hover:border-brand/60',
                 )}
               >
                 <div className="flex items-center justify-between gap-4">
@@ -89,15 +82,16 @@ export function Pacotes() {
                     />
                     <h3
                       className={cn(
-                        'font-mono text-[0.72rem] uppercase tracking-[0.3em]',
-                        pkg.highlighted ? 'text-brand' : 'text-text',
+                        'font-mono text-[0.75rem] uppercase tracking-[0.3em]',
+                        pkg.highlighted ? 'text-brand font-bold' : 'text-text',
                       )}
                     >
                       {pkg.name}
                     </h3>
                   </div>
                   {pkg.highlighted && (
-                    <span className="shrink-0 border border-brand/40 px-2.5 py-1 font-mono text-[0.55rem] uppercase tracking-[0.24em] text-brand">
+                    <span className="shrink-0 flex items-center gap-1.5 border border-brand bg-brand/10 px-3 py-1 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-brand">
+                      <Sparkles className="h-3 w-3" />
                       {copy.highlightBadge}
                     </span>
                   )}
@@ -110,8 +104,7 @@ export function Pacotes() {
                   {pkg.description}
                 </p>
 
-                {/* Two columns so the nine-item package fills its card instead
-                    of running as one thin ribbon of text. */}
+                {/* Features Checklist */}
                 <ul className="mt-7 grid flex-1 gap-x-6 gap-y-3 border-t border-border pt-6 sm:grid-cols-2">
                   {pkg.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-2.5">
@@ -134,12 +127,13 @@ export function Pacotes() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn(
-                    'mt-8 flex min-h-11 items-center justify-center px-4 py-3 text-center font-sans text-sm font-bold tracking-widest transition-colors',
+                    'mt-8 flex min-h-11 items-center justify-center gap-2 px-4 py-3.5 text-center font-sans text-sm font-bold tracking-widest transition-all duration-300',
                     pkg.highlighted
-                      ? 'bg-gold text-void-950 hover:bg-gold-light'
-                      : 'border border-border-strong text-text hover:border-brand hover:text-brand',
+                      ? 'bg-gold text-void-950 hover:bg-gold-light hover:glow-gold'
+                      : 'border border-border-strong text-text hover:border-brand hover:text-brand hover:bg-bg-raise',
                   )}
                 >
+                  <MessageCircle className="h-4 w-4" />
                   {copy.ctaLabel}
                 </a>
               </article>
@@ -147,35 +141,33 @@ export function Pacotes() {
           })}
         </div>
 
-        {/* The mounted rig — photographic proof for the feature lists above.
-            Each caption names the package line the picture backs up. */}
+        {/* The mounted rig: photographic proof */}
         <div className="mt-[clamp(3rem,5vi,4.5rem)] border-t border-border pt-[clamp(2.5rem,4vi,3.5rem)]">
           <Eyebrow tone="mono">{copy.estruturaEyebrow}</Eyebrow>
           <p className="mt-4 max-w-[54ch] text-text-muted" style={{ fontSize: 'var(--text-base)' }}>
             {copy.estruturaLead}
           </p>
 
-          {/* Column template 16:16:9 — two 4/3 landscapes and one 3/4
-              portrait land at exactly the same height with every photograph
-              at its native ratio. Nothing here is cropped. */}
           <ul className="mt-8 grid grid-cols-1 gap-[clamp(0.75rem,2vi,1.5rem)] sm:grid-cols-[16fr_16fr_9fr]">
             {estrutura.map((shot, i) => (
               <li
                 key={shot.src}
-                className="reveal-mid"
+                className="reveal-mid group"
                 style={{ ['--i' as string]: i } as React.CSSProperties}
               >
                 <figure>
-                  <CinematicImage
-                    src={shot.src}
-                    alt={shot.alt}
-                    grade="live"
-                    aspect={shot.aspect}
-                    fill
-                    sizes={i < 2 ? '(min-width: 640px) 36vw, 100vw' : '(min-width: 640px) 21vw, 100vw'}
-                    quality={90}
-                    wrapperClassName="ring-1 ring-inset ring-border"
-                  />
+                  <div className="overflow-hidden">
+                    <CinematicImage
+                      src={shot.src}
+                      alt={shot.alt}
+                      grade="live"
+                      aspect={shot.aspect}
+                      fill
+                      sizes={i < 2 ? '(min-width: 640px) 36vw, 100vw' : '(min-width: 640px) 21vw, 100vw'}
+                      quality={90}
+                      wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
                   <figcaption className="mt-3 flex items-center gap-3 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-text-muted">
                     <span aria-hidden className="inline-block h-px w-4 shrink-0 bg-brand" />
                     {shot.caption}
@@ -191,7 +183,7 @@ export function Pacotes() {
           {includedFeatures.map((feature, i) => (
             <li
               key={feature.title}
-              className="reveal-mid flex flex-col gap-4 border border-border p-6"
+              className="reveal-mid flex flex-col gap-4 border border-border bg-bg-raise/40 p-6"
               style={{ ['--i' as string]: i % 3 } as React.CSSProperties}
             >
               <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">

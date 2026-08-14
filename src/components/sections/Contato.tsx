@@ -1,30 +1,12 @@
 // src/components/sections/Contato.tsx
-// Closing section, set over a stage photograph so the page ends on the same
-// argument it opened with. The old closer asked "Vamos entrar no palco
-// juntos?" — this one asks the only question that moves a booking forward.
+// Closing section, set over a stage photograph so the page ends on the same argument it opened with.
 import Image from 'next/image';
 import { bandInfo, contact, pageCopy } from '@/data/content';
 import { images } from '@/data/images';
 import { Container } from '@/components/ui/Container';
-import { Eyebrow } from '@/components/ui/Eyebrow';
 import { NumberScrub } from '@/components/ui/NumberScrub';
 import { WhatsAppCta } from '@/components/ui/WhatsAppCta';
-
-const InstagramIcon = () => (
-  <svg
-    aria-hidden
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    className="h-[0.95em] w-[0.95em]"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect x="3" y="3" width="18" height="18" rx="5" />
-    <circle cx="12" cy="12" r="4" />
-    <circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" />
-  </svg>
-);
+import { Mail, Sparkles } from 'lucide-react';
 
 const WhatsAppIcon = () => (
   <svg
@@ -37,6 +19,21 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
+const InstagramIcon = () => (
+  <svg
+    aria-hidden
+    viewBox="0 0 24 24"
+    className="h-4 w-4 fill-none stroke-current stroke-2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
 export function Contato() {
   const copy = pageCopy.contato;
 
@@ -45,10 +42,10 @@ export function Contato() {
       <div className="absolute inset-0 -z-10">
         <Image
           src={images.festa209}
-          alt=""
+          alt="Palco e energia da Internacional Freeband"
           fill
           sizes="100vw"
-          quality={90}
+          quality={92}
           className="grade-live object-cover"
           style={{ objectPosition: 'center 35%' }}
         />
@@ -56,9 +53,10 @@ export function Contato() {
       </div>
 
       <Container>
-        <Eyebrow number={copy.eyebrowNumber} tone="mono">
+        <div className="inline-flex items-center gap-2 border border-brand/40 bg-bg-raise/80 px-3.5 py-1 font-mono text-[0.62rem] uppercase tracking-widest text-brand backdrop-blur-sm">
+          <Sparkles className="h-3 w-3" />
           {copy.eyebrowLabel}
-        </Eyebrow>
+        </div>
 
         <h2
           className="mt-8 max-w-4xl font-display -tracking-[0.02em] text-balance text-text"
@@ -91,15 +89,16 @@ export function Contato() {
               href={contact.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/60 px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-text backdrop-blur-sm transition-colors hover:border-brand hover:text-brand"
+              className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/70 px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-text backdrop-blur-md transition-all hover:border-brand hover:text-brand hover:glow-gold-soft"
             >
               <InstagramIcon />
               {contact.instagram}
             </a>
             <a
               href={`mailto:${contact.email}`}
-              className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/60 px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-text backdrop-blur-sm transition-colors hover:border-brand hover:text-brand"
+              className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/70 px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.24em] text-text backdrop-blur-md transition-all hover:border-brand hover:text-brand hover:glow-gold-soft"
             >
+              <Mail className="h-4 w-4 text-brand" />
               {contact.email}
             </a>
           </div>

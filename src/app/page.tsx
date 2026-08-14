@@ -7,6 +7,7 @@ import { Arquivo } from '@/components/sections/Arquivo';
 import { Historia } from '@/components/sections/Historia';
 import { Pacotes } from '@/components/sections/Pacotes';
 import { Contato } from '@/components/sections/Contato';
+import { FloatingQuoteBar } from '@/components/ui/FloatingQuoteBar';
 
 // Order is an argument, not a menu: show what arrives (Palco), show it moving
 // (Video), prove it has been arriving for 57 years (Arquivo), explain where
@@ -33,6 +34,7 @@ export default function HomePage() {
         <Pacotes />
         <Contato />
       </main>
+      <FloatingQuoteBar />
       <Footer />
     </>
   );

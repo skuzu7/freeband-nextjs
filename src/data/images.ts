@@ -48,10 +48,12 @@ export const images = {
   img0867: "/images/img-0867.jpeg",
   // People
   joao: "/images/joao.jpeg",
-  // Venues
+  // Venues & Event posters
   baileTabatinga: "/images/baile-tabatinga.jpeg",
   barraBonita: "/images/barra-bonita.jpeg",
   nauticoAraraquara: "/images/nautico-araraquara.jpeg",
+  freebandJau: "/images/freeband-jau.jpeg",
+  freebandSocial: "/images/freeband-social.jpeg",
   // Historical / vintage
   anos70: "/images/freeband-anos-70.jpeg",
   anos90: "/images/freeband-anos-90.jpeg",
@@ -73,12 +75,16 @@ export type ImageKey = keyof typeof images;
 // frames fill the rhythm between them. Ordered as they should read down-page.
 // =============================================================================
 
+export type StageCategory = 'todos' | 'vocais' | 'blocos' | 'efeitos';
+
 export interface StageFrame {
+  id: string;
   src: string;
   alt: string;
   /** Short mono caption rendered under the frame — what the picture shows. */
   caption: string;
   weight: "lead" | "beat";
+  category: StageCategory;
   /**
    * The photograph's NATIVE ratio. The gallery renders every frame at its
    * own aspect — a portrait file never goes into a landscape box, so nothing
@@ -89,68 +95,125 @@ export interface StageFrame {
   crop?: string;
 }
 
-// One landscape lead carries the section open; everything else in the archive
-// is PORTRAIT phone photography, so the rest of the gallery runs as masonry
-// columns with each frame at its native ratio. The previous grid forced these
-// verticals into 3/2 landscape boxes and object-cover amputated half of every
-// picture — dancers without legs, a drummer without his FREEBAND sign.
+// One landscape lead carries the section open; the gallery provides the live
+// experience with full native aspect ratios in masonry and category filters.
 export const stageFrames: StageFrame[] = [
   {
+    id: "vocal-lead",
     src: images.vocalDouradoPalco,
     alt: "Vocalista da Internacional Freeband cantando ao microfone sob a luz de palco",
-    caption: "Frente de palco",
+    caption: "Frente de palco · Vocal principal",
     weight: "lead",
+    category: "vocais",
     aspect: "3/2",
   },
   {
+    id: "palco-coracoes",
     src: images.palcoLedCoracoes,
     alt: "Bailarina em figurino azul diante do painel de LED durante o show",
     caption: "Painel de LED · efeitos 3D",
     weight: "beat",
+    category: "blocos",
     aspect: "1014/1600",
   },
   {
+    id: "palco-country",
     src: images.palcoCountryLed,
     alt: "Dupla em figurino country dançando à frente da banda e do painel de LED",
-    caption: "Bloco country",
+    caption: "Bloco country ao vivo",
     weight: "beat",
+    category: "blocos",
     aspect: "1112/1600",
   },
   {
+    id: "palco-cabare",
     src: images.palcoCabare,
     alt: "Vocalista em figurino de cabaré à frente da banda e do painel de LED",
-    caption: "Bloco cabaré",
+    caption: "Bloco cabaré · performance",
     weight: "beat",
+    category: "blocos",
     aspect: "1174/1600",
   },
   {
+    id: "palco-anos70",
     src: images.palcoAnos70,
     alt: "Bloco anos 70 com plumas laranja diante do painel de LED",
-    caption: "Bloco anos 70",
+    caption: "Bloco anos 70 · figurinos de época",
     weight: "beat",
+    category: "blocos",
     aspect: "1074/1600",
   },
-  // The instrumentalists — the lineup grid just promised guitars and drums.
   {
+    id: "vocal-guitarras",
     src: images.joao,
     alt: "Vocalista de bandana vermelha à frente, com violão e guitarra ao fundo sob luz vermelha",
-    caption: "Vocal e guitarras",
+    caption: "Vocal e guitarras · rock e hits",
     weight: "beat",
+    category: "vocais",
     aspect: "1479/1173",
   },
   {
+    id: "palco-asas",
     src: images.palcoAsasLed,
     alt: "Bailarinos com asas iluminadas e vocalista diante do painel de LED",
-    caption: "Luz cênica e efeitos",
+    caption: "Luz cênica e asas LED iluminadas",
     weight: "beat",
+    category: "efeitos",
     aspect: "1179/1328",
   },
   {
+    id: "bateria-neon",
     src: images.bateriaFreebandNeon,
     alt: "Baterista tocando diante do letreiro FREEBAND em neon no painel de LED",
-    caption: "Bateria",
+    caption: "Bateria acústica · letreiro neon",
     weight: "beat",
+    category: "efeitos",
     aspect: "1086/1448",
+  },
+  {
+    id: "vocal-espelhado",
+    src: images.vocalEspelhado,
+    alt: "Vocalista com jaqueta espelhada de mosaico cantando sob iluminação neon azul",
+    caption: "Vocal principal · jaqueta espelhada",
+    weight: "beat",
+    category: "vocais",
+    aspect: "800/1600",
+  },
+  {
+    id: "vocais-femininas",
+    src: images.img0690,
+    alt: "Duas vocalistas cantando lado a lado ao microfone sob luz quente de palco",
+    caption: "Naipe de vozes femininas",
+    weight: "beat",
+    category: "vocais",
+    aspect: "3/2",
+  },
+  {
+    id: "bloco-psicodelico",
+    src: images.festa308,
+    alt: "Vocalista à frente do bloco anos 70, com bailarinos em estampas psicodélicas sob luz azul",
+    caption: "Bloco anos 70 · psicodelia",
+    weight: "beat",
+    category: "blocos",
+    aspect: "1600/1066",
+  },
+  {
+    id: "palco-energia",
+    src: images.festa209,
+    alt: "Cantora com chapéu country e bailarinos em movimento no palco",
+    caption: "Presença de palco e coreografia",
+    weight: "beat",
+    category: "blocos",
+    aspect: "1600/1066",
+  },
+  {
+    id: "palco-completo-luzes",
+    src: images.festa55,
+    alt: "Banda completa no palco sob feixes de luz robotizada e telão de LED",
+    caption: "Banda completa · Iluminação robotizada",
+    weight: "beat",
+    category: "efeitos",
+    aspect: "1600/1066",
   },
 ];
 
@@ -169,17 +232,17 @@ export const figurinos: WardrobeShot[] = [
   {
     src: images.figurinoPlumas,
     alt: "Bailarinos em figurino vermelho com plumas e chapéus",
-    caption: "Plumas",
+    caption: "Plumas & Anos 70",
   },
   {
     src: images.figurinoAnos50,
     alt: "Bailarinos em figurino anos 50 de poá com luvas brancas",
-    caption: "Anos 50",
+    caption: "Anos 50 & Retrô",
   },
   {
     src: images.figurinoCountry,
     alt: "Dupla em figurino country dourado com franjas e chapéu",
-    caption: "Country",
+    caption: "Country & Sertanejo",
   },
 ];
 
@@ -187,10 +250,6 @@ export const figurinos: WardrobeShot[] = [
 // estrutura — the mounted rig, photographed at real setups. This is the
 // receipt for every line the Pacotes section lists: each caption points at a
 // package feature, so a buyer can match claim to photograph one-to-one.
-//
-// Two landscapes and one portrait. The grid template in Pacotes.tsx sizes the
-// columns 16:16:9 so all three render at the SAME height with every frame at
-// its native ratio — no crop on any of them.
 // =============================================================================
 
 export interface EstruturaShot extends WardrobeShot {
@@ -238,6 +297,7 @@ export interface Reel {
   /** What the clip shows — read out to anyone who can't watch it. */
   alt: string;
   caption: string;
+  tag: string;
 }
 
 export const reels: Reel[] = [
@@ -246,24 +306,28 @@ export const reels: Reel[] = [
     poster: "/video/reel-baile.jpg",
     alt: "Vocalista à frente da banda sob luz magenta, com o painel de LED aceso ao fundo",
     caption: "Baile · luz cênica",
+    tag: "Luz Cênica",
   },
   {
     src: "/video/reel-led.mp4",
     poster: "/video/reel-led.jpg",
     alt: "Dois vocais cantando diante do painel de LED colorido, com a banda ao fundo",
     caption: "Painel de LED",
+    tag: "Painel 3D",
   },
   {
     src: "/video/reel-dancarinos.mp4",
     poster: "/video/reel-dancarinos.jpg",
     alt: "Bailarinos com asas iluminadas atravessando o palco sob lasers",
     caption: "Bailarinos e efeitos",
+    tag: "Efeitos Visuais",
   },
   {
     src: "/video/reel-vocal.mp4",
     poster: "/video/reel-vocal.jpg",
     alt: "Bloco anos 70 dançando com plumas laranja sob feixes de luz",
     caption: "Bloco anos 70",
+    tag: "Show Temático",
   },
 ];
 
@@ -272,6 +336,8 @@ export const reels: Reel[] = [
 // itself; nothing here is inferred. This is the section that no competitor can
 // reproduce, so the metadata has to be exactly right.
 // =============================================================================
+
+export type PosterCategory = 'todos' | 'municipal' | 'clube' | 'reveillon';
 
 export interface Poster {
   src: string;
@@ -286,6 +352,7 @@ export interface Poster {
   venue?: string;
   /** True when a city hall is the named promoter. */
   municipal?: boolean;
+  category: PosterCategory;
 }
 
 export const posters: Poster[] = [
@@ -296,6 +363,7 @@ export const posters: Poster[] = [
     event: "Réveillon",
     when: "2020",
     venue: "Praça do Teleférico · 28 a 31 dez",
+    category: "reveillon",
   },
   {
     src: images.reveillomParanapanema,
@@ -305,6 +373,7 @@ export const posters: Poster[] = [
     when: "2017",
     venue: "Praça da Matriz · 31/12, 23h",
     municipal: true,
+    category: "municipal",
   },
   {
     src: images.reveillomItatinga,
@@ -314,6 +383,25 @@ export const posters: Poster[] = [
     when: "2023",
     venue: "Prefeitura Municipal · 30/12",
     municipal: true,
+    category: "municipal",
+  },
+  {
+    src: images.freebandJau,
+    alt: "Cartaz do show da Internacional Freeband no Palco do Salão Social do Caiçara Clube Jaú",
+    town: "Jaú",
+    event: "Show Salão Social",
+    when: "09/Nov",
+    venue: "Caiçara Clube Jaú · Palco Social",
+    category: "clube",
+  },
+  {
+    src: images.freebandSocial,
+    alt: "Cartaz do Baile do Havaí da Internacional Freeband no Clube de Campo Céu Azul",
+    town: "Céu Azul",
+    event: "Baile do Havaí",
+    when: "07/Dez",
+    venue: "Clube de Campo Céu Azul",
+    category: "clube",
   },
   {
     src: images.reveillomIacanga,
@@ -322,6 +410,7 @@ export const posters: Poster[] = [
     event: "A virada é aqui",
     when: "2026",
     venue: "Praia das Palmeiras · 22h",
+    category: "reveillon",
   },
   {
     src: images.nauticoAraraquara,
@@ -330,6 +419,7 @@ export const posters: Poster[] = [
     event: "Arraiá do Náutico",
     when: "08/06",
     venue: "Clube Náutico · mesas esgotadas",
+    category: "clube",
   },
   {
     src: images.cartazCosmopolitano,
@@ -337,6 +427,8 @@ export const posters: Poster[] = [
     town: "Cosmopolitano FC",
     event: "Baile do Havaí",
     when: "—",
+    venue: "Cosmopolitano Futebol Clube",
+    category: "clube",
   },
   {
     src: images.baileTabatinga,
@@ -344,6 +436,8 @@ export const posters: Poster[] = [
     town: "Tabatinga",
     event: "Baile do Havaí",
     when: "07/12",
+    venue: "Clube de Campo de Tabatinga",
+    category: "clube",
   },
 ];
 
@@ -357,21 +451,25 @@ export interface HeritageShot {
   caption: string;
 }
 
+// Ordered chronologically, oldest first. Each alt describes the photograph that
+// is actually in the file — they had drifted apart, and on a page whose whole
+// argument is "this is our real archive" a caption that describes a different
+// picture costs more than a missing one.
 export const heritage: HeritageShot[] = [
   {
-    src: images.anos90,
-    alt: "Retrato em preto e branco de três integrantes fundadores",
-    caption: "Os fundadores",
+    src: images.anos70,
+    alt: "Retrato sépia dos integrantes fundadores de terno, três sentados à frente do grupo",
+    caption: "Os fundadores · Jaú/SP",
   },
   {
-    src: images.anos70,
-    alt: "A banda Free Band posando nos anos 70",
-    caption: "Anos 70",
+    src: images.anos90,
+    alt: "Cartaz da formação dos anos 80 com sete integrantes sobre fundo de chamas e o logotipo original 'free band'",
+    caption: "A formação dos anos 80",
   },
   {
     src: images.fb2015,
-    alt: "A Internacional Freeband em 2015",
-    caption: "2015",
+    alt: "Cartaz comemorativo em colagem com fotos de show e os dizeres '30 anos de sucesso'",
+    caption: "Cartaz · 30 anos de sucesso",
   },
 ];
 
