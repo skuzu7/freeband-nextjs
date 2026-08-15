@@ -199,10 +199,10 @@ export const stageFrames: StageFrame[] = [
     plate: 2,
   },
   {
-    id: "bloco-psicodelico",
+    id: "bloco-anos70-baile",
     src: images.festa308,
-    alt: "Vocalista à frente do bloco anos 70, com bailarinos em estampas psicodélicas sob luz azul",
-    caption: "Bloco anos 70 · psicodelia",
+    alt: "Vocalista à frente do bloco anos 70, com o corpo de baile em estampas coloridas sob luz azul",
+    caption: "Bloco anos 70 · corpo de baile",
     weight: "beat",
     category: "blocos",
     aspect: "2560/1707",
