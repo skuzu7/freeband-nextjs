@@ -9,6 +9,7 @@ import { pdfImages } from "./pdfImages";
 // URL the PDF fetcher understands.
 const timelineImageMap: Record<string, string> = {
   "/images/freeband-anos-70.jpeg": pdfImages.anos70,
+  "/images/freeband-anos-80.jpeg": pdfImages.anos80,
   "/images/freeband-anos-90.jpeg": pdfImages.anos90,
   "/images/freeband-antigas.jpeg": pdfImages.antigas,
   "/images/freeband-2015.jpeg": pdfImages.fb2015,

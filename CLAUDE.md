@@ -46,7 +46,9 @@ Two documents are built with `@react-pdf/renderer`: the portfolio (`src/componen
 
 ### Content & data
 
-`src/data/content.ts` is the single source of truth for all band copy and metadata (Portuguese, extracted from the official brochure); `src/data/images.ts` maps every image path used on the site and in PDFs, plus the `stageFrames` / `posters` / `heritage` / `figurinos` / `reels` collections. Don't hardcode copy or image paths in components. `RELEASE_SHORT` in `content.ts` is the band's official one-line description — the meta description, the Palco lead and the last paragraph of `release.full` all read from it, so edit the sentence there and nowhere else.
+`src/data/content.ts` is the single source of truth for all band copy and metadata (Portuguese, extracted from the official brochure); `src/data/images.ts` maps every image path used on the site and in PDFs, plus the `stageFrames` / `posters` / `figurinos` / `estrutura` / `reels` collections and `heroMedia`. Don't hardcode copy or image paths in components. `RELEASE_SHORT` in `content.ts` is the band's official one-line description — the meta description, the Palco lead and the last paragraph of `release.full` all read from it, so edit the sentence there and nowhere else.
+
+Gallery rules the tests enforce (`src/lib/__tests__/images.test.ts`): every frame's `aspect` is the file's real "W/H" (±2%), web-gallery photographs need ≥900px on the long edge (the old site's 600×400 thumbnails are PDF-only), and every rendered image needs an entry in the generated `src/data/blur.ts` — run `node scripts/generate-blur.mjs` after adding or re-encoding any image. The Palco gallery is a programme in three acts (`pageCopy.palco.acts` ↔ `StageFrame.category`) composed of "plates": equal-height rows via `.plate` in `globals.css`, whose column widths are fr values proportional to each photo's ratio — photographs are NEVER cropped by their boxes. The history section's five eras each carry their own archival photo (`timeline[].image*` fields in `content.ts`); originals live in `Desktop/Freeband/_originais/`, re-encode at q90 with sharp.
 
 ### The wordmark
 
@@ -54,7 +56,7 @@ Two documents are built with `@react-pdf/renderer`: the portfolio (`src/componen
 
 ### Video
 
-`public/video/reel-*.mp4` are ten-second silent clips (H.264, ~1 MB each) with a matching `.jpg` poster cut from their own first frame. `Video.tsx` attaches sources only on intersection (`preload="none"` + `data-src`), autoplays muted in view, honours `prefers-reduced-motion`, and exposes one pause control for all four (WCAG 2.2.2). Re-encode new clips at the same budget — `-crf 30 -preset veryslow -an -vf "fps=25,hqdn3d=1.5:1.2:4:3"` — or the page starts paying megabytes for decoration.
+`public/video/reel-*.mp4` are twelve-second silent 16:9 clips (H.264 1280×720/30, ≤2.3 MB each) cut from the band's own AVCHD camera masters (`Desktop/Freeband/*.m2ts`, 1440×1080i anamorphic), each with a `.jpg` poster from its own first frame. `Video.tsx` attaches sources only on intersection (`preload="none"` + `data-src`), autoplays muted in view, honours `prefers-reduced-motion`, and exposes one pause control for all four (WCAG 2.2.2). Re-encode recipe for the interlaced masters: `-vf "yadif=1,scale=1920:1080,setsar=1,fps=30,scale=1280:720,hqdn3d=2.5:2:5:4" -crf 30 -preset veryslow -an` (raise denoise/crf for glittery backdrops — they explode the bitrate). `hero-loop.mp4` (~1.8 MB) is the hero background: `HeroMedia.tsx` paints its poster immediately and only attaches the video on `requestIdleCallback`, never under reduced motion.
 
 ### Design system ("PALCO")
 

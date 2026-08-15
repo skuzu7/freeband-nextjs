@@ -72,6 +72,9 @@ FREEBAND: sempre um clima de expectativa em nossas apresentações. Novos recurs
   values: ['Pontualidade', 'Honestidade', 'Profissionalismo'],
 };
 
+// Each era carries its own archival photograph, rendered WHOLE at the file's
+// native ratio (imageAspect is checked against the real file by the image
+// integrity test). imageGrade picks the CinematicImage treatment.
 export const timeline = [
   {
     year: '1969',
@@ -79,13 +82,23 @@ export const timeline = [
     description:
       'Um grupo de amigos com uma proposta inovadora para a época deu início a uma das trajetórias mais duradouras da música brasileira.',
     image: '/images/freeband-anos-70.jpeg',
+    imageAlt:
+      'Retrato sépia dos seis integrantes fundadores de terno, com o letreiro freeband à frente',
+    imageAspect: '768/1024',
+    imageGrade: 'vintage',
+    imageCaption: 'Os fundadores, em Jaú/SP',
   },
   {
     year: 'Anos 80–90',
     title: 'Expansão Nacional',
     description:
       'Conquista de espaço nos melhores clubes do país, com apresentações em mais de sete estados brasileiros.',
-    image: '/images/freeband-anos-90.jpeg',
+    image: '/images/freeband-anos-80.jpeg',
+    imageAlt:
+      'Integrantes de camiseta da banda reunidos nos bastidores de um baile dos anos 80',
+    imageAspect: '768/768',
+    imageGrade: 'vintage',
+    imageCaption: 'Bastidores de baile, anos 80',
   },
   {
     year: 'Anos 2000',
@@ -93,6 +106,11 @@ export const timeline = [
     description:
       'Duas turnês internacionais ao lado de Jimmy Cliff e Cris Duran, além de palcos nacionais com Lulu Santos, Roupa Nova e Skank.',
     image: '/images/freeband-antigas.jpeg',
+    imageAlt:
+      'Cartaz da formação dos anos 2000 com naipe de metais, bailarinas e o logotipo Internacional Freeband',
+    imageAspect: '800/800',
+    imageGrade: 'poster',
+    imageCaption: 'A formação internacional',
   },
   {
     year: '2015',
@@ -100,6 +118,11 @@ export const timeline = [
     description:
       'Reconhecimento com prêmios nacionais pela excelência, qualidade e profissionalismo em mais de quatro décadas de estrada.',
     image: '/images/freeband-2015.jpeg',
+    imageAlt:
+      'Colagem comemorativa com fotos de show e os dizeres 30 anos de sucesso',
+    imageAspect: '457/640',
+    imageGrade: 'poster',
+    imageCaption: 'Cartaz comemorativo',
   },
   {
     year: 'Hoje',
@@ -107,6 +130,11 @@ export const timeline = [
     description:
       'Sediada em Trabiju/SP, totalmente independente com equipamentos próprios de altíssima tecnologia.',
     image: '/images/festa-55.jpeg',
+    imageAlt:
+      'Banda completa no palco sob feixes de luz robotizada e telão de LED',
+    imageAspect: '1200/800',
+    imageGrade: 'live',
+    imageCaption: 'O palco de hoje',
   },
 ];
 
@@ -317,7 +345,30 @@ export const pageCopy = {
     headlineSuffix: '.',
     lead: `${RELEASE_SHORT} As fotos abaixo são de shows nossos — sem banco de imagens.`,
     lineupEyebrow: `A formação · ${bandLineup.total} no palco`,
-    figurinosEyebrow: 'Figurinos',
+    lineupNote: 'Tudo ao vivo',
+    // The gallery reads as a programme in three acts. Keys match the
+    // StageFrame categories in src/data/images.ts.
+    acts: [
+      {
+        numeral: 'I',
+        key: 'vocais' as const,
+        title: 'A frente do palco',
+        note: 'O naipe de vozes — dois cantores, duas cantoras — e as guitarras.',
+      },
+      {
+        numeral: 'II',
+        key: 'blocos' as const,
+        title: 'Os blocos temáticos',
+        note: 'Country, cabaré, anos 70: figurino, coreografia e painel trocam juntos.',
+      },
+      {
+        numeral: 'III',
+        key: 'efeitos' as const,
+        title: 'Luz, LED e efeitos',
+        note: 'Iluminação robotizada via time code e o letreiro em neon.',
+      },
+    ],
+    figurinosEyebrow: 'Bastidores · Figurinos',
     figurinosLead:
       'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
   },
@@ -331,10 +382,10 @@ export const pageCopy = {
     headlinePrefix: 'E é assim que ele ',
     headlineEmphasis: 'se move',
     headlineSuffix: '.',
-    lead: 'Quatro trechos gravados em shows nossos, sem trilha e sem edição — luz cênica, painel de LED, bailarinos e o naipe de vocais em movimento.',
+    lead: 'Quatro trechos das gravações oficiais de show, sem trilha e sem edição — o letreiro em LED, o naipe de vozes e as guitarras em movimento.',
     pauseLabel: 'Pausar os vídeos',
     playLabel: 'Reproduzir os vídeos',
-    footnote: 'Gravações de celular, feitas na pista. O material em alta resolução vai por WhatsApp.',
+    footnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',
   },
 
   arquivo: {

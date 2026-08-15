@@ -10,10 +10,14 @@
 // Respects next.config.ts:images.qualities: [75, 90] at the type level;
 // defaults to 75 — pass quality={90} only where the extra weight is earned.
 //
+// Every string src found in the generated blurMap automatically gets a
+// blur-up placeholder (run scripts/generate-blur.mjs after adding images).
+//
 // Usage:
 //   <CinematicImage src="…" alt="…" grade="live" aspect="3/2" fill />
 // The wrapper div owns the aspect ratio; the next/image `fill` covers it.
 import Image, { type ImageProps } from "next/image";
+import { blurMap } from "@/data/blur";
 
 export type ImageGrade =
   /** Stage photography — full colour, contrast lifted a touch. */
@@ -51,12 +55,18 @@ export function CinematicImage({
   const wrapperStyle: React.CSSProperties = {};
   if (aspect) wrapperStyle.aspectRatio = aspect;
 
+  const blur =
+    typeof imgProps.src === "string" && blurMap[imgProps.src]
+      ? ({ placeholder: "blur", blurDataURL: blurMap[imgProps.src] } as const)
+      : undefined;
+
   return (
     <div
       className={`relative block h-full w-full overflow-hidden ${wrapperClassName}`.trim()}
       style={wrapperStyle}
     >
       <Image
+        {...blur}
         {...imgProps}
         alt={alt}
         quality={quality}

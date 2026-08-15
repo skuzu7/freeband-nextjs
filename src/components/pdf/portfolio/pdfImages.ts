@@ -19,6 +19,7 @@ const pdfImagePaths = {
   baileTabatinga: images.baileTabatinga,
   nauticoAraraquara: images.nauticoAraraquara,
   anos70: images.anos70,
+  anos80: images.anos80,
   anos90: images.anos90,
   antigas: images.antigas,
   fb2015: images.fb2015,

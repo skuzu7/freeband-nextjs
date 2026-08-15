@@ -1,7 +1,9 @@
 // src/components/sections/Historia.tsx
-// Heritage: the founding, the five eras, and the names the band has shared a stage with.
+// Heritage: the five eras — each with its own archival photograph, whole —
+// and the names the band has shared a stage with.
 import { release, timeline, artists, partners, pageCopy } from '@/data/content';
-import { heritage, manifestoFrame } from '@/data/images';
+import { manifestoFrame } from '@/data/images';
+import type { ImageGrade } from '@/components/ui/CinematicImage';
 import { Section } from '@/components/ui/Section';
 import { Container } from '@/components/ui/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -60,58 +62,53 @@ export function Historia() {
           </div>
         </div>
 
-        {/* Heritage frames + the five eras */}
-        <div className="mt-[clamp(4rem,8vi,7rem)] grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-16">
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {heritage.map((shot, i) => (
-              <li
-                key={shot.src}
-                className="reveal-mid group"
-                style={{ ['--i' as string]: i } as React.CSSProperties}
-              >
-                <div className="overflow-hidden">
-                  <CinematicImage
-                    src={shot.src}
-                    alt={shot.alt}
-                    grade="vintage"
-                    aspect="500/350"
-                    fill
-                    sizes="(min-width: 1024px) 16vw, 30vw"
-                    wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <p className="mt-2.5 font-mono text-[0.62rem] uppercase tracking-[0.26em] text-text-muted">
-                  {shot.caption}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {/* The five eras — a photographic chronology. Every frame is the era's
+            own artefact, rendered whole at the file's native ratio. */}
+        <ol className="mt-[clamp(4rem,8vi,7rem)]">
+          {timeline.map((era, i) => (
+            <li
+              key={era.year}
+              className="reveal-mid group grid grid-cols-[minmax(72px,0.14fr)_1fr] items-start gap-x-[clamp(1rem,3vi,2.5rem)] gap-y-5 border-t border-border py-[clamp(1.5rem,3.5vi,2.75rem)] transition-colors last:border-b hover:border-brand/50 sm:grid-cols-[minmax(90px,0.14fr)_minmax(130px,0.24fr)_1fr]"
+              style={{ ['--i' as string]: i % 3 } as React.CSSProperties}
+            >
+              <div className="flex flex-col gap-2">
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="serif-italic leading-none text-brand" style={{ fontSize: 'var(--text-xl)' }}>
+                  {era.year}
+                </span>
+              </div>
 
-          <ol className="flex flex-col">
-            {timeline.map((era, i) => (
-              <li
-                key={era.year}
-                className="reveal-mid flex flex-col gap-2 border-t border-border py-5 last:border-b transition-colors hover:border-brand/50"
-                style={{ ['--i' as string]: i } as React.CSSProperties}
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3
-                    className="font-display -tracking-[0.01em] text-text"
-                    style={{ fontSize: 'var(--text-lg)', lineHeight: 1.15 }}
-                  >
-                    {era.title}
-                  </h3>
-                  <span className="shrink-0 font-mono text-[0.72rem] tabular-nums font-semibold text-brand">
-                    {era.year}
-                  </span>
-                </div>
-                <p className="max-w-[52ch] text-[0.85rem] leading-[1.6] text-text-muted text-pretty">
+              <figure className="col-start-2 row-start-2 max-w-[300px] sm:row-start-1">
+                <CinematicImage
+                  src={era.image}
+                  alt={era.imageAlt}
+                  grade={era.imageGrade as ImageGrade}
+                  aspect={era.imageAspect}
+                  fill
+                  sizes="(min-width: 640px) 24vw, 300px"
+                  wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+                <figcaption className="mt-2.5 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-text-muted">
+                  {era.imageCaption}
+                </figcaption>
+              </figure>
+
+              <div className="col-span-2 col-start-1 sm:col-span-1 sm:col-start-3">
+                <h3
+                  className="font-display -tracking-[0.01em] text-text"
+                  style={{ fontSize: 'var(--text-lg)', lineHeight: 1.15 }}
+                >
+                  {era.title}
+                </h3>
+                <p className="mt-3 max-w-[52ch] text-[0.88rem] leading-[1.65] text-text-muted text-pretty">
                   {era.description}
                 </p>
-              </li>
-            ))}
-          </ol>
-        </div>
+              </div>
+            </li>
+          ))}
+        </ol>
       </Container>
 
       {/* The band's own manifesto */}
@@ -137,12 +134,12 @@ export function Historia() {
                 <CinematicImage
                   src={manifestoFrame.src}
                   alt={manifestoFrame.alt}
-                  grade="poster"
-                  aspect="3/2"
+                  grade="live"
+                  aspect={manifestoFrame.aspect}
                   fill
                   sizes="(min-width: 1024px) 34vw, 100vw"
                   quality={90}
-                  wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 hover:scale-105"
+                  wrapperClassName="ring-1 ring-inset ring-border transition-transform duration-500 hover:scale-[1.02]"
                 />
               </div>
 

@@ -325,6 +325,23 @@ p {
   }
 }
 
+/* Photographic plate (Palco) — one equal-height row of whole photographs.
+   Column widths come in via CSS vars as fr values proportional to each
+   frame's native ratio, so every box's height is identical and no picture is
+   cropped. Mobile gets its own template: portrait pairs, landscapes full. */
+.plate {
+  display: grid;
+  /* start, not stretch: the caption under each frame varies in line count,
+     and a stretched figure would squeeze the photograph out of its ratio. */
+  align-items: start;
+  grid-template-columns: var(--plate-cols-m, 1fr);
+}
+@media (width >= 40rem) {
+  .plate {
+    grid-template-columns: var(--plate-cols, 1fr);
+  }
+}
+
 /* Poster wall — a strict grid holding very loud artwork. The posters supply
    the energy; restraint is the container's job. */
 .poster-wall {

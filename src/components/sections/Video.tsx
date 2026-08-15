@@ -1,9 +1,11 @@
 'use client';
 
 // src/components/sections/Video.tsx
-// Four silent clips from the band's own shows, looping in a row.
+// Four silent 16:9 clips cut from the band's own camera footage, looping in
+// a two-by-two grid. Sources attach only on intersection; one control pauses
+// everything (WCAG 2.2.2).
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pause, Play, Video as VideoIcon } from 'lucide-react';
+import { Pause, Play } from 'lucide-react';
 import { pageCopy } from '@/data/content';
 import { reels } from '@/data/images';
 import { Section } from '@/components/ui/Section';
@@ -32,7 +34,7 @@ export function Video() {
           if (entry.isIntersecting) {
             if (!video.src && video.dataset.src) video.src = video.dataset.src;
             if (!reduced) {
-              void video.play().then(() => setPlaying(true)).catch(() => {});
+              void video.play().catch(() => {});
             }
           } else {
             video.pause();
@@ -43,8 +45,24 @@ export function Video() {
     );
 
     const videos = videosRef.current.filter((v): v is HTMLVideoElement => v !== null);
-    videos.forEach((video) => observer.observe(video));
-    return () => observer.disconnect();
+    const updatePlaying = () => {
+      const anyPlaying = videosRef.current.some((v) => v && !v.paused);
+      setPlaying(anyPlaying);
+    };
+
+    videos.forEach((video) => {
+      observer.observe(video);
+      video.addEventListener('play', updatePlaying);
+      video.addEventListener('pause', updatePlaying);
+    });
+
+    return () => {
+      observer.disconnect();
+      videos.forEach((video) => {
+        video.removeEventListener('play', updatePlaying);
+        video.removeEventListener('pause', updatePlaying);
+      });
+    };
   }, []);
 
   const toggle = () => {
@@ -90,15 +108,15 @@ export function Video() {
           </button>
         </div>
 
-        <ul className="mt-[clamp(2.5rem,5vi,4rem)] grid grid-cols-1 gap-[clamp(1rem,2.5vi,1.75rem)] sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-[clamp(2.5rem,5vi,4rem)] grid grid-cols-1 gap-[clamp(1.25rem,2.5vi,2rem)] sm:grid-cols-2">
           {reels.map((reel, i) => (
             <li
               key={reel.src}
-              className="reveal-mid group relative flex flex-col bg-bg-high/40 p-2.5 ring-1 ring-border transition-all duration-300 hover:ring-brand/50"
-              style={{ ['--i' as string]: i } as React.CSSProperties}
+              className="reveal-mid group"
+              style={{ ['--i' as string]: i % 2 } as React.CSSProperties}
             >
-              <figure className="flex flex-col h-full">
-                <div className="relative aspect-[9/16] overflow-hidden bg-bg ring-1 ring-inset ring-border/50">
+              <figure>
+                <div className="relative aspect-video overflow-hidden bg-bg ring-1 ring-inset ring-border">
                   <video
                     ref={setVideoRef(i)}
                     data-src={reel.src}
@@ -109,15 +127,13 @@ export function Video() {
                     playsInline
                     preload="none"
                     disablePictureInPicture
-                    className="grade-live h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="grade-live h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
-                  {/* Floating Tag */}
-                  <div className="absolute top-3 left-3 z-10">
-                    <span className="inline-flex items-center gap-1.5 border border-brand/40 bg-void-950/80 px-2.5 py-1 font-mono text-[0.55rem] uppercase tracking-widest text-brand backdrop-blur-sm">
-                      <VideoIcon className="h-2.5 w-2.5" />
-                      {reel.tag}
-                    </span>
-                  </div>
+                  {/* Corner tag — reel index over a quiet scrim */}
+                  <span className="absolute left-0 top-0 z-10 inline-flex items-center gap-2 bg-bg/75 px-3 py-1.5 font-mono text-[0.58rem] uppercase tracking-[0.26em] text-text backdrop-blur-sm">
+                    <span className="font-semibold text-brand">R·{String(i + 1).padStart(2, '0')}</span>
+                    {reel.tag}
+                  </span>
                 </div>
 
                 <figcaption className="mt-3 flex items-center gap-3 font-mono text-[0.62rem] uppercase tracking-[0.24em] text-text-muted">

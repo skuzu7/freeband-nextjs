@@ -1,38 +1,24 @@
 // src/components/sections/Hero.tsx
-// Full-bleed stage photograph carrying the fold, in colour.
-import Image from 'next/image';
+// The fold: the band's own camera footage looping behind the wordmark.
+// HeroMedia paints the loop's first frame immediately and only swaps the
+// video in after the page settles.
 import { contact, pageCopy } from '@/data/content';
-import { images } from '@/data/images';
+import { heroMedia } from '@/data/images';
 import { WhatsAppCta } from '@/components/ui/WhatsAppCta';
 import { Wordmark } from '@/components/ui/Wordmark';
+import { HeroMedia } from '@/components/ui/HeroMedia';
 
 export function Hero() {
   const copy = pageCopy.hero;
 
   return (
     <section id="hero" className="relative isolate flex min-h-[100svh] flex-col">
-      {/* Background stage photograph */}
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src={images.palcoBandaCompleta}
-          alt="Banda completa da Internacional Freeband no palco com bailarinos, painel de LED e luz cênica"
-          fill
-          priority
-          sizes="100vw"
-          quality={92}
-          className="grade-live object-cover"
-          style={{ objectPosition: 'center 45%' }}
-        />
-        <div aria-hidden className="photo-scrim absolute inset-0" />
-      </div>
+      <HeroMedia video={heroMedia.video} poster={heroMedia.poster} alt={heroMedia.alt} />
 
       <div className="max-w-container px-section mx-auto flex w-full flex-1 flex-col justify-end pb-[clamp(3rem,7vi,6rem)] pt-32">
         {/* Live Badge */}
         <div className="inline-flex w-fit items-center gap-2.5 border border-brand/40 bg-bg-raise/80 px-3.5 py-1.5 backdrop-blur-md">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-brand"></span>
-          </span>
+          <span aria-hidden className="inline-block h-1.5 w-1.5 rotate-45 bg-brand" />
           <p className="font-mono text-[0.68rem] uppercase tracking-[0.3em] text-brand">
             {copy.badge}
           </p>
