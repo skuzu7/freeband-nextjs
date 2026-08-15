@@ -14,12 +14,19 @@ import { LightboxModal, LightboxItem } from '@/components/ui/LightboxModal';
 import { Landmark, Calendar, MapPin, Search } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
+// Short labels wrap as whole units on a phone; the per-category count is the
+// credential — it tells the buyer how much real archive sits behind each one.
 const categories: { key: PosterCategory; label: string }[] = [
-  { key: 'todos', label: 'Todos os Eventos' },
-  { key: 'municipal', label: 'Prefeituras Municipais' },
-  { key: 'clube', label: 'Clubes Tradicionais' },
+  { key: 'todos', label: 'Todos' },
+  { key: 'municipal', label: 'Prefeituras' },
+  { key: 'clube', label: 'Clubes' },
   { key: 'reveillon', label: 'Réveillons' },
 ];
+
+const countFor = (key: PosterCategory) =>
+  key === 'todos'
+    ? posters.length
+    : posters.filter((p) => p.category === key || (key === 'municipal' && p.municipal)).length;
 
 export function Arquivo() {
   const copy = pageCopy.arquivo;
@@ -57,24 +64,34 @@ export function Arquivo() {
           lead={copy.lead}
         />
 
-        {/* Category Filters */}
-        <div className="mt-[clamp(2.5rem,5vi,3.5rem)] flex flex-wrap items-center gap-2.5 border-y border-border py-4">
-          <span className="mr-2 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-text-muted">
-            Filtrar acervo:
-          </span>
+        {/* Archive index — each pill carries its category's count */}
+        <div
+          role="group"
+          aria-label="Filtrar o acervo de cartazes por tipo de evento"
+          className="mt-[clamp(2.5rem,5vi,3.5rem)] flex flex-wrap items-center gap-2 border-y border-border py-4"
+        >
           {categories.map((cat) => (
             <button
               key={cat.key}
               type="button"
               onClick={() => setActiveCategory(cat.key)}
+              aria-pressed={activeCategory === cat.key}
               className={cn(
-                'min-h-9 px-4 py-2 font-mono text-[0.64rem] uppercase tracking-[0.22em] transition-all cursor-pointer',
+                'inline-flex min-h-9 items-baseline gap-2 whitespace-nowrap px-4 py-2 font-mono text-[0.64rem] uppercase tracking-[0.22em] transition-all cursor-pointer',
                 activeCategory === cat.key
-                  ? 'bg-brand text-void-950 font-bold glow-gold-soft'
+                  ? 'bg-brand font-bold text-void-950'
                   : 'border border-border bg-bg-raise/50 text-text-muted hover:border-brand/50 hover:text-text',
               )}
             >
               {cat.label}
+              <span
+                className={cn(
+                  'text-[0.58rem] tabular-nums',
+                  activeCategory === cat.key ? 'text-void-950/70' : 'text-brand',
+                )}
+              >
+                {String(countFor(cat.key)).padStart(2, '0')}
+              </span>
             </button>
           ))}
         </div>
