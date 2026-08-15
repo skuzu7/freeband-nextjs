@@ -140,8 +140,8 @@ export const stageFrames: StageFrame[] = [
   {
     id: "vocal-espelhado",
     src: images.vocalEspelhado,
-    alt: "Vocalista com jaqueta espelhada de mosaico cantando sob iluminação neon azul",
-    caption: "Vocal principal · jaqueta espelhada",
+    alt: "Vocalista cantando ao microfone sob iluminação neon azul",
+    caption: "Vocal principal · ao vivo",
     weight: "beat",
     category: "vocais",
     aspect: "1170/2349",
@@ -151,7 +151,7 @@ export const stageFrames: StageFrame[] = [
     id: "vocais-femininas",
     src: images.img0690,
     alt: "Duas vocalistas cantando lado a lado ao microfone sob luz quente de palco",
-    caption: "Naipe de vozes femininas",
+    caption: "Vocalistas",
     weight: "beat",
     category: "vocais",
     aspect: "1200/800",
@@ -232,8 +232,8 @@ export const stageFrames: StageFrame[] = [
   {
     id: "bateria-neon",
     src: images.bateriaFreebandNeon,
-    alt: "Baterista tocando diante do letreiro FREEBAND em neon no painel de LED",
-    caption: "Bateria acústica · letreiro neon",
+    alt: "Baterista tocando diante do painel de LED aceso em neon",
+    caption: "Bateria acústica · painel em neon",
     weight: "beat",
     category: "efeitos",
     aspect: "1086/1448",
@@ -342,8 +342,8 @@ export const reels: Reel[] = [
   {
     src: "/video/reel-dueto.mp4",
     poster: "/video/reel-dueto.jpg",
-    alt: "Dueto de vocalistas à frente do letreiro Internacional Freeband aceso no painel de LED",
-    caption: "Dueto · letreiro Freeband",
+    alt: "Dueto de vocalistas cantando à frente do painel de LED aceso",
+    caption: "Dueto de vocalistas",
     tag: "Vozes",
   },
   {

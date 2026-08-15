@@ -101,6 +101,7 @@ export function PdfContact() {
           <View style={styles.contactItem}>
             <Text style={styles.label}>E-mail</Text>
             <Text style={styles.value}>{contact.email}</Text>
+            <Text style={styles.value}>{contact.emailAlt}</Text>
           </View>
           <View style={styles.contactItem}>
             <Text style={styles.label}>Link WhatsApp</Text>
