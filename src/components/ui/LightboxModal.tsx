@@ -201,7 +201,7 @@ export function LightboxModal({
             alt={currentItem.alt}
             fill
             sizes="(min-width: 1280px) 1152px, 95vw"
-            quality={95}
+            quality={90}
             priority
             className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
           />

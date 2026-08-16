@@ -45,7 +45,7 @@ export function Contato() {
           alt="Palco e energia da Internacional Freeband"
           fill
           sizes="100vw"
-          quality={92}
+          quality={90}
           className="grade-live object-cover"
           style={{ objectPosition: 'center 35%' }}
         />

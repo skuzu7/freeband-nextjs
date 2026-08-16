@@ -6,6 +6,7 @@
 // "1600/1066" — which has happened.
 import { describe, it, expect } from 'vitest';
 import { existsSync } from 'node:fs';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import {
@@ -141,6 +142,35 @@ describe('posters archive', () => {
       expect(poster.event).toBeTruthy();
       expect(['todos', 'municipal', 'clube', 'reveillon']).toContain(poster.category);
     }
+  });
+});
+
+describe('next/image quality values', () => {
+  // CinematicImage's Quality type guards its own callers, but components that
+  // reach for next/image directly bypass it — and an unlisted quality makes
+  // Next refuse to optimize that image at all.
+  it('every quality literal in src/ is whitelisted in next.config.ts', async () => {
+    const config = await readFile(path.resolve(__dirname, '../../../next.config.ts'), 'utf8');
+    const allowed = (config.match(/qualities:\s*\[([^\]]+)\]/)?.[1] ?? '')
+      .split(',')
+      .map((n) => Number(n.trim()));
+    expect(allowed.length).toBeGreaterThan(0);
+
+    const src = path.resolve(__dirname, '../..');
+    const entries = await readdir(src, { recursive: true });
+    const offenders: string[] = [];
+    for (const relative of entries) {
+      if (!relative.endsWith('.tsx')) continue;
+      const file = path.join(src, relative);
+      const source = await readFile(file, 'utf8');
+      for (const match of source.matchAll(/quality=\{(\d+)\}/g)) {
+        const value = Number(match[1]);
+        if (!allowed.includes(value)) {
+          offenders.push(`${path.basename(file)}: quality={${value}}`);
+        }
+      }
+    }
+    expect(offenders, `not in images.qualities [${allowed}]`).toEqual([]);
   });
 });
 
