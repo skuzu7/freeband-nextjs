@@ -63,15 +63,12 @@ export function Footer() {
             >
               {contact.phone}
             </a>
-            {[contact.email, contact.emailAlt].map((address) => (
-              <a
-                key={address}
-                href={`mailto:${address}`}
-                className="w-fit text-text transition-colors hover:text-brand"
-              >
-                {address}
-              </a>
-            ))}
+            <a
+              href={`mailto:${contact.email}`}
+              className="w-fit text-text transition-colors hover:text-brand"
+            >
+              {contact.email}
+            </a>
             <a
               href={contact.instagramUrl}
               target="_blank"

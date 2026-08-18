@@ -272,9 +272,7 @@ export const contact = {
   whatsappQuoteLink: `https://wa.me/5516997732749?text=${encodeURIComponent(
     'Olá! Quero um orçamento da Freeband. O evento é: (formato, data e cidade)',
   )}`,
-  email: 'faleconosco@freeband.com.br',
-  // Second inbox the production checks — both are published side by side.
-  emailAlt: 'freeband.morales@gmail.com',
+  email: 'freeband.morales@gmail.com',
   city: 'Trabiju/SP',
   address: 'Rua Gabriel Tannuri, 210',
   addressFull: 'Rua Gabriel Tannuri, 210 — Trabiju/SP',

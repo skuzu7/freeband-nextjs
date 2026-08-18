@@ -94,16 +94,13 @@ export function Contato() {
               <InstagramIcon />
               {contact.instagram}
             </a>
-            {[contact.email, contact.emailAlt].map((address) => (
-              <a
-                key={address}
-                href={`mailto:${address}`}
-                className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/70 px-5 py-3 font-mono text-[0.68rem] normal-case tracking-[0.14em] text-text backdrop-blur-md transition-all hover:border-brand hover:text-brand hover:glow-gold-soft"
-              >
-                <Mail className="h-4 w-4 shrink-0 text-brand" />
-                {address}
-              </a>
-            ))}
+            <a
+              href={`mailto:${contact.email}`}
+              className="inline-flex min-h-11 items-center gap-3 border border-border-strong bg-bg/70 px-5 py-3 font-mono text-[0.68rem] normal-case tracking-[0.14em] text-text backdrop-blur-md transition-all hover:border-brand hover:text-brand hover:glow-gold-soft"
+            >
+              <Mail className="h-4 w-4 shrink-0 text-brand" />
+              {contact.email}
+            </a>
           </div>
         </div>
 
