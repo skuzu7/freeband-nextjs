@@ -1,5 +1,9 @@
 # Internacional Freeband
 
+[![CI & Security Checks](https://github.com/skuzu7/freeband-nextjs/actions/workflows/ci.yml/badge.svg)](https://github.com/skuzu7/freeband-nextjs/actions/workflows/ci.yml)
+[![Security Policy](https://img.shields.io/badge/Security-Policy_Active-blue.svg)](SECURITY.md)
+[![Threat Model](https://img.shields.io/badge/Threat_Model-STRIDE_Documented-success.svg)](docs/THREAT_MODEL.md)
+
 Site institucional e gerador interno de propostas da [Internacional Freeband](https://freeband.com.br) (Jaú/Trabiju, desde 1969).
 
 - Landing pública em `/`
@@ -39,3 +43,9 @@ O repositório publica automaticamente no Vercel a partir de `main`.
 URL atual: https://freeband-nextjs.vercel.app
 
 No painel do Vercel, as três variáveis acima precisam existir no ambiente de produção.
+
+## Segurança e Engenharia Defensiva
+
+- **Revisão de Segurança Documentada:** Veja [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md) para a análise detalhada de autenticação e mitigação de vulnerabilidades lógicas.
+- **Modelagem de Ameaças (STRIDE):** Consulte [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) para a matriz de riscos e defesas arquiteturais.
+- **Proteção de Sessão Criptográfica:** HMAC-SHA256 e comparação em tempo constante (`crypto.timingSafeEqual`) validados por testes unitários automatizados em `src/lib/__tests__/session.test.ts`.

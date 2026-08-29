@@ -1,21 +1,38 @@
-name: ci
+name: CI & Security Checks
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
-  check:
+  test-and-build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm test
-      - run: npm run build
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Unit & Security Tests
+        run: npm test
+
+      - name: Lint and Typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Production Build
+        run: npm run build
+        env:
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || 'ci-dummy-admin-password-for-build' }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET || 'ci-dummy-session-secret-for-build' }}
