@@ -114,6 +114,32 @@ export function dotRadius(intensity: number, maxRadius: number, minRatio = 0.22)
   return maxRadius * (minRatio + (1 - minRatio) * t);
 }
 
+/**
+ * Auto-levels: stretches the grid so its darkest cell is 0 and its brightest
+ * 255, then applies a gamma (γ < 1 lifts the mid-tones). Photographs sampled
+ * into a few thousand cells come out muddy without it. A flat grid is
+ * returned unchanged.
+ */
+export function levels(grid: Uint8Array, gamma = 1): Uint8Array {
+  let min = 255;
+  let max = 0;
+  for (const v of grid) {
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
+  const out = new Uint8Array(grid.length);
+  if (max <= min) {
+    out.set(grid);
+    return out;
+  }
+  const range = max - min;
+  for (let i = 0; i < grid.length; i++) {
+    const t = (grid[i] - min) / range;
+    out[i] = Math.round(255 * t ** gamma);
+  }
+  return out;
+}
+
 /** 0..255 → 0..levels-1. */
 export function quantize(intensity: number, levels: number): number {
   return Math.min(levels - 1, Math.round((intensity / 255) * (levels - 1)));

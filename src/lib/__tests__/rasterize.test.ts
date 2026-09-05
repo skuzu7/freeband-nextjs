@@ -8,6 +8,7 @@ import {
   dotRadius,
   layoutDots,
   quantize,
+  levels,
 } from '../led/rasterize';
 
 /** Builds an opaque RGBA buffer from a matrix of grey levels. */
@@ -119,6 +120,23 @@ describe('dotRadius', () => {
     expect(dotRadius(0, max)).toBeLessThan(dotRadius(128, max));
     expect(dotRadius(128, max)).toBeLessThan(dotRadius(255, max));
     expect(dotRadius(255, max)).toBe(max);
+  });
+});
+
+describe('levels', () => {
+  it('stretches the range to 0..255', () => {
+    expect(Array.from(levels(new Uint8Array([10, 20, 30])))).toEqual([0, 128, 255]);
+  });
+
+  it('gamma below 1 lifts the mid-tones', () => {
+    const lifted = levels(new Uint8Array([0, 128, 255]), 0.5);
+    expect(lifted[1]).toBeGreaterThan(160);
+    expect(lifted[0]).toBe(0);
+    expect(lifted[2]).toBe(255);
+  });
+
+  it('leaves a flat grid alone instead of dividing by zero', () => {
+    expect(Array.from(levels(new Uint8Array([7, 7, 7])))).toEqual([7, 7, 7]);
   });
 });
 

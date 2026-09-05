@@ -17,6 +17,7 @@ import {
   dotRadius,
   fitGrid,
   layoutDots,
+  levels,
   lightUpOrder,
   quantize,
   sampleGrid,
@@ -213,9 +214,12 @@ export function LedPanel({
         pixels = await imageToPixels(src.src, grid.cols, grid.rows, src.fit);
       }
       if (disposed) return;
-      intensity = pixels
+      const sampled = pixels
         ? sampleGrid(pixels.data, pixels.width, pixels.height, grid.cols, grid.rows)
         : new Uint8Array(grid.cols * grid.rows);
+      // Text and glyphs are already binary; photographs need their range
+      // stretched and mid-tones lifted or the panel reads as mud.
+      intensity = src.kind === 'image' ? levels(sampled, 0.65) : sampled;
       if (litRef.current) {
         draw(1);
         return;
