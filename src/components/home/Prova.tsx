@@ -23,7 +23,7 @@ export function Prova() {
     .map((p) => ({ ...p, caption: `${p.town} · ${p.event} · ${p.when}` }));
 
   return (
-    <Section id="prova" labelledBy="prova-title">
+    <Section id="prova" labelledBy="prova-title" className="border-t border-line">
       <Container className="flex flex-col gap-20">
         <div>
           <header className="max-w-[60ch]">

@@ -31,6 +31,7 @@ export const caminhao = {
   lineupLabel: `A formação · ${bandLineup.total} no palco`,
   lineupNote: 'Tudo ao vivo',
   formatsLabel: 'Formatos atendidos',
+  estruturaLabel: 'A estrutura, montada · fotos de montagens nossas',
 };
 
 export interface Bloco {

@@ -99,7 +99,7 @@ export const tokens = {
     // --container-* is a Tailwind namespace: this becomes `max-w-site`.
     'container-site': '88rem',
     'pad-inline': 'clamp(1.25rem, 4vw, 3.5rem)',
-    'section-gap': 'clamp(4.5rem, 10vw, 9rem)',
+    'section-gap': 'clamp(4rem, 7vw, 6.5rem)',
     'dot-pitch': '6px',
   },
 } as const;

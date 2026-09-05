@@ -10,7 +10,7 @@ import { Photo } from '@/components/media/Photo';
 
 export function Blocos() {
   return (
-    <Section id="blocos" labelledBy="blocos-title" className="overflow-hidden">
+    <Section id="blocos" labelledBy="blocos-title" className="overflow-hidden border-t border-line">
       <Container>
         <header className="max-w-[60ch]">
           <Label dot>{blocos.label}</Label>

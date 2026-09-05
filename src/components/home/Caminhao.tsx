@@ -5,11 +5,13 @@ import { cn } from '@/lib/cn';
 import { bandLineup } from '@/data/band';
 import { whatsappPackageLink } from '@/data/contact';
 import { caminhao } from '@/data/copy/home';
+import { estrutura } from '@/data/media/estrutura';
 import { servicePackages, services, type ServicePackage } from '@/data/packages';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
+import { PlateRow } from '@/components/media/PlateRow';
 
 function PackageCard({ pkg }: { pkg: ServicePackage }) {
   return (
@@ -63,6 +65,12 @@ export function Caminhao() {
           {servicePackages.map((pkg) => (
             <PackageCard key={pkg.id} pkg={pkg} />
           ))}
+        </div>
+
+        {/* The receipt for every line above: the rig, photographed mounted. */}
+        <div className="mt-12">
+          <Label>{caminhao.estruturaLabel}</Label>
+          <PlateRow frames={estrutura} className="mt-5" />
         </div>
 
         <div className="mt-12 grid gap-10 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]">

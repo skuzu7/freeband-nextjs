@@ -43,6 +43,18 @@ interface LedPanelProps {
   still?: boolean;
   /** Fired once, after the panel has finished lighting up. */
   onLit?: () => void;
+  /**
+   * Draw the unlit cells as dim dots (the panel switched off). Off when the
+   * panel sits over a photograph: only the lit dots should appear.
+   */
+  dimDots?: boolean;
+  /** Paint the CSS dot field under the canvas. Off over a photograph. */
+  field?: boolean;
+  /**
+   * Fade the dots out once lit, so what the caller renders on top (the sharp
+   * vector) takes over — the LED wall becoming the acrylic sign.
+   */
+  fadeWhenLit?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
@@ -72,6 +84,9 @@ export function LedPanel({
   mode,
   still = false,
   onLit,
+  dimDots = true,
+  field = true,
+  fadeWhenLit = false,
   className,
   children,
 }: LedPanelProps) {
@@ -126,6 +141,8 @@ export function LedPanel({
           // own delay, so the sweep reads as a wave, not a hard edge.
           const p = t >= 1 ? 1 : easeOut(Math.min(1, Math.max(0, (t - order[i] * 0.7) / 0.3)));
           const v = intensity[i] * p;
+          // Over a photograph the switched-off cells are not drawn at all.
+          if (!dimDots && v <= 0) continue;
           const level = quantize(v, LEVELS);
           const radius = dotRadius(v, layout.maxRadius);
           const x = layout.offsetX + c * layout.pitch;
@@ -144,6 +161,9 @@ export function LedPanel({
       draw(1);
       if (!litRef.current) {
         litRef.current = true;
+        // Hand over to whatever sits on top: the dots fade on the same curve
+        // the caller uses to fade its vector in.
+        if (fadeWhenLit) canvas.style.opacity = '0';
         onLitRef.current?.();
       }
     };
@@ -236,7 +256,7 @@ export function LedPanel({
       ro.disconnect();
       io.disconnect();
     };
-  }, [sourceKey, aspect, cols, mode, still]);
+  }, [sourceKey, aspect, cols, mode, still, dimDots, fadeWhenLit]);
 
   return (
     <div
@@ -244,8 +264,12 @@ export function LedPanel({
       className={cn('relative isolate overflow-hidden', className)}
       style={{ aspectRatio: String(aspect) }}
     >
-      <DotGrid />
-      <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
+      {field && <DotGrid />}
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        className="absolute inset-0 h-full w-full transition-opacity duration-700 ease-light"
+      />
       {children}
     </div>
   );

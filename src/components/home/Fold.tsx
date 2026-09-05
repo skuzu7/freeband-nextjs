@@ -49,6 +49,9 @@ function Backdrop() {
 
   return (
     <div className="absolute inset-0 -z-10">
+      {/* The one photograph on the site that IS allowed to bleed: it is the
+          stage as backdrop, under a scrim, not a picture on display. The
+          `data-backdrop` flag exempts it from the smoke test's crop audit. */}
       <Image
         src={heroMedia.poster}
         alt={heroMedia.alt}
@@ -59,6 +62,7 @@ function Backdrop() {
         placeholder="blur"
         blurDataURL={blurMap[heroMedia.poster]}
         className="object-cover"
+        data-backdrop
       />
       {!reduced && (
         <video
@@ -97,6 +101,9 @@ export function Fold() {
             aspect={WORDMARK_ASPECT}
             cols={180}
             onLit={() => setLit(true)}
+            field={false}
+            dimDots={false}
+            fadeWhenLit
             className="w-full"
           >
             <Wordmark
@@ -113,8 +120,10 @@ export function Fold() {
             <p className="mt-4 max-w-[52ch] text-lg text-ink-muted">{fold.lead}</p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
-            <WhatsAppCta size="lg">{fold.ctaPrimary}</WhatsAppCta>
-            <Button variant="secondary" size="lg" href="/palco">
+            <WhatsAppCta size="lg" className="flex-1 sm:flex-none">
+              {fold.ctaPrimary}
+            </WhatsAppCta>
+            <Button variant="secondary" size="lg" href="/palco" className="flex-1 sm:flex-none">
               {fold.ctaSecondary}
             </Button>
           </div>
