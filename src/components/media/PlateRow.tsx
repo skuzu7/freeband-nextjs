@@ -2,7 +2,8 @@
 // One equal-height row of whole photographs. Column widths are fr values
 // proportional to each photo's ratio, so every box ends at the same height and
 // no picture is cropped. On phones a row of portraits stays side by side;
-// anything else stacks.
+// two frames still share the width; three or more become a strip that
+// scrolls sideways at a fixed height (see .plate in globals.css).
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/cn';
 import { ratioOf, type Photo as PhotoData } from '@/data/media/paths';
@@ -15,15 +16,19 @@ export type PlateFrame = PhotoData & { caption?: string };
 function sizesFor(fraction: number, rowFraction: number, splitOnMobile: boolean): string {
   const desktop = Math.ceil(fraction * rowFraction * 100);
   const capped = Math.ceil(fraction * rowFraction * 1408);
-  const mobile = splitOnMobile ? Math.ceil(fraction * 100) : 100;
+  const mobile = splitOnMobile ? Math.ceil(fraction * 100) : 88;
   return `(min-width: 1408px) ${capped}px, (min-width: 640px) ${desktop}vw, ${mobile}vw`;
 }
 
 export interface PlateLayout {
   /** CSS variables for the `.plate` grid. */
   style: CSSProperties;
+  /** How the row behaves under 40rem: 'grid' (columns) or 'scroll' (strip). */
+  mobile: 'grid' | 'scroll';
   /** next/image `sizes` per frame, in order. */
   sizes: string[];
+  /** Per-frame inline style carrying the ratio the mobile strip sizes by. */
+  frameStyle: CSSProperties[];
 }
 
 /**
@@ -36,9 +41,13 @@ export function plateLayout(frames: PhotoData[], rowFraction = 1): PlateLayout {
   const total = ratios.reduce((a, b) => a + b, 0);
   const cols = ratios.map((r) => `${r.toFixed(4)}fr`).join(' ');
   const allPortrait = frames.length > 1 && ratios.every((r) => r < 1);
+  const sideBySide = allPortrait || frames.length === 2;
+  const mobile: PlateLayout['mobile'] = !sideBySide && frames.length >= 3 ? 'scroll' : 'grid';
   return {
-    style: { '--plate-cols': cols, '--plate-cols-m': allPortrait ? cols : '1fr' } as CSSProperties,
-    sizes: ratios.map((r) => sizesFor(r / total, rowFraction, allPortrait)),
+    style: { '--plate-cols': cols, '--plate-cols-m': sideBySide ? cols : '1fr' } as CSSProperties,
+    mobile,
+    sizes: ratios.map((r) => sizesFor(r / total, rowFraction, sideBySide)),
+    frameStyle: ratios.map((r) => ({ '--ratio': r.toFixed(4) }) as CSSProperties),
   };
 }
 
@@ -68,9 +77,9 @@ export function PlateRow({
   const layout = plateLayout(frames, rowFraction);
 
   return (
-    <div className={cn('plate', className)} style={layout.style}>
+    <div className={cn('plate', className)} style={layout.style} data-m={layout.mobile}>
       {frames.map((frame, i) => (
-        <figure key={frame.src} className="m-0 flex flex-col gap-2">
+        <figure key={frame.src} className="m-0 flex flex-col gap-2" style={layout.frameStyle[i]}>
           {led ? (
             <LedPhoto photo={frame} sizes={layout.sizes[i]} priority={priority && i === 0} quality={quality} />
           ) : (

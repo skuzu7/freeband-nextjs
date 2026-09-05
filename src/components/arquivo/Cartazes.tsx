@@ -58,11 +58,16 @@ export function Cartazes() {
         {rows.map((row, r) => {
           const layout = plateLayout(row);
           return (
-            <ul key={row.map((p) => p.src).join()} className="plate m-0 list-none p-0" style={layout.style}>
+            <ul
+              key={row.map((p) => p.src).join()}
+              className="plate m-0 list-none p-0"
+              style={layout.style}
+              data-m={layout.mobile}
+            >
               {row.map((p, i) => {
                 const index = r * PER_ROW + i;
                 return (
-                  <li key={p.src} className="flex flex-col gap-3">
+                  <li key={p.src} className="flex flex-col gap-3" style={layout.frameStyle[i]}>
                     <button
                       type="button"
                       aria-label={`${arquivo.lightbox.open}: ${titleOf(p)}`}

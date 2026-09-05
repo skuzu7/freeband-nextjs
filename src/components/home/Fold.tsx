@@ -119,11 +119,12 @@ export function Fold() {
             <p className="text-3xl font-semibold tracking-tight text-ink">{fold.kicker}</p>
             <p className="mt-4 max-w-[52ch] text-lg text-ink-muted">{fold.lead}</p>
           </div>
-          <div className="flex flex-wrap gap-3 md:justify-end">
-            <WhatsAppCta size="lg" className="flex-1 sm:flex-none">
+          {/* Stacked and full-width on phones, side by side from 40rem. */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">
+            <WhatsAppCta size="lg" className="w-full sm:w-auto">
               {fold.ctaPrimary}
             </WhatsAppCta>
-            <Button variant="secondary" size="lg" href="/palco" className="flex-1 sm:flex-none">
+            <Button variant="secondary" size="lg" href="/palco" className="w-full sm:w-auto">
               {fold.ctaSecondary}
             </Button>
           </div>

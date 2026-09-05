@@ -31,7 +31,7 @@ export function Blocos() {
 
       <ul
         id={ROW_ID}
-        className="snap-row mt-10 items-end md:mt-14"
+        className="snap-row mt-10 items-start md:mt-14 md:items-end"
         style={{ '--snap-gap': '1.5rem' } as CSSProperties}
       >
         {blocos.items.map((bloco, i) => (

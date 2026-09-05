@@ -134,7 +134,10 @@
 
 /* Photographic plate — one equal-height row of WHOLE photographs. Column
    widths arrive as fr values proportional to each photo's ratio, so every box
-   is the same height and nothing is cropped. Mobile gets its own template. */
+   is the same height and nothing is cropped. On phones a row of three or more
+   becomes a strip that scrolls sideways at a fixed height, each frame as wide
+   as its ratio says (--ratio on the frame) — still whole, still level, and
+   the page stays short. */
 .plate {
   display: grid;
   align-items: start;
@@ -144,6 +147,27 @@
 @media (width >= 40rem) {
   .plate {
     grid-template-columns: var(--plate-cols, 1fr);
+  }
+}
+@media (width < 40rem) {
+  .plate[data-m='scroll'] {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--pad-inline));
+    padding-inline: var(--pad-inline);
+    scroll-padding-inline: var(--pad-inline);
+  }
+  .plate[data-m='scroll']::-webkit-scrollbar {
+    display: none;
+  }
+  .plate[data-m='scroll'] > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: calc(var(--plate-h-m, 15rem) * var(--ratio, 1.5));
+    max-width: 88vw;
   }
 }
 
@@ -218,6 +242,7 @@
   }
   .ticker-track {
     animation: none;
+    flex: 1 1 100%;
     flex-wrap: wrap;
     row-gap: 0.75rem;
     min-width: 0;
