@@ -159,6 +159,8 @@
     margin-inline: calc(-1 * var(--pad-inline));
     padding-inline: var(--pad-inline);
     scroll-padding-inline: var(--pad-inline);
+    /* The right edge fades: the strip visibly goes on past the screen. */
+    mask-image: linear-gradient(to right, black 88%, transparent 100%);
   }
   .plate[data-m='scroll']::-webkit-scrollbar {
     display: none;

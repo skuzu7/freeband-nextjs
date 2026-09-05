@@ -119,7 +119,11 @@ export function LedPanel({
     const dimColor = readVar(box, '--color-led-dim', FALLBACK_DIM);
     const palette = Array.from({ length: LEVELS }, (_, i) => mix(dimColor, ledColor, i / (LEVELS - 1)));
 
+    // Until the source arrives the panel is switched off: every cell 0. The
+    // light-up may run on that (a dark panel coming on), so nothing the
+    // caller stacks on top ever waits on the network.
     let intensity: Uint8Array | null = null;
+    const unlit = new Uint8Array(grid.cols * grid.rows);
     let raf = 0;
     let startedAt = 0;
     let disposed = false;
@@ -129,7 +133,8 @@ export function LedPanel({
     const fontFamily = getComputedStyle(box).fontFamily || 'sans-serif';
 
     const draw = (t: number) => {
-      if (!intensity || cssW === 0 || cssH === 0) return;
+      if (cssW === 0 || cssH === 0) return;
+      const cells = intensity ?? unlit;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const layout = layoutDots(grid.cols, grid.rows, cssW, cssH);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -141,7 +146,7 @@ export function LedPanel({
           // Each dot switches on over the last 30% of the timeline after its
           // own delay, so the sweep reads as a wave, not a hard edge.
           const p = t >= 1 ? 1 : easeOut(Math.min(1, Math.max(0, (t - order[i] * 0.7) / 0.3)));
-          const v = intensity[i] * p;
+          const v = cells[i] * p;
           // Over a photograph the switched-off cells are not drawn at all.
           if (!dimDots && v <= 0) continue;
           const level = quantize(v, LEVELS);
@@ -182,7 +187,7 @@ export function LedPanel({
     };
 
     const start = () => {
-      if (disposed || !intensity) return;
+      if (disposed) return;
       if (reduced || still) {
         finish();
         return;
@@ -204,6 +209,8 @@ export function LedPanel({
     const ro = new ResizeObserver(resize);
     ro.observe(box);
     resize();
+    // The unlit panel, at once; the source replaces it when it lands.
+    draw(0);
 
     // Start when the panel is actually in view; a panel below the fold should
     // not spend frames lighting up unseen.
@@ -214,8 +221,11 @@ export function LedPanel({
           start();
         }
       },
-      { threshold: 0.25 },
+      // Anything near the viewport comes on — a frame peeking in from the
+      // side of a strip included.
+      { threshold: 0.05, rootMargin: '15% 25%' },
     );
+    io.observe(box);
 
     const load = async () => {
       let pixels = null;
@@ -255,8 +265,7 @@ export function LedPanel({
         return;
       }
       // Unlit panel first, so the box is never blank while waiting for view.
-      draw(0);
-      io.observe(box);
+      if (!raf) draw(0);
     };
     void load();
 

@@ -3,7 +3,7 @@
 // src/components/brand/LedPhoto.tsx
 // A photograph that resolves out of the panel: first the picture as a field
 // of dots lighting up, then the dots fade and the real photo takes over. The
-// raster reads a small optimised copy of the file (384px through next/image),
+// raster reads a small optimised copy of the file (256px through next/image),
 // never the full-size original.
 import { useState } from 'react';
 import { cn } from '@/lib/cn';
@@ -21,9 +21,9 @@ interface LedPhotoProps {
   className?: string;
 }
 
-/** The thumbnail next/image would serve at 384px — enough for a few thousand dots. */
+/** The thumbnail next/image would serve at 256px — enough for a few thousand dots. */
 function rasterSrc(src: string): string {
-  return `/_next/image?url=${encodeURIComponent(src)}&w=384&q=75`;
+  return `/_next/image?url=${encodeURIComponent(src)}&w=256&q=75`;
 }
 
 export function LedPhoto({ photo, sizes, cols = 96, priority, quality, className }: LedPhotoProps) {
