@@ -20,6 +20,7 @@ import { heroMedia } from '@/data/media/hero';
 import { timeline } from '@/data/band';
 import { blocos } from '@/data/copy/home';
 import { blurMap } from '@/data/blur';
+import { pdfPhotoList } from '@/components/pdf/portfolio/images';
 
 const PUBLIC = path.resolve(__dirname, '../../../public');
 const toDisk = (url: string) => path.join(PUBLIC, url.replace(/^\//, ''));
@@ -121,6 +122,11 @@ describe('aspect ratios and resolution', () => {
       expect(poster.event).toBeTruthy();
       expect(POSTER_CATEGORIES).toContain(poster.category);
     }
+  });
+
+  it('portfolio PDF — every frame declares its real aspect, so plate rows print it whole', async () => {
+    expect(pdfPhotoList.length).toBeGreaterThan(0);
+    for (const frame of pdfPhotoList) await expectAspect(frame.src, frame.aspect, `pdf ${frame.src}`);
   });
 
   it('blocos temáticos — one big photo each, gallery floor', async () => {

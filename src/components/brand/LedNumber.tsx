@@ -26,6 +26,35 @@ const ROWS = 7;
 /** One blank column between characters. */
 const ADVANCE = COLS + 1;
 
+export interface LedDot {
+  x: number;
+  y: number;
+  on: boolean;
+  /** Index among the lit dots (for staggering), -1 when unlit. */
+  i: number;
+}
+
+/**
+ * The dot layout for a string, in cell units. Shared with the PDF, which
+ * draws the same matrix with react-pdf's Svg/Circle.
+ */
+export function ledDots(value: string): { width: number; rows: number; dots: LedDot[] } {
+  const chars = Array.from(value);
+  const width = chars.length * ADVANCE - 1;
+  const dots: LedDot[] = [];
+  let lit = 0;
+  chars.forEach((ch, ci) => {
+    const glyph = MATRIX[ch] ?? MATRIX[' '];
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const on = glyph[y][x] === '1';
+        dots.push({ x: ci * ADVANCE + x, y, on, i: on ? lit++ : -1 });
+      }
+    }
+  });
+  return { width, rows: ROWS, dots };
+}
+
 interface LedNumberProps {
   /** Digits, "+" and spaces only; anything else renders as a blank cell. */
   value: string;
@@ -48,19 +77,7 @@ export function LedNumber({
   animate = true,
   on = true,
 }: LedNumberProps) {
-  const chars = Array.from(value);
-  const width = chars.length * ADVANCE - 1;
-  const dots: Array<{ x: number; y: number; on: boolean; i: number }> = [];
-  let lit = 0;
-  chars.forEach((ch, ci) => {
-    const glyph = MATRIX[ch] ?? MATRIX[' '];
-    for (let y = 0; y < ROWS; y++) {
-      for (let x = 0; x < COLS; x++) {
-        const on = glyph[y][x] === '1';
-        dots.push({ x: ci * ADVANCE + x, y, on, i: on ? lit++ : -1 });
-      }
-    }
-  });
+  const { width, dots } = ledDots(value);
 
   return (
     <span className={cn('inline-flex items-end gap-4', className)}>
