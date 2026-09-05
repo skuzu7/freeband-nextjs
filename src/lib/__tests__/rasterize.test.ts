@@ -9,6 +9,7 @@ import {
   layoutDots,
   quantize,
   levels,
+  parseDurationMs,
 } from '../led/rasterize';
 
 /** Builds an opaque RGBA buffer from a matrix of grey levels. */
@@ -155,5 +156,20 @@ describe('layoutDots', () => {
     expect(l.offsetX).toBe(12.5);
     expect(l.offsetY).toBe(37.5);
     expect(l.maxRadius).toBeLessThan(l.pitch / 2);
+  });
+});
+
+describe('parseDurationMs', () => {
+  it('honours the unit the browser normalises custom properties to', () => {
+    expect(parseDurationMs('900ms')).toBe(900);
+    expect(parseDurationMs('.9s')).toBe(900);
+    expect(parseDurationMs('0.9s')).toBe(900);
+    expect(parseDurationMs(' 180ms ')).toBe(180);
+  });
+
+  it('falls back when the value is not a time', () => {
+    expect(parseDurationMs('')).toBe(900);
+    expect(parseDurationMs('fast')).toBe(900);
+    expect(parseDurationMs('', 500)).toBe(500);
   });
 });

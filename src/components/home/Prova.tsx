@@ -1,15 +1,17 @@
 // src/components/home/Prova.tsx
-// Block 4 — proof: three reels, four flyers, the names the band has shared a
-// stage with. Each part links to the page that holds the rest.
+// Block 4 — proof: three reels, four flyers, and the names the band has
+// shared a stage with running across a LED sign. Each part links to the page
+// that holds the rest.
 import { artists } from '@/data/band';
 import { prova } from '@/data/copy/home';
 import { posters } from '@/data/media/posters';
 import { reels } from '@/data/media/reels';
+import { LedMarquee } from '@/components/brand/LedMarquee';
+import { LedText } from '@/components/brand/LedText';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
-import { Ticker } from '@/components/ui/Ticker';
 import { PlateRow } from '@/components/media/PlateRow';
 import { ReelGroup } from '@/components/media/ReelGroup';
 
@@ -28,13 +30,13 @@ export function Prova() {
         <div>
           <header className="max-w-[60ch]">
             <Label dot>{prova.label}</Label>
-            <h2 id="prova-title" className="mt-4 text-4xl font-semibold tracking-display text-ink">
-              {prova.headline}
-            </h2>
-            <p className="mt-5 text-lg text-ink-muted">{prova.videoLead}</p>
+            <div className="mt-4">
+              <LedText id="prova-title" text={prova.headline} className="text-4xl font-semibold tracking-display text-ink" />
+            </div>
+            <p className="rise mt-5 text-lg text-ink-muted">{prova.videoLead}</p>
           </header>
           <ReelGroup
-            className="mt-8"
+            className="rise mt-8"
             reels={homeReels}
             pauseLabel={prova.pauseLabel}
             playLabel={prova.playLabel}
@@ -47,19 +49,25 @@ export function Prova() {
           </div>
         </div>
 
-        <div>
+        <div className="rise">
           <Label>{prova.arquivoLabel}</Label>
           <p className="mt-4 max-w-[60ch] text-lg text-ink-muted">{prova.arquivoLead}</p>
-          <PlateRow frames={homePosters} className="mt-8" />
+          <PlateRow frames={homePosters} className="mt-8" led />
           <Button variant="secondary" href="/arquivo" className="mt-8">
             {prova.arquivoCta}
           </Button>
         </div>
 
-        <div>
+        <div className="rise">
           <Label>{prova.namesLabel}</Label>
           <p className="mt-4 max-w-[60ch] text-lg text-ink-muted">{prova.namesLead}</p>
-          <Ticker items={artists} label={prova.namesLabel} className="mt-8" />
+          <LedMarquee
+            items={artists}
+            label={prova.namesLabel}
+            pauseLabel={prova.namesPause}
+            playLabel={prova.namesPlay}
+            className="mt-8"
+          />
         </div>
       </Container>
     </Section>

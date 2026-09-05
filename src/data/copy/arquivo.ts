@@ -11,7 +11,7 @@ export const arquivo = {
       'Cartazes de réveillons de prefeitura, bailes de clube e arraiás em que a Internacional Freeband tocou.',
   },
   label: 'O arquivo',
-  headline: 'Cartazes de quem já tocou.',
+  headline: 'Cartazes de\nquem já tocou.',
   lead: 'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
   municipalNote: 'Realização da prefeitura',
   footnote: 'Um recorte do arquivo — a agenda completa vai por WhatsApp.',

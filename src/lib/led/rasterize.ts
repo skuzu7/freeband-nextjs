@@ -167,3 +167,16 @@ export function layoutDots(cols: number, rows: number, width: number, height: nu
     maxRadius: pitch * 0.42,
   };
 }
+
+/**
+ * A CSS <time> in milliseconds. Computed custom properties come back
+ * normalised ("900ms" → ".9s"), so the unit has to be honoured — parseFloat
+ * alone read 0.9 ms and finished every light-up in a single frame.
+ */
+export function parseDurationMs(raw: string, fallback = 900): number {
+  const m = /^\s*([\d.]+)\s*(ms|s)?\s*$/i.exec(raw);
+  if (!m) return fallback;
+  const value = parseFloat(m[1]);
+  if (!Number.isFinite(value)) return fallback;
+  return m[2]?.toLowerCase() === 's' ? value * 1000 : value;
+}

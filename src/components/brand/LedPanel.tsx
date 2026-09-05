@@ -19,6 +19,7 @@ import {
   layoutDots,
   levels,
   lightUpOrder,
+  parseDurationMs,
   quantize,
   sampleGrid,
   type LightUpMode,
@@ -28,7 +29,7 @@ import { GLYPHS, WORDMARK } from './Wordmark';
 import { DotGrid } from './DotGrid';
 
 export type LedSource =
-  | { kind: 'text'; text: string; weight?: number }
+  | { kind: 'text'; text: string; weight?: number; align?: 'left' | 'center'; tracking?: number }
   | { kind: 'wordmark' }
   | { kind: 'image'; src: string; fit?: 'cover' | 'contain' };
 
@@ -113,7 +114,7 @@ export function LedPanel({
     const grid = fitGrid(aspect, cols, MAX_DOTS);
     const order = lightUpOrder(grid.cols, grid.rows, mode ?? (src.kind === 'image' ? 'radial' : 'sweep'));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const durationMs = parseFloat(getComputedStyle(box).getPropertyValue('--dur-light')) || 900;
+    const durationMs = parseDurationMs(getComputedStyle(box).getPropertyValue('--dur-light'));
     const ledColor = readVar(box, '--color-led', FALLBACK_LED);
     const dimColor = readVar(box, '--color-led-dim', FALLBACK_DIM);
     const palette = Array.from({ length: LEVELS }, (_, i) => mix(dimColor, ledColor, i / (LEVELS - 1)));
@@ -219,7 +220,16 @@ export function LedPanel({
     const load = async () => {
       let pixels = null;
       if (src.kind === 'text') {
-        pixels = textToPixels(src.text, grid.cols, grid.rows, { fontFamily, weight: src.weight });
+        // The raster must use the site face, not a fallback that happens to
+        // be ready first.
+        await document.fonts?.ready;
+        if (disposed) return;
+        pixels = textToPixels(src.text, grid.cols, grid.rows, {
+          fontFamily,
+          weight: src.weight,
+          align: src.align,
+          tracking: src.tracking,
+        });
       } else if (src.kind === 'wordmark') {
         pixels = glyphsToPixels(
           GLYPHS,

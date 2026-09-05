@@ -9,7 +9,7 @@ export const historia = {
       'Fundada em 1969 em Jaú/SP, a Internacional Freeband é uma das trajetórias mais duradouras da música brasileira: cinco eras, duas turnês internacionais, prêmios nacionais.',
   },
   label: 'A história',
-  headline: 'Começou em 1969, num fim de semana em Jaú.',
+  headline: 'Começou em 1969,\nnum fim de semana em Jaú.',
   numberLabel: 'fundação em Jaú/SP',
   capitulo: {
     label: 'Capítulo 1969',

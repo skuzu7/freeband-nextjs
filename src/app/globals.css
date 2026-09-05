@@ -233,12 +233,29 @@
 .rise {
   opacity: 1;
 }
+/* The fold's backdrop drifts down as the page scrolls over it: the stage
+   stays put while the type leaves. Scroll-driven, so no JS and no jank. */
+@keyframes fold-parallax {
+  to {
+    transform: translate3d(0, 22%, 0);
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .rise {
       animation: rise linear both;
       animation-timeline: view();
       animation-range: entry 5% entry 40%;
+    }
+    .rise-late {
+      animation-range: entry 15% entry 55%;
+    }
+  }
+  @supports (animation-timeline: scroll()) {
+    .fold-backdrop {
+      animation: fold-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
     }
   }
   .snap-row {

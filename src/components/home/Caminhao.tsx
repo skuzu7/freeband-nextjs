@@ -1,12 +1,16 @@
 // src/components/home/Caminhao.tsx
-// Block 2 — "O que chega no caminhão": the two packages side by side, then
-// the eleven on stage and the formats the band plays.
+// Block 2 — "O que chega no caminhão": the two packages side by side (the
+// premium one on a lit panel), the rig resolving out of the dots, then the
+// eleven on stage counted in LED digits and the formats the band plays.
 import { cn } from '@/lib/cn';
 import { bandLineup } from '@/data/band';
 import { whatsappPackageLink } from '@/data/contact';
 import { caminhao } from '@/data/copy/home';
 import { estrutura } from '@/data/media/estrutura';
 import { servicePackages, services, type ServicePackage } from '@/data/packages';
+import { DotGrid } from '@/components/brand/DotGrid';
+import { LedNumber } from '@/components/brand/LedNumber';
+import { LedText } from '@/components/brand/LedText';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
@@ -17,14 +21,17 @@ function PackageCard({ pkg }: { pkg: ServicePackage }) {
   return (
     <article
       className={cn(
-        'relative flex flex-col gap-6 border p-6 md:p-8',
+        'rise relative isolate flex flex-col gap-6 border p-6 md:p-8',
         pkg.highlighted ? 'border-led bg-surface-raise' : 'border-line',
       )}
     >
       {pkg.highlighted && (
-        <Label dot className="absolute -top-2.5 left-6 bg-surface px-2">
-          {caminhao.highlightBadge}
-        </Label>
+        <>
+          <DotGrid fade className="opacity-70" />
+          <Label dot className="absolute -top-2.5 left-6 bg-surface px-2">
+            {caminhao.highlightBadge}
+          </Label>
+        </>
       )}
       <header>
         <h3 className="label-caps text-ink">{pkg.name}</h3>
@@ -55,10 +62,10 @@ export function Caminhao() {
       <Container>
         <header className="max-w-[60ch]">
           <Label dot>{caminhao.label}</Label>
-          <h2 id="caminhao-title" className="mt-4 text-4xl font-semibold tracking-display text-ink">
-            {caminhao.headline}
-          </h2>
-          <p className="mt-5 text-lg text-ink-muted">{caminhao.lead}</p>
+          <div className="mt-4">
+            <LedText id="caminhao-title" text={caminhao.headline} className="text-4xl font-semibold tracking-display text-ink" />
+          </div>
+          <p className="rise mt-5 text-lg text-ink-muted">{caminhao.lead}</p>
         </header>
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
@@ -67,26 +74,27 @@ export function Caminhao() {
           ))}
         </div>
 
-        {/* The receipt for every line above: the rig, photographed mounted. */}
-        <div className="mt-12">
+        {/* The receipt for every line above: the rig, photographed mounted,
+            switching on out of the panel. */}
+        <div className="rise mt-12">
           <Label>{caminhao.estruturaLabel}</Label>
-          <PlateRow frames={estrutura} className="mt-5" />
+          <PlateRow frames={estrutura} className="mt-5" led />
         </div>
 
         <div className="mt-12 grid gap-10 border-t border-line pt-8 md:grid-cols-[1.4fr_1fr]">
-          <div>
+          <div className="rise">
             <Label>{caminhao.lineupLabel}</Label>
-            <ul className="mt-5 flex flex-wrap gap-x-7 gap-y-3">
+            <ul className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
               {bandLineup.roles.map((r) => (
-                <li key={r.role} className="flex items-baseline gap-2">
-                  <span className="text-2xl font-semibold tabular-nums text-led-text">{r.count}</span>
+                <li key={r.role} className="flex items-end gap-2.5">
+                  <LedNumber value={String(r.count)} matrixClassName="h-6" animate={false} />
                   <span className="text-sm text-ink-muted">{r.role}</span>
                 </li>
               ))}
             </ul>
             <p className="label-caps mt-5 text-ink-low">{caminhao.lineupNote}</p>
           </div>
-          <div>
+          <div className="rise">
             <Label>{caminhao.formatsLabel}</Label>
             <ul className="mt-5 flex flex-col gap-2">
               {services.map((s) => (

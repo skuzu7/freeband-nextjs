@@ -23,7 +23,7 @@ export const fold = {
 
 export const caminhao = {
   label: 'O que chega no caminhão',
-  headline: 'Dois formatos, nenhum terceirizado.',
+  headline: 'Dois formatos,\nnenhum terceirizado.',
   lead: 'O que entra no caminhão em cada um. Valores por WhatsApp, porque dependem de data, distância e estrutura do local.',
   highlightBadge: 'Mais pedido',
   ctaLabel: 'Pedir valores',
@@ -103,16 +103,17 @@ const blocoItems: Bloco[] = [
 
 export const blocos = {
   label: 'Blocos temáticos',
-  headline: 'Os blocos temáticos.',
+  headline: 'Os blocos\ntemáticos.',
   lead: 'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
   note: 'Country, cabaré, anos 70: figurino, coreografia e painel trocam juntos.',
   hint: 'Arraste para o lado',
+  position: 'Bloco',
   items: blocoItems,
 };
 
 export const prova = {
   label: 'Prova',
-  headline: 'E é assim que ele se move.',
+  headline: 'E é assim que\nele se move.',
   videoLead:
     'Trechos das gravações oficiais de show, sem trilha e sem edição — o painel de LED, os vocalistas e as guitarras em movimento.',
   pauseLabel: 'Pausar os vídeos',
@@ -125,6 +126,8 @@ export const prova = {
   palcoCta: 'Ver o palco inteiro',
   namesLabel: 'Palcos divididos',
   namesLead: 'Nomes com quem a Freeband já dividiu o palco.',
+  namesPause: 'Pausar o letreiro',
+  namesPlay: 'Rodar o letreiro',
 };
 
 export const data = {

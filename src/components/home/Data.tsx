@@ -1,8 +1,9 @@
 // src/components/home/Data.tsx
-// Block 5 — "Qual é a data?": the WhatsApp CTA and every way to reach the
-// production. The footer follows.
+// Block 5 — "Qual é a data?": the question coming on in dots, the WhatsApp
+// CTA and every way to reach the production. The footer follows.
 import { contact } from '@/data/contact';
 import { data } from '@/data/copy/home';
+import { LedText } from '@/components/brand/LedText';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
@@ -16,15 +17,15 @@ export function Data() {
       <Container className="grid gap-12 md:grid-cols-[1.25fr_1fr] md:items-end">
         <div>
           <Label dot>{data.label}</Label>
-          <h2 id="contato-title" className="mt-4 text-5xl font-semibold tracking-display text-ink">
-            {data.headline}
-          </h2>
-          <p className="mt-5 max-w-[52ch] text-lg text-ink-muted">{data.lead}</p>
-          <div className="mt-8">
+          <div className="mt-4">
+            <LedText id="contato-title" text={data.headline} className="text-5xl font-semibold tracking-display text-ink" cols={140} />
+          </div>
+          <p className="rise mt-5 max-w-[52ch] text-lg text-ink-muted">{data.lead}</p>
+          <div className="rise mt-8">
             <WhatsAppCta size="lg">{data.whatsappCta}</WhatsAppCta>
           </div>
         </div>
-        <dl className="grid gap-6">
+        <dl className="rise rise-late grid gap-6">
           <div>
             <dt className="label-caps text-ink-low">{data.phoneLabel}</dt>
             <dd className="mt-1">

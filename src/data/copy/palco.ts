@@ -16,7 +16,7 @@ export const palco = {
     description: `${releaseShort} Fotos e vídeos de shows nossos — sem banco de imagens.`,
   },
   label: 'O palco',
-  headline: 'É isto que chega na sua festa.',
+  headline: 'É isto que chega\nna sua festa.',
   lead: `${releaseShort} As fotos abaixo são de shows nossos — sem banco de imagens.`,
   lineupLabel: `A formação · ${bandLineup.total} no palco`,
   lineupNote: 'Tudo ao vivo',

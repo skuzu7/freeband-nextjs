@@ -48,7 +48,7 @@ function Backdrop() {
   }, [reduced]);
 
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="fold-backdrop absolute inset-0 -z-10 will-change-transform">
       {/* The one photograph on the site that IS allowed to bleed: it is the
           stage as backdrop, under a scrim, not a picture on display. The
           `data-backdrop` flag exempts it from the smoke test's crop audit. */}

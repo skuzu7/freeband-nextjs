@@ -6,6 +6,7 @@
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/cn';
 import { ratioOf, type Photo as PhotoData } from '@/data/media/paths';
+import { LedPhoto } from '@/components/brand/LedPhoto';
 import { Photo } from './Photo';
 
 export type PlateFrame = PhotoData & { caption?: string };
@@ -51,6 +52,8 @@ interface PlateRowProps {
   rowFraction?: number;
   /** Must be one of next.config.ts `images.qualities`. */
   quality?: 75 | 90;
+  /** Resolve each photograph out of the LED panel when it scrolls into view. */
+  led?: boolean;
 }
 
 export function PlateRow({
@@ -60,6 +63,7 @@ export function PlateRow({
   priority = false,
   rowFraction = 1,
   quality,
+  led = false,
 }: PlateRowProps) {
   const layout = plateLayout(frames, rowFraction);
 
@@ -67,7 +71,11 @@ export function PlateRow({
     <div className={cn('plate', className)} style={layout.style}>
       {frames.map((frame, i) => (
         <figure key={frame.src} className="m-0 flex flex-col gap-2">
-          <Photo photo={frame} sizes={layout.sizes[i]} priority={priority && i === 0} quality={quality} />
+          {led ? (
+            <LedPhoto photo={frame} sizes={layout.sizes[i]} priority={priority && i === 0} quality={quality} />
+          ) : (
+            <Photo photo={frame} sizes={layout.sizes[i]} priority={priority && i === 0} quality={quality} />
+          )}
           {captions && frame.caption && (
             <figcaption className="label-caps text-ink-low">{frame.caption}</figcaption>
           )}
