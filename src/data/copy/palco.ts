@@ -22,6 +22,7 @@ export const palco = {
   lineupNote: 'Tudo ao vivo',
   // The gallery reads as a programme in three acts. Keys match the
   // StageFrame categories in src/data/media/frames.ts.
+  actWord: 'Ato',
   acts: [
     {
       numeral: 'I',

@@ -11,14 +11,15 @@ interface SectionProps {
   className?: string;
 }
 
-/** A page block with the standard vertical rhythm. */
+/** A page block with the standard vertical rhythm. Its own stacking context,
+ *  so a DotGrid inside sits over the block's background, not behind it. */
 export function Section({ children, id, theme, labelledBy, className }: SectionProps) {
   return (
     <section
       id={id}
       data-theme={theme}
       aria-labelledby={labelledBy}
-      className={cn('section-gap relative', theme && 'bg-surface text-ink', className)}
+      className={cn('section-gap relative isolate', theme && 'bg-surface text-ink', className)}
     >
       {children}
     </section>

@@ -9,12 +9,14 @@ interface LabelProps {
   /** Draws a single LED dot before the text. */
   dot?: boolean;
   as?: ElementType;
+  /** For `aria-labelledby` when the label doubles as a block's heading. */
+  id?: string;
   className?: string;
 }
 
-export function Label({ children, dot = false, as: Tag = 'span', className }: LabelProps) {
+export function Label({ children, dot = false, as: Tag = 'span', id, className }: LabelProps) {
   return (
-    <Tag className={cn('label-caps inline-flex items-center gap-2.5 text-led-text', className)}>
+    <Tag id={id} className={cn('label-caps inline-flex items-center gap-2.5 text-led-text', className)}>
       {dot && <i aria-hidden className="inline-block size-1.5 shrink-0 rounded-pill bg-led" />}
       {children}
     </Tag>
