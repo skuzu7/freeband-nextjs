@@ -5,6 +5,7 @@
 // position indicator.
 import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
+import { ratioOf } from '@/data/media/paths';
 import { LedPhoto } from '@/components/brand/LedPhoto';
 import { LedText } from '@/components/brand/LedText';
 import { Container } from '@/components/ui/Container';
@@ -29,13 +30,19 @@ export function Blocos() {
         <SnapDots rowId={ROW_ID} count={blocos.items.length} label={blocos.position} className="mb-2" />
       </Container>
 
+      {/* Every block photograph is the same height; each card is as wide as
+          its photo's ratio says. Tops, bottoms and titles all line up. */}
       <ul
         id={ROW_ID}
-        className="snap-row mt-10 items-start md:mt-14 md:items-end"
-        style={{ '--snap-gap': '1.5rem' } as CSSProperties}
+        className="snap-row mt-10 items-start md:mt-14"
+        style={{ '--snap-gap': '1.5rem', '--bloco-h': 'min(32rem, 100vw)' } as CSSProperties}
       >
         {blocos.items.map((bloco, i) => (
-          <li key={bloco.id} className="rise flex w-[min(82vw,24rem)] flex-col gap-5">
+          <li
+            key={bloco.id}
+            className="rise flex flex-col gap-5"
+            style={{ width: `calc(var(--bloco-h) * ${ratioOf(bloco.photo.aspect).toFixed(4)})` }}
+          >
             <div className="relative">
               <LedPhoto photo={bloco.photo} sizes="(min-width: 640px) 24rem, 82vw" cols={72} />
               {bloco.figurino && (

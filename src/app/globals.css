@@ -167,7 +167,6 @@
     flex: 0 0 auto;
     scroll-snap-align: start;
     width: calc(var(--plate-h-m, 15rem) * var(--ratio, 1.5));
-    max-width: 88vw;
   }
 }
 

@@ -43,8 +43,15 @@ export function plateLayout(frames: PhotoData[], rowFraction = 1): PlateLayout {
   const allPortrait = frames.length > 1 && ratios.every((r) => r < 1);
   const sideBySide = allPortrait || frames.length === 2;
   const mobile: PlateLayout['mobile'] = !sideBySide && frames.length >= 3 ? 'scroll' : 'grid';
+  // The strip's height: 15rem, or less so that even the widest frame fits in
+  // 88vw — the row must stay level, so no single frame may be capped.
+  const widest = Math.max(...ratios);
   return {
-    style: { '--plate-cols': cols, '--plate-cols-m': sideBySide ? cols : '1fr' } as CSSProperties,
+    style: {
+      '--plate-cols': cols,
+      '--plate-cols-m': sideBySide ? cols : '1fr',
+      '--plate-h-m': `min(15rem, calc(88vw / ${widest.toFixed(4)}))`,
+    } as CSSProperties,
     mobile,
     sizes: ratios.map((r) => sizesFor(r / total, rowFraction, sideBySide)),
     frameStyle: ratios.map((r) => ({ '--ratio': r.toFixed(4) }) as CSSProperties),
