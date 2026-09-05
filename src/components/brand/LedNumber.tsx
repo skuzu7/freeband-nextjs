@@ -36,6 +36,8 @@ interface LedNumberProps {
   matrixClassName?: string;
   /** Whether the dots stagger on when rendered. */
   animate?: boolean;
+  /** False keeps every dot unlit — flip to true to switch the number on. */
+  on?: boolean;
 }
 
 export function LedNumber({
@@ -44,6 +46,7 @@ export function LedNumber({
   className,
   matrixClassName = 'h-[clamp(2.5rem,6vi,4.5rem)]',
   animate = true,
+  on = true,
 }: LedNumberProps) {
   const chars = Array.from(value);
   const width = chars.length * ADVANCE - 1;
@@ -69,21 +72,24 @@ export function LedNumber({
         focusable="false"
         style={{ aspectRatio: `${width} / ${ROWS}` }}
       >
-        {dots.map((d) => (
-          <circle
-            key={`${d.x}-${d.y}`}
-            cx={d.x + 0.5}
-            cy={d.y + 0.5}
-            r={d.on ? 0.42 : 0.16}
-            fill={d.on ? 'currentColor' : 'var(--color-led-dim)'}
-            className={d.on && animate ? 'animate-led-on' : undefined}
-            style={
-              d.on && animate
-                ? { animationDelay: `${d.i * 14}ms`, transformBox: 'fill-box', transformOrigin: 'center' }
-                : undefined
-            }
-          />
-        ))}
+        {dots.map((d) => {
+          const lit = d.on && on;
+          return (
+            <circle
+              key={`${d.x}-${d.y}`}
+              cx={d.x + 0.5}
+              cy={d.y + 0.5}
+              r={lit ? 0.42 : 0.16}
+              fill={lit ? 'currentColor' : 'var(--color-led-dim)'}
+              className={lit && animate ? 'animate-led-on' : undefined}
+              style={
+                lit && animate
+                  ? { animationDelay: `${d.i * 14}ms`, transformBox: 'fill-box', transformOrigin: 'center' }
+                  : undefined
+              }
+            />
+          );
+        })}
       </svg>
       {label && <span className="label-caps max-w-[10rem] text-ink-muted">{label}</span>}
     </span>
