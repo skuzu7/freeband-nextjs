@@ -76,7 +76,7 @@ export const stageFrames: StageFrame[] = [
     alt: 'Dupla em figurino country dançando à frente da banda e do painel de LED',
     caption: 'Bloco country ao vivo',
     category: 'blocos',
-    aspect: '1112/1600',
+    aspect: '1074/1600',
     plate: 1,
   },
   {
@@ -94,7 +94,16 @@ export const stageFrames: StageFrame[] = [
     alt: 'Bloco anos 70 com plumas laranja diante do painel de LED',
     caption: 'Bloco anos 70 · figurinos de época',
     category: 'blocos',
-    aspect: '1074/1600',
+    aspect: '1112/1600',
+    plate: 2,
+  },
+  {
+    id: 'palco-anos50',
+    src: images.palcoAnos50,
+    alt: 'Vocalista de jaqueta espelhada e bailarina de saia de poá do bloco anos 50 diante do painel de LED',
+    caption: 'Bloco anos 50 · foto Jonas Matheus',
+    category: 'blocos',
+    aspect: '970/1365',
     plate: 2,
   },
   {

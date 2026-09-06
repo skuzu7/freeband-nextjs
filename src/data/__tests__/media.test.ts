@@ -78,8 +78,8 @@ describe('files', () => {
 });
 
 describe('aspect ratios and resolution', () => {
-  it('stageFrames — 13 frames in three acts, gallery floor', async () => {
-    expect(stageFrames.length).toBe(13);
+  it('stageFrames — 14 frames in three acts, gallery floor', async () => {
+    expect(stageFrames.length).toBe(14);
     for (const frame of stageFrames) {
       const r = await expectAspect(frame.src, frame.aspect, frame.id);
       expect(r.longEdge, `${frame.id} below gallery floor`).toBeGreaterThanOrEqual(GALLERY_MIN_LONG_EDGE);

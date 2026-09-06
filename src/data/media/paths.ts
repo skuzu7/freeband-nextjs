@@ -21,6 +21,8 @@ export const images = {
   palcoCountryLed: '/images/palco-country-led.jpeg',
   palcoAnos70: '/images/palco-anos-70.jpeg',
   palcoCabare: '/images/palco-cabare.jpeg',
+  // Clube Náutico Araraquara (Jonas Matheus), watermark strip cropped off.
+  palcoAnos50: '/images/palco-anos-50.jpeg',
   // Golden sequin frontman, 2010×2130 camera scan.
   vocalPaete: '/images/vocal-paete-ouro.jpeg',
   // Wardrobe — shot backstage, one per block of the show.

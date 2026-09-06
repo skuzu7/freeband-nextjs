@@ -59,8 +59,10 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoOAAsABABoJbACdAELXQYgmoAA/un45kNANOhIhbS2yymcyjjaf+blCl5x1E2cVVUuDEqRuFcZF3J9iAebalkv9pSiv7CrQBahn8G9YAAAAA==",
   "/images/nautico-araraquara.jpeg":
     "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoOAAoABABoJbACdADDh80AZAAA/k9tN5RomSpOKTYr15fAKfKRzDplEM8xbQmbAe6wLIhu4MUJ0xGCWii3DWA0S557rjFfjN+Cnjdm6b5K1meF00AAAA==",
+  "/images/palco-anos-50.jpeg":
+    "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoKAA4ABABoJbACdAD8Xy1j0aqAAP7I/V6TcYRoq85WnvgdQlB9skXZvTx2AZeJZxESch4e7mV/cM0M/KNvm4kP/80Scm+2DWzA/gK8qzwbFuAA",
   "/images/palco-anos-70.jpeg":
-    "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAQCdASoJAA4ABABoJbACdADcc+gAAP7c9X9RvKEV80IhWikqQIUhYpNoDvBAa3x01Or0kno0/DPh+s7Rrp6Q3NwB/IveFe99zvBkjquQFCUM3AAAAA==",
+    "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoKAA4ABABoJaACdAEVvIz10ffqgAD+n+2pSxzgmytRt7jtHFmgIedTsBgKHcjdnfriN0vFx9Y+KA9PiwgqKqf9dYWnEiOACPraU/HK3xQGNv67Xi4AAA==",
   "/images/palco-asas-led.jpeg":
     "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoMAA4ABABoJbACdAYt9nYL9IVAAPsXbURwxo3ey0GTK168hRcekjeOc2pJR6O2lg7KiQtDtQCon2zW1zfZIeB/5MiKwFDMXShA0ISMViqQygvSAAA=",
   "/images/palco-banda-completa.jpeg":
@@ -68,7 +70,7 @@ export const blurMap: Record<string, string> = {
   "/images/palco-cabare.jpeg":
     "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoKAA4ABABoJbACdAEQFVU2t58AAP7QaXE2kN1eCeBlnQc9WWrSk5g1IzgVe0woO7pPlLVkbb1ROY+G78J5piZqrIsfjzZ4fefCALwAAAA=",
   "/images/palco-country-led.jpeg":
-    "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoKAA4ABABoJaACdAEVvIz10ffqgAD+n+2pSxzgmytRt7jtHFmgIedTsBgKHcjdnfriN0vFx9Y+KA9PiwgqKqf9dYWnEiOACPraU/HK3xQGNv67Xi4AAA==",
+    "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAQCdASoJAA4ABABoJbACdADcc+gAAP7c9X9RvKEV80IhWikqQIUhYpNoDvBAa3x01Or0kno0/DPh+s7Rrp6Q3NwB/IveFe99zvBkjquQFCUM3AAAAA==",
   "/images/palco-led-coracoes.jpeg":
     "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoJAA4ABABoJZACdAEfUgFgrolgAP7boP+5sDeeSLaCMBhWMP/wUlNxOBCuqwvVE8AEkO6y6By7HJtWGkjy19lmjOsHwo4AAAA=",
   "/images/reveillom-iacanga.jpeg":

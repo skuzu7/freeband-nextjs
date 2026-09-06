@@ -27,7 +27,14 @@ export function Blocos() {
           </div>
           <p className="rise mt-5 text-lg text-ink-muted">{blocos.lead}</p>
         </header>
-        <SnapDots rowId={ROW_ID} count={blocos.items.length} label={blocos.position} className="mb-2" />
+        <SnapDots
+          rowId={ROW_ID}
+          count={blocos.items.length}
+          label={blocos.position}
+          prev={blocos.prev}
+          next={blocos.next}
+          className="mb-2"
+        />
       </Container>
 
       {/* Every block photograph is the same height; each card is as wide as

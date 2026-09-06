@@ -2,7 +2,6 @@
 // The home in five blocks: fold, "o que chega no caminhão", blocos temáticos,
 // prova, "qual é a data?". Every string a component on "/" renders.
 import { bandInfo, bandLineup } from '../band';
-import { contact } from '../contact';
 import { images, type Photo } from '../media/paths';
 
 export const fold = {
@@ -48,11 +47,17 @@ const blocoItems: Bloco[] = [
       id: 'anos-50',
       title: 'Anos 50',
       note: 'Poá, luvas brancas e rock de baile.',
-      // No stage frame of this block exists in the archive; the wardrobe shot
-      // carries it. (Noted in the rebuild report.)
+      // Stage frame from the Clube Náutico show (Jonas Matheus); the club's
+      // watermark strip is cropped off the file, the credit is in `note`.
       photo: {
+        src: images.palcoAnos50,
+        alt: 'Vocalista de jaqueta espelhada e bailarina de saia de poá do bloco anos 50 diante do painel de LED',
+        aspect: '970/1365',
+      },
+      figurino: {
         src: images.figurinoAnos50,
         alt: 'Bailarinos em figurino anos 50 de poá com luvas brancas',
+        caption: 'Anos 50 & Retrô',
         aspect: '1200/1600',
       },
     },
@@ -63,7 +68,7 @@ const blocoItems: Bloco[] = [
       photo: {
         src: images.palcoAnos70,
         alt: 'Bloco anos 70 com plumas laranja diante do painel de LED',
-        aspect: '1074/1600',
+        aspect: '1112/1600',
       },
       figurino: {
         src: images.figurinoPlumas,
@@ -79,7 +84,7 @@ const blocoItems: Bloco[] = [
       photo: {
         src: images.palcoCountryLed,
         alt: 'Dupla em figurino country dançando à frente da banda e do painel de LED',
-        aspect: '1112/1600',
+        aspect: '1074/1600',
       },
       figurino: {
         src: images.figurinoCountry,
@@ -105,9 +110,11 @@ export const blocos = {
   label: 'Blocos temáticos',
   headline: 'Os blocos\ntemáticos.',
   lead: 'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
-  note: 'Country, cabaré, anos 70: figurino, coreografia e painel trocam juntos.',
+  note: 'Anos 50, country, cabaré, anos 70: figurino, coreografia e painel trocam juntos. Foto do bloco anos 50: Jonas Matheus, Clube Náutico Araraquara.',
   hint: 'Arraste para o lado',
   position: 'Bloco',
+  prev: 'Bloco anterior',
+  next: 'Próximo bloco',
   items: blocoItems,
 };
 
@@ -136,5 +143,6 @@ export const data = {
   lead: 'Conta o formato, a data e a cidade. Devolvemos uma proposta fechada — som, luz, palco, logística, backup e DJ depois do show.',
   phoneLabel: 'Fale com a produção',
   whatsappCta: 'Falar pelo WhatsApp',
-  meta: `CNPJ ${bandInfo.cnpj} · ${contact.address}`,
+  // The address already sits in the "Endereço" row right above this line.
+  meta: `CNPJ ${bandInfo.cnpj}`,
 };
