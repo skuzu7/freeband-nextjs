@@ -71,8 +71,18 @@ export function Nav() {
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
         <Container className="flex h-16 items-center justify-between gap-6">
-          <Link href="/" aria-label={site.nav.homeLabel} className="flex shrink-0 items-center py-2">
-            <Wordmark className="h-5 w-auto text-red" />
+          <Link
+            href="/"
+            aria-label={site.nav.homeLabel}
+            className="group flex flex-col items-start gap-0.5 shrink-0 py-1 transition-quick hover:opacity-95"
+          >
+            <span className="text-[9px] font-semibold tracking-[0.28em] uppercase text-ink-muted leading-none transition-quick group-hover:text-ink">
+              Internacional
+            </span>
+            <Wordmark
+              acrylic
+              className="h-5 sm:h-5.5 w-auto text-red transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(238,53,36,0.6)]"
+            />
           </Link>
 
           <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">

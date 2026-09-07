@@ -15,7 +15,7 @@ export function Footer() {
     <footer className="border-t border-line">
       <Container className="grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="flex flex-col gap-5">
-          <Logotipo title={bandInfo.name} markClassName="h-8 w-auto" className="max-w-xs" />
+          <Logotipo acrylic glow title={bandInfo.name} markClassName="h-8 md:h-9 w-auto" className="max-w-xs" />
           <p className="text-lg text-ink">{site.footer.brandTagline}</p>
           <p className="text-sm text-ink-muted">{site.footer.brandTaglineLong}</p>
         </div>

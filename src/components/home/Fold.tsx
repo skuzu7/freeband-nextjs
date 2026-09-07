@@ -95,24 +95,34 @@ export function Fold() {
         <h1 id="fold-title" className="sr-only">
           {bandInfo.name} — banda de baile e show desde {bandInfo.founded}
         </h1>
-        <div role="img" aria-label="Freeband" className="w-full max-w-[min(100%,66rem)]">
-          <LedPanel
-            source={{ kind: 'wordmark' }}
-            aspect={WORDMARK_ASPECT}
-            cols={180}
-            onLit={() => setLit(true)}
-            field={false}
-            dimDots={false}
-            fadeWhenLit
-            className="w-full"
-          >
-            <Wordmark
-              className={cn(
-                'absolute inset-[3%] h-[94%] w-[94%] text-red transition-opacity duration-700 ease-light',
-                lit ? 'opacity-100' : 'opacity-0',
-              )}
-            />
-          </LedPanel>
+        <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-3">
+          <div className="flex w-full items-center gap-4 text-ink-muted">
+            <span className="text-xs sm:text-sm font-semibold tracking-[0.32em] uppercase text-ink-muted">
+              Internacional
+            </span>
+            <span aria-hidden className="dot-line flex-1 opacity-50" />
+          </div>
+          <div role="img" aria-label="Freeband" className="w-full">
+            <LedPanel
+              source={{ kind: 'wordmark' }}
+              aspect={WORDMARK_ASPECT}
+              cols={180}
+              onLit={() => setLit(true)}
+              field={false}
+              dimDots={false}
+              fadeWhenLit
+              className="w-full"
+            >
+              <Wordmark
+                acrylic
+                glow
+                className={cn(
+                  'absolute inset-[3%] h-[94%] w-[94%] text-red transition-all duration-700 ease-light',
+                  lit ? 'opacity-100 scale-100' : 'opacity-0 scale-98',
+                )}
+              />
+            </LedPanel>
+          </div>
         </div>
         <div className="grid gap-8 md:grid-cols-[1.25fr_1fr] md:items-end">
           <div>

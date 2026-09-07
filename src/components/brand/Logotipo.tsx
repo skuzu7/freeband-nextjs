@@ -11,6 +11,10 @@ interface LogotipoProps {
   markClassName?: string;
   /** Hides the "INTERNACIONAL" line and its rule (tight spots, e.g. the nav). */
   compact?: boolean;
+  /** Renders wordmark with authentic extruded red acrylic stage lighting. */
+  acrylic?: boolean;
+  /** Adds soft ambient stage glow. */
+  glow?: boolean;
   title?: string;
 }
 
@@ -18,6 +22,8 @@ export function Logotipo({
   className,
   markClassName = 'h-[clamp(2.5rem,7vi,5.5rem)] w-auto',
   compact = false,
+  acrylic = false,
+  glow = false,
   title,
 }: LogotipoProps) {
   return (
@@ -28,7 +34,12 @@ export function Logotipo({
           <span aria-hidden className="dot-line flex-1" />
         </span>
       )}
-      <Wordmark className={cn('text-red', markClassName)} title={title} />
+      <Wordmark
+        acrylic={acrylic}
+        glow={glow}
+        className={cn('text-red', markClassName)}
+        title={title}
+      />
     </span>
   );
 }

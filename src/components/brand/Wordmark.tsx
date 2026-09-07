@@ -1,4 +1,5 @@
 // src/components/brand/Wordmark.tsx
+import { useId } from 'react';
 // The band's own wordmark, redrawn as vector.
 //
 // Source: a photograph of the band's stage backdrop — "freeband" in extruded
@@ -73,9 +74,23 @@ interface WordmarkProps {
    * `aria-label`, say) and the mark is hidden from assistive tech instead.
    */
   title?: string;
+  /**
+   * When true, renders with the authentic extruded red acrylic stage lighting:
+   * multi-stop gradient, 3D side extrusion and specular top highlight.
+   */
+  acrylic?: boolean;
+  /**
+   * When true, adds a soft ambient stage glow filter around the mark.
+   */
+  glow?: boolean;
 }
 
-export function Wordmark({ className = '', title }: WordmarkProps) {
+export function Wordmark({ className = '', title, acrylic = false, glow = false }: WordmarkProps) {
+  const reactId = useId();
+  const baseId = reactId.replace(/:/g, '');
+  const gradId = `wm-grad-${baseId}`;
+  const glowId = `wm-glow-${baseId}`;
+
   return (
     <svg
       viewBox={VIEWBOX}
@@ -86,12 +101,54 @@ export function Wordmark({ className = '', title }: WordmarkProps) {
       xmlns="http://www.w3.org/2000/svg"
     >
       {title && <title>{title}</title>}
+      {acrylic && (
+        <defs>
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ff5a47" />
+            <stop offset="25%" stopColor="#ee3524" />
+            <stop offset="70%" stopColor="#d32212" />
+            <stop offset="100%" stopColor="#9e1205" />
+          </linearGradient>
+          {glow && (
+            <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1" dy="3" stdDeviation="2.5" floodColor="#04060c" floodOpacity="0.85" />
+              <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#ee3524" floodOpacity="0.45" />
+            </filter>
+          )}
+        </defs>
+      )}
+
+      {/* 3D Extrusion underneath when acrylic is active */}
+      {acrylic && (
+        <g
+          fill="none"
+          stroke="#5a0b02"
+          strokeWidth={WORDMARK.stroke}
+          strokeLinecap="butt"
+          transform={`translate(${WORDMARK.overhang + 1.5}, 2.5)`}
+          opacity="0.9"
+        >
+          {GLYPHS.map((glyph, i) => (
+            <g key={`ext-${i}`} transform={`translate(${glyph.x},0)`}>
+              {glyph.circle && (
+                <circle cx={WORDMARK.bowl.cx} cy={WORDMARK.bowl.cy} r={WORDMARK.bowl.r} />
+              )}
+              {glyph.d.map((d, j) => (
+                <path key={j} d={d} />
+              ))}
+            </g>
+          ))}
+        </g>
+      )}
+
+      {/* Main glyphs face */}
       <g
         fill="none"
-        stroke="currentColor"
+        stroke={acrylic ? `url(#${gradId})` : 'currentColor'}
         strokeWidth={WORDMARK.stroke}
         strokeLinecap="butt"
         transform={`translate(${WORDMARK.overhang},0)`}
+        filter={acrylic && glow ? `url(#${glowId})` : undefined}
       >
         {GLYPHS.map((glyph, i) => (
           <g key={i} transform={`translate(${glyph.x},0)`}>
@@ -104,6 +161,29 @@ export function Wordmark({ className = '', title }: WordmarkProps) {
           </g>
         ))}
       </g>
+
+      {/* Subtle top specular highlight */}
+      {acrylic && (
+        <g
+          fill="none"
+          stroke="#ffa89b"
+          strokeWidth={2}
+          strokeLinecap="butt"
+          transform={`translate(${WORDMARK.overhang}, -0.75)`}
+          opacity="0.35"
+        >
+          {GLYPHS.map((glyph, i) => (
+            <g key={`hi-${i}`} transform={`translate(${glyph.x},0)`}>
+              {glyph.circle && (
+                <circle cx={WORDMARK.bowl.cx} cy={WORDMARK.bowl.cy} r={WORDMARK.bowl.r} />
+              )}
+              {glyph.d.map((d, j) => (
+                <path key={j} d={d} />
+              ))}
+            </g>
+          ))}
+        </g>
+      )}
     </svg>
   );
 }
