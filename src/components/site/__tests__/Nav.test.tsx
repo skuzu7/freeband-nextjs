@@ -43,4 +43,23 @@ describe('Nav', () => {
     expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('toggles mobile menu with button and closes on link click', () => {
+    render(<Nav />);
+    const trigger = screen.getByRole('button', { name: site.nav.menuOpen });
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog', { name: 'Menu' })).toBeInTheDocument();
+
+    // Toggle close
+    fireEvent.click(trigger);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // Open again and click a link inside the menu
+    fireEvent.click(trigger);
+    const link = screen.getByRole('navigation', { name: 'Principal (menu)' }).querySelector('a[href="/historia"]');
+    expect(link).toBeInTheDocument();
+    if (link) fireEvent.click(link);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });
+

@@ -68,54 +68,56 @@ export function Nav() {
   const links = site.nav.links.map((link) => ({ ...link, active: isActive(pathname, link.href) }));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
-      <Container className="flex h-16 items-center justify-between gap-6">
-        <Link href="/" aria-label={site.nav.homeLabel} className="flex shrink-0 items-center py-2">
-          <Wordmark className="h-5 w-auto text-red" />
-        </Link>
+    <>
+      <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
+        <Container className="flex h-16 items-center justify-between gap-6">
+          <Link href="/" aria-label={site.nav.homeLabel} className="flex shrink-0 items-center py-2">
+            <Wordmark className="h-5 w-auto text-red" />
+          </Link>
 
-        <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              aria-current={link.active ? 'page' : undefined}
-              className={cn(
-                'label-caps transition-quick relative py-2 text-ink-muted hover:text-ink',
-                link.active && 'text-ink',
-              )}
-            >
-              {link.label}
-              {link.active && (
-                <span aria-hidden className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-pill bg-led" />
-              )}
-            </Link>
-          ))}
-          <Button href={site.nav.cta.href}>{site.nav.cta.label}</Button>
-        </nav>
+          <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={link.active ? 'page' : undefined}
+                className={cn(
+                  'label-caps transition-quick relative py-2 text-ink-muted hover:text-ink',
+                  link.active && 'text-ink',
+                )}
+              >
+                {link.label}
+                {link.active && (
+                  <span aria-hidden className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-pill bg-led" />
+                )}
+              </Link>
+            ))}
+            <Button href={site.nav.cta.href}>{site.nav.cta.label}</Button>
+          </nav>
 
-        <button
-          ref={triggerRef}
-          type="button"
-          className="transition-quick -mr-2 flex size-11 items-center justify-center rounded-sm text-ink hover:text-led-text md:hidden"
-          aria-expanded={open}
-          aria-controls={panelId}
-          aria-label={open ? site.nav.menuClose : site.nav.menuOpen}
-          onClick={() => setOpen(!open)}
-        >
-          <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
-            {open ? (
-              <path d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <>
-                <path d="M3 7h18" />
-                <path d="M3 12h18" />
-                <path d="M3 17h18" />
-              </>
-            )}
-          </svg>
-        </button>
-      </Container>
+          <button
+            ref={triggerRef}
+            type="button"
+            className="transition-quick -mr-2 flex size-11 items-center justify-center rounded-sm text-ink hover:text-led-text md:hidden"
+            aria-expanded={open}
+            aria-controls={panelId}
+            aria-label={open ? site.nav.menuClose : site.nav.menuOpen}
+            onClick={() => setOpen(!open)}
+          >
+            <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+              {open ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <>
+                  <path d="M3 7h18" />
+                  <path d="M3 12h18" />
+                  <path d="M3 17h18" />
+                </>
+              )}
+            </svg>
+          </button>
+        </Container>
+      </header>
 
       {open && (
         <div
@@ -133,6 +135,7 @@ export function Nav() {
                 key={link.href}
                 href={link.href}
                 aria-current={link.active ? 'page' : undefined}
+                onClick={() => setOpen(false)}
                 className={cn(
                   'flex items-center justify-between border-b border-line py-5 text-3xl font-semibold tracking-tight text-ink',
                   link.active && 'text-led-text',
@@ -143,7 +146,7 @@ export function Nav() {
               </Link>
             ))}
             <div className="mt-8">
-              <Button href={site.nav.cta.href} size="lg" className="w-full">
+              <Button href={site.nav.cta.href} size="lg" className="w-full" onClick={() => setOpen(false)}>
                 {site.nav.cta.label}
               </Button>
               <p className="label-caps mt-6 text-ink-low">{site.nav.brandLine}</p>
@@ -151,6 +154,6 @@ export function Nav() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }

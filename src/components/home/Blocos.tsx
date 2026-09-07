@@ -1,8 +1,9 @@
 // src/components/home/Blocos.tsx
 // Block 3 — the thematic blocks as panels on the wall: each photograph
 // resolves out of the dot matrix as it scrolls into view, the wardrobe shot
-// tucked over its corner, in a horizontal scroll-snap row with a LED
-// position indicator.
+// tucked over its corner. On small screens cards stack in a responsive grid so
+// every photograph stays whole and nothing is cut off horizontally; from md:
+// they sit in a horizontal scroll-snap row with a LED position indicator.
 import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
 import { ratioOf } from '@/data/media/paths';
@@ -33,12 +34,13 @@ export function Blocos() {
           label={blocos.position}
           prev={blocos.prev}
           next={blocos.next}
-          className="mb-2"
+          className="mb-2 hidden md:flex"
         />
       </Container>
 
-      {/* Every block photograph is the same height; each card is as wide as
-          its photo's ratio says. Tops, bottoms and titles all line up. */}
+      {/* Thematic blocks: stacks vertically on mobile so every photograph stays
+          whole and nothing is cut off horizontally; on desktop it runs as
+          a horizontal scroll-snap row with LED controls. */}
       <ul
         id={ROW_ID}
         className="snap-row mt-10 items-start md:mt-14"
@@ -47,17 +49,24 @@ export function Blocos() {
         {blocos.items.map((bloco, i) => (
           <li
             key={bloco.id}
-            className="rise flex flex-col gap-5"
-            style={{ width: `calc(var(--bloco-h) * ${ratioOf(bloco.photo.aspect).toFixed(4)})` }}
+            className="rise flex w-full flex-col gap-5 md:w-auto"
+            style={{ '--ratio': ratioOf(bloco.photo.aspect).toFixed(4) } as CSSProperties}
           >
             <div className="relative">
-              <LedPhoto photo={bloco.photo} sizes="(min-width: 640px) 24rem, 82vw" cols={72} />
+              <LedPhoto
+                photo={bloco.photo}
+                sizes="(min-width: 768px) 24rem, 92vw"
+                cols={72}
+              />
               {bloco.figurino && (
-                <div className="absolute -right-3 -bottom-6 w-[42%] border-[3px] border-surface shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8)]">
+                <div className="absolute right-0 -bottom-6 w-[40%] max-w-[11rem] border-[3px] border-surface shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8)] md:-right-3 md:w-[42%] md:max-w-none">
                   <Photo photo={bloco.figurino} sizes="10rem" />
                 </div>
               )}
-              <span aria-hidden className="label-caps absolute top-3 left-3 bg-surface/80 px-2 py-1 text-led-text backdrop-blur-sm">
+              <span
+                aria-hidden
+                className="label-caps absolute top-3 left-3 bg-surface/80 px-2 py-1 text-led-text backdrop-blur-sm"
+              >
                 {String(i + 1).padStart(2, '0')}
               </span>
             </div>
@@ -71,8 +80,7 @@ export function Blocos() {
       </ul>
 
       <Container>
-        <p className="label-caps mt-8 text-ink-low md:hidden">{blocos.hint}</p>
-        <p className="mt-8 hidden max-w-[60ch] text-sm text-ink-low md:block">{blocos.note}</p>
+        <p className="mt-8 max-w-[60ch] text-sm text-ink-low">{blocos.note}</p>
       </Container>
     </Section>
   );

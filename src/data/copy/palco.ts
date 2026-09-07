@@ -13,11 +13,11 @@ export interface Act {
 export const palco = {
   seo: {
     title: 'O palco',
-    description: `${releaseShort} Fotos e vídeos de shows nossos — sem banco de imagens.`,
+    description: `${releaseShort} Registros 100% autênticos de shows nossos — sem fotos de banco de imagens.`,
   },
   label: 'O palco',
-  headline: 'É isto que chega\nna sua festa.',
-  lead: `${releaseShort} As fotos abaixo são de shows nossos — sem banco de imagens.`,
+  headline: 'O espetáculo ao vivo,\ndo primeiro ao último acorde.',
+  lead: `${releaseShort} Todas as fotografias abaixo são registros reais dos nossos eventos — sem modelos ou fotos de banco de imagens.`,
   lineupLabel: `A formação · ${bandLineup.total} no palco`,
   lineupNote: 'Tudo ao vivo',
   // The gallery reads as a programme in three acts. Keys match the
@@ -27,35 +27,35 @@ export const palco = {
     {
       numeral: 'I',
       key: 'vocais',
-      title: 'A frente do palco',
-      note: 'Os vocalistas — dois cantores, duas cantoras — e as guitarras.',
+      title: 'Vozes & Frente de Palco',
+      note: 'Quatro vocalistas principais — duas cantoras e dois cantores —, harmonias ao vivo, solos de guitarra e dinâmica contagiante.',
     },
     {
       numeral: 'II',
       key: 'blocos',
-      title: 'Os blocos temáticos',
-      note: 'Country, cabaré, anos 70: figurino, coreografia e painel trocam juntos.',
+      title: 'A Jornada dos Blocos Temáticos',
+      note: 'Anos 50, anos 70, country e cabaré: figurinos de época, coreografias sincronizadas e efeitos visuais no painel de LED que transformam a pista a cada virada.',
     },
     {
       numeral: 'III',
       key: 'efeitos',
-      title: 'Luz, LED e efeitos',
-      note: 'Iluminação robotizada via time code e o painel de LED em neon.',
+      title: 'Luz, LED & Alta Tecnologia',
+      note: 'Moving heads e feixes robotizados sincronizados via timecode, painel de LED de alta definição e impacto visual de grande festival.',
     },
   ] satisfies Act[],
   figurinos: {
     label: 'Bastidores · Figurinos',
-    lead: 'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
+    lead: 'O espetáculo se transforma junto com o repertório: dezenas de trocas completas de figurino, adereços e coreografias exclusivas para transportar o público pelas grandes eras da música.',
   },
   estrutura: {
     label: 'A estrutura · fotos de montagens nossas',
-    lead: 'O que os pacotes listam é isto aqui, montado: pista e painéis de LED, iluminação robotizada e a boate completa. Nada é terceirizado — a estrutura viaja no nosso caminhão.',
+    lead: 'Infraestrutura de ponta transportada em frota própria: som de alta fidelidade dimensionado para o espaço, painéis e pista de LED, iluminação inteligente e boate completa. Nada é terceirizado — montagem e operação pela nossa equipe.',
   },
   // The reel: four clips filmed at the band's own shows, no sound, no edit.
   video: {
     label: 'O show',
     headline: 'E é assim que ele se move.',
-    lead: 'Quatro trechos das gravações oficiais de show, sem trilha e sem edição — o painel de LED, os vocalistas e as guitarras em movimento.',
+    lead: 'Cortes reais das gravações de show, direto da câmera e sem overdubs de estúdio — o painel de LED, os vocalistas e a energia exatamente como o seu público vai sentir.',
     pauseLabel: 'Pausar os vídeos',
     playLabel: 'Reproduzir os vídeos',
     footnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',

@@ -134,61 +134,48 @@
 
 /* Photographic plate — one equal-height row of WHOLE photographs. Column
    widths arrive as fr values proportional to each photo's ratio, so every box
-   is the same height and nothing is cropped. On phones a row of three or more
-   becomes a strip that scrolls sideways at a fixed height, each frame as wide
-   as its ratio says (--ratio on the frame) — still whole, still level, and
-   the page stays short. */
+   is the same height and nothing is cropped. On phones portraits stay side by
+   side; two frames share the width; three or more stack vertically so each
+   photograph stays whole and level within the screen. */
 .plate {
   display: grid;
   align-items: start;
-  gap: var(--plate-gap, 0.5rem);
+  gap: var(--plate-gap, 1.5rem 0.5rem);
   grid-template-columns: var(--plate-cols-m, 1fr);
 }
 @media (width >= 40rem) {
   .plate {
+    gap: var(--plate-gap, 0.5rem);
     grid-template-columns: var(--plate-cols, 1fr);
   }
 }
-@media (width < 40rem) {
-  .plate[data-m='scroll'] {
-    display: flex;
+
+/* Responsive layout for the thematic blocks: vertical stack on mobile, horizontal
+   scroll-snap row on desktop. */
+.snap-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-inline: var(--pad-inline);
+}
+@media (width >= 48rem) {
+  .snap-row {
+    flex-direction: row;
+    gap: var(--snap-gap, 1.5rem);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    margin-inline: calc(-1 * var(--pad-inline));
-    padding-inline: var(--pad-inline);
     scroll-padding-inline: var(--pad-inline);
-    /* The right edge fades: the strip visibly goes on past the screen. */
-    mask-image: linear-gradient(to right, black 88%, transparent 100%);
+    scrollbar-width: none;
   }
-  .plate[data-m='scroll']::-webkit-scrollbar {
+  .snap-row::-webkit-scrollbar {
     display: none;
   }
-  .plate[data-m='scroll'] > * {
+  .snap-row > * {
     flex: 0 0 auto;
     scroll-snap-align: start;
-    width: calc(var(--plate-h-m, 15rem) * var(--ratio, 1.5));
+    width: calc(var(--bloco-h, 32rem) * var(--ratio, 1));
   }
-}
-
-/* Horizontal scroll-snap row for the thematic blocks. */
-.snap-row {
-  display: flex;
-  gap: var(--snap-gap, 1rem);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--pad-inline);
-  padding-inline: var(--pad-inline);
-  scrollbar-width: none;
-}
-.snap-row::-webkit-scrollbar {
-  display: none;
-}
-.snap-row > * {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
 }
 
 /* Pre-digital prints in the 1969 chapter. */

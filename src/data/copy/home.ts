@@ -23,7 +23,7 @@ export const fold = {
 export const caminhao = {
   label: 'O que chega no caminhão',
   headline: 'Dois formatos,\nnenhum terceirizado.',
-  lead: 'O que entra no caminhão em cada um. Valores por WhatsApp, porque dependem de data, distância e estrutura do local.',
+  lead: 'Estrutura própria completa em dois formatos de montagem. Valores sob consulta, dimensionados de acordo com a data, distância e estrutura do seu evento.',
   highlightBadge: 'Mais pedido',
   ctaLabel: 'Pedir valores',
   whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
@@ -46,7 +46,7 @@ const blocoItems: Bloco[] = [
     {
       id: 'anos-50',
       title: 'Anos 50',
-      note: 'Poá, luvas brancas e rock de baile.',
+      note: 'Rock and roll clássico, saias de poá, luvas brancas e a energia vibrante dos bailes de época.',
       // Stage frame from the Clube Náutico show (Jonas Matheus); the club's
       // watermark strip is cropped off the file, the credit is in `note`.
       photo: {
@@ -64,7 +64,7 @@ const blocoItems: Bloco[] = [
     {
       id: 'anos-70',
       title: 'Anos 70',
-      note: 'Plumas, estampas e o corpo de baile inteiro.',
+      note: 'Plumas, brilho, coreografias marcadas e os maiores hinos que definiram a era disco.',
       photo: {
         src: images.palcoAnos70,
         alt: 'Bloco anos 70 com plumas laranja diante do painel de LED',
@@ -80,7 +80,7 @@ const blocoItems: Bloco[] = [
     {
       id: 'country',
       title: 'Country',
-      note: 'Franjas, chapéu e sertanejo para a pista.',
+      note: 'Franjas, fivelas e os clássicos do sertanejo e country que contagiam e agitam a pista.',
       photo: {
         src: images.palcoCountryLed,
         alt: 'Dupla em figurino country dançando à frente da banda e do painel de LED',
@@ -96,7 +96,7 @@ const blocoItems: Bloco[] = [
     {
       id: 'cabare',
       title: 'Cabaré',
-      note: 'Performance de frente de palco com o painel em vermelho.',
+      note: 'Performance teatral e sofisticada, figurino elegante e iluminação intimista sob o painel de LED.',
       // No separate wardrobe shot for cabaré in the archive.
       photo: {
         src: images.palcoCabare,
@@ -109,7 +109,7 @@ const blocoItems: Bloco[] = [
 export const blocos = {
   label: 'Blocos temáticos',
   headline: 'Os blocos\ntemáticos.',
-  lead: 'O show troca de roupa junto com o repertório: anos 50, anos 70, country, cabaré. Cada bloco tem o seu figurino, e eles viajam com a banda.',
+  lead: 'O show se transforma visualmente a cada época do repertório: anos 50, anos 70, country, cabaré. Cada bloco traz figurino exclusivo e viaja completo com a banda.',
   note: 'Anos 50, country, cabaré, anos 70: figurino, coreografia e painel trocam juntos. Foto do bloco anos 50: Jonas Matheus, Clube Náutico Araraquara.',
   hint: 'Arraste para o lado',
   position: 'Bloco',
@@ -122,13 +122,13 @@ export const prova = {
   label: 'Prova',
   headline: 'E é assim que\nele se move.',
   videoLead:
-    'Trechos das gravações oficiais de show, sem trilha e sem edição — o painel de LED, os vocalistas e as guitarras em movimento.',
+    'Trechos de gravações oficiais ao vivo, sem overdubs ou playback — a vibração real dos 11 integrantes, do painel de LED e da iluminação cênica.',
   pauseLabel: 'Pausar os vídeos',
   playLabel: 'Reproduzir os vídeos',
   videoFootnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',
   arquivoLabel: 'O arquivo',
   arquivoLead:
-    'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
+    'Grandes réveillons públicos, bailes de clubes tradicionais e eventos corporativos. Mais de cinco décadas registrando momentos inesquecíveis.',
   arquivoCta: 'Ver o arquivo',
   palcoCta: 'Ver o palco inteiro',
   namesLabel: 'Palcos divididos',
