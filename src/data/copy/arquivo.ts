@@ -12,9 +12,9 @@ export const arquivo = {
   },
   label: 'O arquivo',
   headline: 'Cartazes de\nquem já tocou.',
-  lead: 'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
+  lead: 'Acervo documental de grandes réveillons públicos, bailes tradicionais de clubes e eventos oficiais realizados com prefeituras municipais e diretorias em múltiplos estados.',
   municipalNote: 'Realização da prefeitura',
-  footnote: 'Um recorte do arquivo — a agenda completa vai por WhatsApp.',
+  footnote: 'Um recorte documental do nosso histórico de apresentações — referências e portfólio completo disponíveis sob consulta.',
   filterLabel: 'Filtrar por',
   filters: [
     { key: 'todos', label: 'Todos' },

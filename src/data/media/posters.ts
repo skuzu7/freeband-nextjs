@@ -97,7 +97,7 @@ export const posters: Poster[] = [
   {
     src: images.cartazCosmopolitano,
     alt: 'Cartaz do Baile do Havaí no Cosmopolitano FC',
-    town: 'Cosmopolitano FC',
+    town: 'Cosmópolis',
     event: 'Baile do Havaí',
     when: '—',
     venue: 'Cosmopolitano Futebol Clube',
