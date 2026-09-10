@@ -49,3 +49,4 @@ No painel do Vercel, as três variáveis acima precisam existir no ambiente de p
 - **Revisão de Segurança Documentada:** Veja [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md) para a análise detalhada de autenticação e mitigação de vulnerabilidades lógicas.
 - **Modelagem de Ameaças (STRIDE):** Consulte [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) para a matriz de riscos e defesas arquiteturais.
 - **Proteção de Sessão Criptográfica:** HMAC-SHA256 e comparação em tempo constante (`crypto.timingSafeEqual`) validados por testes unitários automatizados em `src/lib/__tests__/session.test.ts`.
+- **Laboratório de Pesquisa Defensiva:** os padrões acima (HMAC, validação server-side, testes de regressão) são estudados de forma isolada no [CSA-LAB](https://github.com/skuzu7/CSA-LAB) — 5 findings documentados com patches e suítes verdes, incluindo falsificação de sessão (FINDING-004) e falha de lógica de negócio (FINDING-005).
