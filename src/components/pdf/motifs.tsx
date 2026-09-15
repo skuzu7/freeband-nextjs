@@ -11,7 +11,7 @@ import { ledDots } from '@/components/brand/LedNumber';
 import { ratioOf } from '@/data/media/paths';
 import { pdfColors, pdfUrl } from './theme';
 
-/** One row of the panel: a dotted rule, 8pt pitch. */
+/** One row of the panel: a dotted rule, 6pt pitch (the site's .dot-line uses 8px; paper is denser). */
 export function DotLinePdf({ width, color = pdfColors.led }: { width: number; color?: string }) {
   const pitch = 6;
   const n = Math.floor(width / pitch);

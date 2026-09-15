@@ -19,14 +19,22 @@ cp .env.example .env.local
 npm run dev
 ```
 
+Requer Node 22.18 ou mais novo (o gerador de tokens importa TypeScript nativamente).
+
 Scripts:
 
 - `npm run dev` — servidor local
 - `npm run build` / `npm start` — build e runtime de produção
 - `npm run lint` — ESLint sem warnings
 - `npm run typecheck` — TypeScript
-- `npm test` — Vitest
-- `npm run optimize:images` — recomprime JPEGs grandes em `public/images`
+- `npm test` / `npm run test:watch` — Vitest
+- `npm run tokens` — **obrigatório** depois de editar `src/design/tokens.ts`; regenera `src/app/tokens.css` (um teste falha se estiver desatualizado)
+- `npm run blur` — **obrigatório** depois de adicionar ou reencodar qualquer imagem; regenera `src/data/blur.ts` (um teste falha sem a entrada)
+- `npm run optimize:images` — recomprime JPEGs grandes em `public/images` (e pede o `npm run blur` em seguida)
+- `npm run smoke` — Puppeteer em todas as rotas, a 1440 e 390: falha em erro de console, overflow horizontal ou foto cortada; precisa de um servidor no ar (`BASE_URL`, `ORCAMENTO_TOKEN`)
+- `npm run smoke:motion` — o mesmo com `prefers-reduced-motion: reduce`: nada pode se mover
+
+O CI (`.github/workflows/ci.yml`) roda auditoria de dependências, testes, lint, typecheck, build e os dois smokes em cada PR e push na `main`.
 
 ## Variáveis de ambiente
 
@@ -48,5 +56,5 @@ No painel do Vercel, as três variáveis acima precisam existir no ambiente de p
 
 - **Revisão de Segurança Documentada:** Veja [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md) para a análise detalhada de autenticação e mitigação de vulnerabilidades lógicas.
 - **Modelagem de Ameaças (STRIDE):** Consulte [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) para a matriz de riscos e defesas arquiteturais.
-- **Proteção de Sessão Criptográfica:** HMAC-SHA256 e comparação em tempo constante (`crypto.timingSafeEqual`) validados por testes unitários automatizados em `src/lib/__tests__/session.test.ts`.
+- **Proteção de Sessão Criptográfica:** cookie `__Host-freeband_admin` assinado com HMAC-SHA256 via Web Crypto (o mesmo código roda no proxy Edge e nas server actions), comparação em tempo constante sobre digests de tamanho fixo, limite de tentativas no login e no link legado, e a página `/orcamento` conferindo a sessão além do proxy — tudo coberto por `src/lib/__tests__/session.test.ts`, `proxy.test.ts` e `rateLimit.test.ts`.
 - **Laboratório de Pesquisa Defensiva:** os padrões acima (HMAC, validação server-side, testes de regressão) são estudados de forma isolada no [CSA-LAB](https://github.com/skuzu7/CSA-LAB) — 5 findings documentados com patches e suítes verdes, incluindo falsificação de sessão (FINDING-004) e falha de lógica de negócio (FINDING-005).

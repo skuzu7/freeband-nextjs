@@ -14,10 +14,12 @@ import {
 import path from "node:path";
 import sharp from "sharp";
 
-const IMAGES_DIR = "public/images";
+// Resolved from this file, so the script touches the same folder from any cwd.
+const ROOT = path.resolve(import.meta.dirname, "..");
+const IMAGES_DIR = path.join(ROOT, "public/images");
 const THRESHOLD_BYTES = 400 * 1024;
 const MAX_WIDTH = 2560;
-const BACKUP_DIR = process.env.BACKUP_DIR ?? "screenshots/originals";
+const BACKUP_DIR = path.resolve(ROOT, process.env.BACKUP_DIR ?? "screenshots/originals");
 
 const candidates = readdirSync(IMAGES_DIR)
   .filter((name) => /\.(jpe?g)$/i.test(name))
@@ -49,3 +51,9 @@ for (const file of candidates) {
     `${path.basename(file)}: ${(before / 1024 / 1024).toFixed(1)} MB -> ${(after / 1024 / 1024).toFixed(2)} MB (-${pct}%)`,
   );
 }
+
+// Re-encoding (and baking EXIF orientation) changes the pixels the blur
+// placeholders and the declared aspects were made from.
+console.log(
+  "\nDone. Now run `npm run blur`, and check `aspect` in src/data/media/*.ts for any file whose orientation was baked (npm test).",
+);
