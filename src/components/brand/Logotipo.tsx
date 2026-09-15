@@ -3,6 +3,7 @@
 // rule, the wordmark beneath. The wordmark takes the red; the caps line takes
 // the muted ink so the red is the only saturated thing in the block.
 import { cn } from '@/lib/cn';
+import { bandInfo } from '@/data/band';
 import { Wordmark } from './Wordmark';
 
 interface LogotipoProps {
@@ -30,7 +31,7 @@ export function Logotipo({
     <span className={cn('flex flex-col items-start gap-2', className)}>
       {!compact && (
         <span className="flex w-full items-center gap-3 text-ink-muted">
-          <span className="label-caps">Internacional</span>
+          <span className="label-caps">{bandInfo.brandLine}</span>
           <span aria-hidden className="dot-line flex-1" />
         </span>
       )}

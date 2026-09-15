@@ -2,8 +2,9 @@
 
 // src/components/home/Fold.tsx
 // Block 1. The stage poster is the LCP; the loop attaches on idle and never
-// under reduced motion. The wordmark comes on as LED dots, then the sharp red
-// acrylic appears over them — the backdrop, as the audience sees it.
+// under reduced motion, and one control pauses it (WCAG 2.2.2). The wordmark
+// comes on as LED dots, then the sharp red acrylic appears over them — the
+// backdrop, as the audience sees it.
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
@@ -22,7 +23,11 @@ import { WhatsAppCta } from '@/components/site/WhatsAppCta';
 
 const WORDMARK_ASPECT = WORDMARK.viewBox.width / WORDMARK.viewBox.height;
 
-function Backdrop() {
+interface BackdropProps {
+  paused: boolean;
+}
+
+function Backdrop({ paused }: BackdropProps) {
   const reduced = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -31,6 +36,7 @@ function Backdrop() {
     const video = videoRef.current;
     if (!video) return;
     const attach = () => {
+      if (video.getAttribute('src')) return;
       video.setAttribute('src', heroMedia.video);
       video.play().catch(() => {});
     };
@@ -46,6 +52,14 @@ function Backdrop() {
     const id = window.setTimeout(attach, 1500);
     return () => window.clearTimeout(id);
   }, [reduced]);
+
+  // The pause control: the loop stays attached and resumes where it stopped.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !video.getAttribute('src')) return;
+    if (paused) video.pause();
+    else video.play().catch(() => {});
+  }, [paused]);
 
   return (
     <div className="fold-backdrop absolute inset-0 -z-10 will-change-transform">
@@ -81,28 +95,46 @@ function Backdrop() {
   );
 }
 
-export function Fold() {
+interface FoldProps {
+  /** Years since the founding, counted on the server so the HTML and the hydrated tree agree. */
+  yearsActive: number;
+}
+
+export function Fold({ yearsActive }: FoldProps) {
   const [lit, setLit] = useState(false);
+  const reduced = useReducedMotion();
+  const [paused, setPaused] = useState(false);
 
   return (
     <section
       aria-labelledby="fold-title"
       className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
     >
-      <Backdrop />
+      <Backdrop paused={paused} />
+      {!reduced && (
+        <button
+          type="button"
+          aria-pressed={paused}
+          onClick={() => setPaused((p) => !p)}
+          className="label-caps transition-quick absolute top-20 right-[var(--pad-inline)] z-10 inline-flex min-h-11 items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
+        >
+          <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
+          {paused ? fold.backdropPlay : fold.backdropPause}
+        </button>
+      )}
       <Container className="relative z-10 flex flex-col gap-8 pb-10 pt-32 md:gap-10">
         <Label dot>{fold.badge}</Label>
         <h1 id="fold-title" className="sr-only">
-          {bandInfo.name} — banda de baile e show desde {bandInfo.founded}
+          {fold.title}
         </h1>
         <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-3">
           <div className="flex w-full items-center gap-4 text-ink-muted">
             <span className="text-xs sm:text-sm font-semibold tracking-[0.32em] uppercase text-ink-muted">
-              Internacional
+              {bandInfo.brandLine}
             </span>
             <span aria-hidden className="dot-line flex-1 opacity-50" />
           </div>
-          <div role="img" aria-label="Freeband" className="w-full">
+          <div role="img" aria-label={fold.wordmarkLabel} className="w-full">
             <LedPanel
               source={{ kind: 'wordmark' }}
               aspect={WORDMARK_ASPECT}
@@ -126,7 +158,7 @@ export function Fold() {
         </div>
         <div className="grid gap-8 md:grid-cols-[1.25fr_1fr] md:items-end">
           <div>
-            <p className="text-3xl font-semibold tracking-tight text-ink">{fold.kicker}</p>
+            <p className="text-3xl font-semibold tracking-tight text-ink">{fold.kicker(yearsActive)}</p>
             <p className="mt-4 max-w-[52ch] text-lg text-ink-muted">{fold.lead}</p>
           </div>
           {/* Stacked and full-width on phones, side by side from 40rem. */}

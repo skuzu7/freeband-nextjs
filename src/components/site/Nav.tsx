@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
+import { bandInfo } from '@/data/band';
 import { site } from '@/data/copy/site';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { DotGrid } from '@/components/brand/DotGrid';
@@ -15,6 +16,8 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
+/** The breakpoint at which the routes leave the dialog for the header (md). */
+const DESKTOP = '(min-width: 48rem)';
 
 function isActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
@@ -59,9 +62,18 @@ export function Nav() {
       }
     };
     document.addEventListener('keydown', onKeyDown);
+    // The dialog is md:hidden, so a rotation into desktop width would leave
+    // the page locked behind a menu nobody can see: close it instead.
+    const mq = typeof window.matchMedia === 'function' ? window.matchMedia(DESKTOP) : null;
+    const onWide = () => {
+      if (mq?.matches) setOpenFor(null);
+    };
+    onWide();
+    mq?.addEventListener('change', onWide);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKeyDown);
+      mq?.removeEventListener('change', onWide);
     };
   }, [open]);
 
@@ -77,7 +89,7 @@ export function Nav() {
             className="group flex flex-col items-start gap-0.5 shrink-0 py-1 transition-quick hover:opacity-95"
           >
             <span className="text-[9px] font-semibold tracking-[0.28em] uppercase text-ink-muted leading-none transition-quick group-hover:text-ink">
-              Internacional
+              {bandInfo.brandLine}
             </span>
             <Wordmark
               acrylic
@@ -85,7 +97,7 @@ export function Nav() {
             />
           </Link>
 
-          <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
+          <nav aria-label={site.nav.landmark} className="hidden items-center gap-8 md:flex">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -135,11 +147,28 @@ export function Nav() {
           id={panelId}
           role="dialog"
           aria-modal="true"
-          aria-label="Menu"
+          aria-label={site.nav.menuLabel}
           className="fixed inset-x-0 top-16 bottom-0 z-40 isolate flex flex-col overflow-y-auto bg-surface md:hidden"
         >
           <DotGrid fade />
-          <nav aria-label="Principal (menu)" className="flex flex-1 flex-col gap-2 px-[var(--pad-inline)] py-10">
+          {/* The header's toggle sits outside the dialog, which aria-modal
+              hides from assistive tech: the dialog carries its own close. */}
+          <div className="flex justify-end px-[var(--pad-inline)] pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                triggerRef.current?.focus();
+              }}
+              className="label-caps transition-quick inline-flex min-h-11 items-center gap-2 py-2 text-ink-muted hover:text-ink"
+            >
+              {site.nav.menuClose}
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+          <nav aria-label={site.nav.menuLandmark} className="flex flex-1 flex-col gap-2 px-[var(--pad-inline)] py-6">
             {links.map((link) => (
               <Link
                 key={link.href}

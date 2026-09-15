@@ -24,7 +24,7 @@ export const portfolio = {
     docSubject: 'Portfólio profissional da banda Internacional Freeband',
     pageOf: (n: number, total: number) => `${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')}`,
     cover: {
-      brandLine: 'Internacional',
+      brandLine: bandInfo.brandLine,
       kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
       badge: 'Portfólio & Serviços',
       since: (year: number) => `Desde ${year} · ${bandInfo.foundedCity}`,

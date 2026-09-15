@@ -1,9 +1,29 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Nav } from '../Nav';
 import { site } from '@/data/copy/site';
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/palco' }));
+
+/** A controllable matchMedia: the test flips `matches` and fires `change`. */
+function mockMatchMedia(initial: boolean) {
+  const listeners = new Set<() => void>();
+  const mq = {
+    matches: initial,
+    addEventListener: (_: string, cb: () => void) => listeners.add(cb),
+    removeEventListener: (_: string, cb: () => void) => listeners.delete(cb),
+  };
+  Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: () => mq });
+  return {
+    widen() {
+      mq.matches = true;
+      listeners.forEach((cb) => cb());
+    },
+    restore() {
+      Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: undefined });
+    },
+  };
+}
 
 describe('Nav', () => {
   it('renders every public route and the WhatsApp CTA', () => {
@@ -42,6 +62,36 @@ describe('Nav', () => {
     expect(trigger).toHaveFocus();
     expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('closes the mobile menu from the button inside the dialog', () => {
+    render(<Nav />);
+    const trigger = screen.getByRole('button', { name: site.nav.menuOpen });
+    fireEvent.click(trigger);
+    const dialog = screen.getByRole('dialog', { name: site.nav.menuLabel });
+    const close = Array.from(dialog.querySelectorAll('button')).find((b) => b.textContent?.includes(site.nav.menuClose));
+    expect(close).toBeDefined();
+    fireEvent.click(close!);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
+    expect(trigger).toHaveFocus();
+  });
+
+  it('closes the mobile menu and unlocks scrolling when the viewport grows to desktop', () => {
+    const media = mockMatchMedia(false);
+    try {
+      render(<Nav />);
+      fireEvent.click(screen.getByRole('button', { name: site.nav.menuOpen }));
+      expect(screen.getByRole('dialog', { name: site.nav.menuLabel })).toBeInTheDocument();
+      expect(document.body).toHaveStyle({ overflow: 'hidden' });
+
+      act(() => media.widen());
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
+    } finally {
+      media.restore();
+    }
   });
 
   it('toggles mobile menu with button and closes on link click', () => {

@@ -6,7 +6,14 @@ import { images, type Photo } from '../media/paths';
 
 export const fold = {
   badge: `Banda de baile e show · desde ${bandInfo.founded}`,
-  kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
+  // The page's one <h1>, read by search and screen readers under the mark.
+  title: `${bandInfo.name} — banda de baile e show desde ${bandInfo.founded}`,
+  wordmarkLabel: 'Freeband',
+  // The year count comes from the server (see Fold), never from the
+  // browser's clock: the two could disagree on New Year's Eve.
+  kicker: (yearsActive: number) => `${bandLineup.total} no palco. ${yearsActive} anos de estrada.`,
+  backdropPause: 'Pausar o vídeo de fundo',
+  backdropPlay: 'Reproduzir o vídeo de fundo',
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
@@ -142,6 +149,9 @@ export const data = {
   headline: 'Qual é a data?',
   lead: 'Conta o formato, a data e a cidade. Devolvemos uma proposta fechada — som, luz, palco, logística, backup e DJ depois do show.',
   phoneLabel: 'Fale com a produção',
+  emailLabel: 'E-mail',
+  instagramLabel: 'Instagram',
+  addressLabel: 'Endereço',
   whatsappCta: 'Falar pelo WhatsApp',
   // The address already sits in the "Endereço" row right above this line.
   meta: `CNPJ ${bandInfo.cnpj}`,
