@@ -8,7 +8,7 @@
 // control satisfies WCAG 2.2.2. Under reduced motion it is a plain list.
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { mix, toRgba } from '@/design/color';
+import { buildPalette, readLedColors } from '@/lib/led/palette';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { dotRadius, quantize, sampleGrid } from '@/lib/led/rasterize';
 import { textStripToPixels } from '@/lib/led/sources';
@@ -29,15 +29,6 @@ interface LedMarqueeProps {
 const LEVELS = 12;
 const SEPARATOR = '   ·   ';
 
-function readVar(el: Element, name: string, fallback: string): string {
-  const raw = getComputedStyle(el).getPropertyValue(name).trim();
-  try {
-    return raw ? toRgba(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, speed = 26, className }: LedMarqueeProps) {
   const reduced = useReducedMotion();
   const [userPaused, setUserPaused] = useState(false);
@@ -46,8 +37,12 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
   const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pausedRef = useRef(paused);
+  // The loop restarts through this ref; the effect below owns it.
+  const startRef = useRef<() => void>(() => {});
   useEffect(() => {
     pausedRef.current = paused;
+    // A paused sign resumes from where it stopped.
+    if (!paused) startRef.current();
   }, [paused]);
   const text = items.join(SEPARATOR) + SEPARATOR;
 
@@ -66,13 +61,11 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     let offset = 0;
     let strip: HTMLCanvasElement | OffscreenCanvas | null = null;
     let stripW = 0;
-    let cssW = 0;
     let cssH = 0;
     let dpr = 1;
 
-    const led = readVar(box, '--color-led', '#4fa3ff');
-    const dim = readVar(box, '--color-led-dim', '#17304f');
-    const palette = Array.from({ length: LEVELS }, (_, i) => mix(dim, led, i / (LEVELS - 1)));
+    const { led, dim } = readLedColors(box);
+    const palette = buildPalette(dim, led, LEVELS);
     const fontFamily = getComputedStyle(box).fontFamily || 'sans-serif';
 
     // Rasterise the text once into a dot strip the height of the sign.
@@ -138,18 +131,23 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     };
 
     const start = () => {
-      if (raf || disposed) return;
+      if (raf || disposed || !inView) return;
       last = 0;
       raf = requestAnimationFrame(tick);
     };
+    startRef.current = start;
 
     const resize = () => {
       const rect = box.getBoundingClientRect();
-      cssW = rect.width;
-      cssH = rect.height;
       dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = Math.max(1, Math.round(cssW * dpr));
-      canvas.height = Math.max(1, Math.round(cssH * dpr));
+      const w = Math.max(1, Math.round(rect.width * dpr));
+      const h = Math.max(1, Math.round(rect.height * dpr));
+      // The observer fires once on observe(); the strip is rebuilt only when
+      // the box actually changed.
+      if (w === canvas.width && h === canvas.height && cssH === rect.height && strip) return;
+      cssH = rect.height;
+      canvas.width = w;
+      canvas.height = h;
       buildStrip();
       draw();
     };
@@ -171,18 +169,12 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
       resize();
     })();
 
-    // A paused sign resumes from where it stopped.
-    const observer = new MutationObserver(() => {
-      if (!pausedRef.current) start();
-    });
-    observer.observe(box, { attributes: true, attributeFilter: ['data-paused'] });
-
     return () => {
       disposed = true;
+      startRef.current = () => {};
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
-      observer.disconnect();
     };
   }, [reduced, text, rows, speed]);
 
@@ -197,7 +189,6 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
       </ul>
       <div
         ref={boxRef}
-        data-paused={paused ? '' : undefined}
         className="relative h-[clamp(3.25rem,6vi,5.5rem)] w-full overflow-hidden border-y border-line py-0"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}

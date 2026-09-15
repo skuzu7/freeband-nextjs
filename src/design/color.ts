@@ -21,15 +21,16 @@ function parseAlpha(raw: string | undefined): number {
   return clamp01(Number(t));
 }
 
-/** oklch(L% C H [/ a]) → linear sRGB. Out-of-gamut values are clipped. */
+/** oklch(L C H [/ a]), L as a percentage or 0..1 → linear sRGB. Out-of-gamut values are clipped. */
 function oklchToLinear(input: string): Rgba {
-  const m = /^oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+%?))?\s*\)$/i.exec(
+  const m = /^oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+%?))?\s*\)$/i.exec(
     input.trim(),
   );
   if (!m) throw new Error(`Not an oklch() color: ${input}`);
-  const L = Number(m[1]) / (m[1].includes('.') && Number(m[1]) <= 1 ? 1 : 100);
-  const C = Number(m[2]);
-  const H = (Number(m[3]) * Math.PI) / 180;
+  // Lightness is a percentage when written as one, a 0..1 number otherwise.
+  const L = clamp01(Number(m[1]) / (m[2] ? 100 : 1));
+  const C = Number(m[3]);
+  const H = (Number(m[4]) * Math.PI) / 180;
   const a = C * Math.cos(H);
   const b = C * Math.sin(H);
 
@@ -44,7 +45,7 @@ function oklchToLinear(input: string): Rgba {
     r: clamp01(4.0767416621 * l - 3.3077115913 * mm + 0.2309699292 * s),
     g: clamp01(-1.2684380046 * l + 2.6097574011 * mm - 0.3413193965 * s),
     b: clamp01(-0.0041960863 * l - 0.7034186147 * mm + 1.707614701 * s),
-    alpha: parseAlpha(m[4]),
+    alpha: parseAlpha(m[5]),
   };
 }
 
