@@ -43,7 +43,7 @@ export function Fact({ label, value, big = false }: { label: string; value: stri
   return (
     <View>
       <Text style={pdfStyles.labelMuted}>{label}</Text>
-      <Text style={{ marginTop: 2, fontSize: big ? 13 : 10, fontWeight: big ? 600 : 500, color: pdfStyles.h2.color }}>
+      <Text style={{ marginTop: 2, fontSize: big ? 13 : 10, fontWeight: big ? 600 : 400, color: pdfStyles.h2.color }}>
         {value}
       </Text>
     </View>

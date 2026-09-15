@@ -6,6 +6,7 @@
 // come from src/data/copy/orcamento.ts.
 import type { CSSProperties, ReactNode } from 'react';
 import { orcamento } from '@/data/copy/orcamento';
+import { parseReais } from '@/lib/format';
 import type { OrcamentoData } from '@/types/orcamento';
 
 interface FormProps {
@@ -18,21 +19,37 @@ const inputClass =
 const labelClass = 'label-caps mb-2 block text-ink-muted';
 const growWithContent = { fieldSizing: 'content' } as CSSProperties;
 
-function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: ReactNode }) {
   return (
     <div className="flex flex-col">
       <label htmlFor={id} className={labelClass}>
         {label}
       </label>
       {children}
+      {/* Always in the DOM so aria-describedby resolves; empty until needed. */}
+      <p id={`${id}-erro`} className="mt-1.5 min-h-[1.25em] text-xs text-red-hot">
+        {error}
+      </p>
     </div>
   );
+}
+
+/** A number field is wrong only when it holds something: empty is "not yet". */
+function outOfRange(value: string, min: number, max: number): boolean {
+  if (value === '') return false;
+  const n = parseReais(value);
+  return n === null || n < min || n > max;
 }
 
 export function Form({ data, onChange }: FormProps) {
   const set = (field: keyof OrcamentoData) => (e: { target: { value: string } }) =>
     onChange({ ...data, [field]: e.target.value });
   const f = orcamento.form;
+  // The document clamps these itself; the form only says so, at the field.
+  const cacheError = outOfRange(data.cache, 0, Number.MAX_SAFE_INTEGER) ? f.invalidAmount : undefined;
+  const pctError = outOfRange(data.entradaPct, 0, 100) ? f.invalidPct : undefined;
+  const invalid = (error?: string, id?: string) =>
+    error ? { 'aria-invalid': true as const, 'aria-describedby': `${id}-erro` } : {};
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-6">
@@ -94,12 +111,12 @@ export function Form({ data, onChange }: FormProps) {
             inputMode="numeric"
             value={data.numConvidados}
             onChange={set('numConvidados')}
-            placeholder="0"
+            placeholder={f.convidadosPlaceholder}
           />
         </Field>
       </div>
 
-      <Field id="cache" label={f.cache}>
+      <Field id="cache" label={f.cache} error={cacheError}>
         <input
           id="cache"
           className={inputClass}
@@ -110,11 +127,12 @@ export function Form({ data, onChange }: FormProps) {
           value={data.cache}
           onChange={set('cache')}
           placeholder={f.cachePlaceholder}
+          {...invalid(cacheError, 'cache')}
         />
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Field id="entrada-pct" label={f.entradaPct}>
+        <Field id="entrada-pct" label={f.entradaPct} error={pctError}>
           <input
             id="entrada-pct"
             className={inputClass}
@@ -124,6 +142,7 @@ export function Form({ data, onChange }: FormProps) {
             inputMode="numeric"
             value={data.entradaPct}
             onChange={set('entradaPct')}
+            {...invalid(pctError, 'entrada-pct')}
           />
         </Field>
         <Field id="entrada-data" label={f.entradaData}>

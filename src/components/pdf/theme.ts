@@ -48,9 +48,10 @@ let fontsRegistered = false;
  */
 export function registerPdfFonts(prefix = typeof window !== 'undefined' ? window.location.origin : ''): void {
   if (fontsRegistered) return;
-  fontsRegistered = true;
   Font.register({
     family: PDF_FONT,
+    // Only these three weights exist: a style asking for another one is a
+    // bug, not a fallback. 500 is not among them — use 400 or 600.
     fonts: [
       { src: `${prefix}/fonts/Outfit-Regular.ttf`, fontWeight: 400 },
       { src: `${prefix}/fonts/Outfit-SemiBold.ttf`, fontWeight: 600 },
@@ -59,6 +60,8 @@ export function registerPdfFonts(prefix = typeof window !== 'undefined' ? window
   });
   // Portuguese words are not to be hyphenated by an English dictionary.
   Font.registerHyphenationCallback((word) => [word]);
+  // Only once the registration went through: a failed one may be retried.
+  fontsRegistered = true;
 }
 
 /** Absolute URL for a public asset, so the browser-side renderer can fetch it. */
@@ -87,7 +90,7 @@ export const pdfStyles = StyleSheet.create({
   },
   labelMuted: {
     fontSize: 7.5,
-    fontWeight: 500,
+    fontWeight: 400,
     letterSpacing: 1.5,
     textTransform: 'uppercase',
     color: pdfColors.inkMuted,

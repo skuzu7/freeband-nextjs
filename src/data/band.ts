@@ -6,6 +6,8 @@ import { images, type Photo } from './media/paths';
 
 export const bandInfo = {
   name: 'Internacional Freeband',
+  /** The word set above the wordmark wherever the mark is drawn. */
+  brandLine: 'Internacional',
   legalName: 'Banda Internacional Freeband — Junior Promoções Artísticas',
   cnpj: '59.457.507/0001-11',
   tagline: 'Sinônimo em padrão de qualidade',
