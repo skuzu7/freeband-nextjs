@@ -12,8 +12,9 @@
 // the CSS dot field.
 //
 // The panel fails open: whatever stops it from lighting — no 2D context, no
-// IntersectionObserver, a colour token the mixer rejects, an exception — ends
-// in `onLit`, so the content the caller hides behind the dots is never lost.
+// IntersectionObserver, an exception — ends in `onLit`, so the content the
+// caller hides behind the dots is never lost. The colours come from the
+// tokens through src/lib/led/palette.ts, whatever syntax the stylesheet shipped.
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/cn';
 import { buildPalette, readLedColors } from '@/lib/led/palette';

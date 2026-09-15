@@ -76,11 +76,21 @@ function hexToLinear(input: string): Rgba {
   };
 }
 
-/** Parses `#rgb[a]`, `#rrggbb[aa]` or `oklch(...)` into linear sRGB. */
+/** rgb(r, g, b), rgba(r, g, b, a) or rgb(r g b / a), as canvases and getComputedStyle serialise them. */
+function rgbToLinear(input: string): Rgba {
+  const m = /^rgba?\(\s*([\d.]+)\s*[, ]\s*([\d.]+)\s*[, ]\s*([\d.]+)\s*(?:[,/]\s*([\d.]+%?))?\s*\)$/i.exec(input.trim());
+  if (!m) throw new Error(`Not an rgb() color: ${input}`);
+  const n = (v: string) => srgbToLinear(clamp01(Number(v) / 255));
+  return { r: n(m[1]), g: n(m[2]), b: n(m[3]), alpha: parseAlpha(m[4]) };
+}
+
+/** Parses `#rgb[a]`, `#rrggbb[aa]`, `oklch(...)` or `rgb[a](...)` into linear sRGB. */
 export function parseColor(input: string): Rgba {
   const t = input.trim();
   if (t.startsWith('#')) return hexToLinear(t);
-  if (t.toLowerCase().startsWith('oklch(')) return oklchToLinear(t);
+  const fn = t.toLowerCase();
+  if (fn.startsWith('oklch(')) return oklchToLinear(t);
+  if (fn.startsWith('rgb(') || fn.startsWith('rgba(')) return rgbToLinear(t);
   throw new Error(`Unsupported color syntax: ${input}`);
 }
 

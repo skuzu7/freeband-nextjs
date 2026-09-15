@@ -3,17 +3,63 @@
 // element itself. Shared by LedPanel and LedMarquee so the two signs can never
 // disagree on a colour, and so a token the parser does not understand can only
 // ever fall back — never throw inside a render effect.
+//
+// The tokens are written as oklch() in tokens.css, but the production
+// stylesheet does not ship them that way: Lightning CSS emits a hex fallback
+// plus a lab() form for modern browsers, and getComputedStyle hands back
+// whichever the browser chose. The colour helpers read hex, oklch() and
+// rgb(); anything else is resolved by painting it on a 1×1 canvas and reading
+// the pixel back, which turns any syntax the browser accepts into rgb().
 import { mix, parseColor } from '@/design/color';
 
-/** Hex fallbacks, close to `--color-led-500` and `--color-led-900`. */
-export const FALLBACK_LED = '#4fa3ff';
-export const FALLBACK_DIM = '#17304f';
+/** The sRGB of `--color-led-500` and `--color-led-900` (tokens.ts), for when nothing can be read. */
+export const FALLBACK_LED = '#02a9f7';
+export const FALLBACK_DIM = '#0f2e52';
+
+/** A colour no token is, so an invalid value can be told from a painted one. */
+const SENTINEL = '#010203';
+
+let probe: CanvasRenderingContext2D | null | undefined;
+
+/** rgb(r, g, b) for any colour the browser can paint; null when it cannot, or without a canvas. */
+export function resolveColor(raw: string): string | null {
+  if (typeof document === 'undefined') return null;
+  if (probe === undefined) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    probe = canvas.getContext('2d', { willReadFrequently: true });
+  }
+  if (!probe) return null;
+  const paint = (color: string) => {
+    probe!.fillStyle = color;
+    probe!.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = probe!.getImageData(0, 0, 1, 1).data;
+    return a === 255 ? `rgb(${r}, ${g}, ${b})` : null;
+  };
+  try {
+    const sentinel = paint(SENTINEL);
+    const painted = paint(raw);
+    // An invalid colour leaves fillStyle untouched, so the sentinel shows.
+    return painted && painted !== sentinel ? painted : null;
+  } catch {
+    return null;
+  }
+}
+
+/** True when the colour helpers can read the string directly. */
+function parseable(color: string): boolean {
+  try {
+    parseColor(color);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Reads a colour custom property as the browser computed it and returns it
- * as-is when the colour helpers can parse it (a hex or oklch() token), or the
- * fallback otherwise. The raw token is returned, not a conversion: `mix()`
- * parses the same syntaxes, and an rgba() string would not survive it.
+ * in a form `mix()` accepts, or the fallback when nothing usable can be read.
  */
 export function readColorVar(el: Element, name: string, fallback: string): string {
   let raw = '';
@@ -23,12 +69,8 @@ export function readColorVar(el: Element, name: string, fallback: string): strin
     return fallback;
   }
   if (!raw) return fallback;
-  try {
-    parseColor(raw);
-    return raw;
-  } catch {
-    return fallback;
-  }
+  if (parseable(raw)) return raw;
+  return resolveColor(raw) ?? fallback;
 }
 
 /**

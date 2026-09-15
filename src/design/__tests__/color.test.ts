@@ -24,8 +24,15 @@ describe('parseColor', () => {
     expect(toHex('#4fa3ff')).toBe('#4fa3ff');
   });
 
+  it('reads rgb() in the legacy and the modern syntax', () => {
+    expect(toHex('rgb(2, 169, 247)')).toBe('#02a9f7');
+    expect(toHex('rgba(2, 169, 247, 1)')).toBe('#02a9f7');
+    expect(toHex('rgb(2 169 247 / 0.5)')).toBe('#02a9f7');
+    expect(parseColor('rgba(0, 0, 0, 0.5)').alpha).toBe(0.5);
+  });
+
   it('rejects any other syntax instead of guessing', () => {
-    expect(() => parseColor('rgba(78, 166, 255, 1)')).toThrow(/Unsupported/);
+    expect(() => parseColor('lab(64.96% -15.78 -49.8)')).toThrow(/Unsupported/);
     expect(() => parseColor('red')).toThrow(/Unsupported/);
   });
 });
@@ -39,9 +46,9 @@ describe('mix', () => {
     expect(mix(dim, led, 0.5)).toMatch(/^rgb\(\d+, \d+, \d+\)$/);
   });
 
-  it('does not accept its own rgba() output as input', () => {
+  it('round-trips its own rgba() output', () => {
     const led = toRgba('oklch(70% 0.16 240)');
     expect(led).toMatch(/^rgba\(/);
-    expect(() => mix(led, led, 0.5)).toThrow(/Unsupported/);
+    expect(mix(led, led, 0.5)).toBe(mix('oklch(70% 0.16 240)', 'oklch(70% 0.16 240)', 0.5));
   });
 });
