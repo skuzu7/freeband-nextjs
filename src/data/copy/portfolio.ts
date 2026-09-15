@@ -45,7 +45,7 @@ export const portfolio = {
       artistsLabel: 'Nomes com quem a Freeband já dividiu o palco',
       partnersLabel: 'Clubes & parceiros',
       archiveLabel: 'Do arquivo',
-      archiveNote: 'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
+      archiveNote: 'Réveillon de praça, arraiá de sócio, baile de clube. No arquivo completo, duas viradas de ano contratadas por prefeituras municipais.',
     },
     gallery: {
       title: 'O palco',

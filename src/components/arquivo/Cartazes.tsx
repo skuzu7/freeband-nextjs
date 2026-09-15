@@ -62,7 +62,6 @@ export function Cartazes() {
               key={row.map((p) => p.src).join()}
               className="plate m-0 list-none p-0"
               style={layout.style}
-              data-m={layout.mobile}
             >
               {row.map((p, i) => {
                 const index = r * PER_ROW + i;

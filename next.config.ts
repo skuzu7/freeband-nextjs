@@ -1,4 +1,3 @@
-import path from "node:path";
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -34,7 +33,7 @@ const nextConfig: NextConfig = {
     // Pin the Turbopack workspace root to this project. A stray
     // package-lock.json in C:\Users\anton confuses Turbopack's auto-detection
     // and causes external module resolution to fail during production builds.
-    root: path.join(__dirname),
+    root: __dirname,
   },
   async headers() {
     return [

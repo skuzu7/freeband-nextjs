@@ -15,13 +15,12 @@ import { Section } from '@/components/ui/Section';
 import { PlateRow } from '@/components/media/PlateRow';
 import { ReelGroup } from '@/components/media/ReelGroup';
 
-// The four flyers with enough resolution to run at this size.
-const HOME_POSTERS = ['Barra Bonita', 'Paranapanema', 'Jaú', 'Céu Azul'];
-
 export function Prova() {
   const homeReels = reels.slice(0, 3);
+  // The flyers flagged for the home in posters.ts: the ones with enough
+  // resolution to run at this size.
   const homePosters = posters
-    .filter((p) => HOME_POSTERS.includes(p.town))
+    .filter((p) => p.home)
     .map((p) => ({ ...p, caption: `${p.town} · ${p.event} · ${p.when}` }));
 
   return (

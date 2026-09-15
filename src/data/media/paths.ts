@@ -59,7 +59,6 @@ export const images = {
   // originals in Desktop/Freeband/_originais.
   anos70: '/images/freeband-anos-70.jpeg',
   anos80: '/images/freeband-anos-80.jpeg',
-  anos90: '/images/freeband-anos-90.jpeg',
   antigas: '/images/freeband-antigas.jpeg',
   // Promotional
   fb2015: '/images/freeband-2015.jpeg',

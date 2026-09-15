@@ -27,12 +27,15 @@ export function LoginForm({ action }: LoginFormProps) {
         autoComplete="current-password"
         required
         autoFocus
+        aria-invalid={state?.error ? true : undefined}
+        aria-describedby="admin-password-erro"
         className="transition-quick w-full rounded-sm border border-line-strong bg-surface-raise px-4 py-3 text-base text-ink outline-none focus:border-led"
       />
       <Button type="submit" size="lg" disabled={isPending} className="w-full">
         {isPending ? admin.submitting : admin.submit}
       </Button>
-      <p role="alert" aria-live="polite" className="min-h-[1.5em] text-center text-sm text-red-hot">
+      {/* role=alert is assertive on its own; a second, softer aria-live would contradict it. */}
+      <p id="admin-password-erro" role="alert" className="min-h-[1.5em] text-center text-sm text-red-hot">
         {state?.error}
       </p>
     </form>

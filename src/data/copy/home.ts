@@ -17,7 +17,6 @@ export const fold = {
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
-  scrollLabel: 'Role',
   // Credential strip directly under the fold — the numbers a buyer weighs.
   proof: [
     { value: String(bandInfo.founded), label: 'fundada em Jaú/SP' },
@@ -118,7 +117,6 @@ export const blocos = {
   headline: 'Os blocos\ntemáticos.',
   lead: 'O show se transforma visualmente a cada época do repertório: anos 50, anos 70, country, cabaré. Cada bloco traz figurino exclusivo e viaja completo com a banda.',
   note: 'Anos 50, country, cabaré, anos 70: figurino, coreografia e painel trocam juntos. Foto do bloco anos 50: Jonas Matheus, Clube Náutico Araraquara.',
-  hint: 'Arraste para o lado',
   position: 'Bloco',
   prev: 'Bloco anterior',
   next: 'Próximo bloco',

@@ -1,3 +1,8 @@
+'use client';
+
+// Client-only, like everything under src/components/pdf/: importing this
+// from a Server Component is a build error, which is the point — the PDF
+// toolkit must never enter the server module graph.
 // src/components/pdf/theme.ts
 // The design system as @react-pdf/renderer understands it: hex colours read
 // from src/design/tokens.ts (paper theme, plus the night colours for the

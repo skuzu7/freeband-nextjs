@@ -10,16 +10,13 @@ export const bandInfo = {
   brandLine: 'Internacional',
   legalName: 'Banda Internacional Freeband — Junior Promoções Artísticas',
   cnpj: '59.457.507/0001-11',
-  tagline: 'Sinônimo em padrão de qualidade',
   taglineLong: 'Experiências musicais de alto padrão para eventos inesquecíveis',
-  subtitle: 'Portfólio & Serviços',
   founded: 1969,
   foundedCity: 'Jaú/SP',
   yearsActive: new Date().getFullYear() - 1969,
   location: 'Trabiju/SP',
   founder: 'Antônio Lourenço Morales',
   founderTitle: 'Fundador e idealizador',
-  website: 'www.freeband.com.br',
 };
 
 // On-stage line-up — 11 integrantes, as the band lists them. The counts have
@@ -68,7 +65,7 @@ FREEBAND: sempre um clima de expectativa em nossas apresentações. Novos recurs
   sloganFootnote: `${YEARS_ACTIVE} anos de sucesso`,
   highlights: [
     { value: `${YEARS_ACTIVE}+`, label: 'anos de estrada' },
-    { value: '11', label: 'integrantes no palco' },
+    { value: String(bandLineup.total), label: 'integrantes no palco' },
     { value: '7+', label: 'estados brasileiros' },
     { value: '2', label: 'turnês internacionais' },
   ],
