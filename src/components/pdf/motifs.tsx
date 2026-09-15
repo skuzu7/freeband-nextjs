@@ -1,3 +1,8 @@
+'use client';
+
+// Client-only, like everything under src/components/pdf/: importing this
+// from a Server Component is a build error, which is the point — the PDF
+// toolkit must never enter the server module graph.
 // src/components/pdf/motifs.tsx
 // The system's motifs, for paper: the dotted rule, a number in the 5×7 LED
 // matrix, and a row of whole photographs laid out by the plate rule.
@@ -6,7 +11,7 @@ import { ledDots } from '@/components/brand/LedNumber';
 import { ratioOf } from '@/data/media/paths';
 import { pdfColors, pdfUrl } from './theme';
 
-/** One row of the panel: a dotted rule, 8pt pitch. */
+/** One row of the panel: a dotted rule, 6pt pitch (the site's .dot-line uses 8px; paper is denser). */
 export function DotLinePdf({ width, color = pdfColors.led }: { width: number; color?: string }) {
   const pitch = 6;
   const n = Math.floor(width / pitch);

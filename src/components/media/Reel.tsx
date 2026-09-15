@@ -34,7 +34,9 @@ export function Reel({ reel, active, className }: ReelProps) {
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    if (inView && !el.currentSrc && !el.getAttribute('src')) {
+    // The file is fetched only for a reel that is about to play: a paused
+    // group (reduced motion starts paused) costs nothing on the network.
+    if (inView && active && !el.currentSrc && !el.getAttribute('src')) {
       el.setAttribute('src', reel.src);
       el.load();
     }

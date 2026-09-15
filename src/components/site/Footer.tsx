@@ -25,7 +25,7 @@ export function Footer() {
           <ul className="flex flex-col gap-2.5">
             <li>
               <Link href="/" className="transition-quick text-ink-muted hover:text-ink">
-                Início
+                {site.nav.homeLink}
               </Link>
             </li>
             {site.nav.links.map((link) => (
@@ -65,8 +65,10 @@ export function Footer() {
         <p>
           © {year} {bandInfo.name} · {site.footer.rightsNote}
         </p>
-        <p>CNPJ {bandInfo.cnpj}</p>
-        <ul aria-label="Décadas de estrada" className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <p>
+          {site.footer.cnpjLabel} {bandInfo.cnpj}
+        </p>
+        <ul aria-label={site.footer.decadesLabel} className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {site.footer.years.map((y, i) => (
             <li key={y} className="flex items-center gap-3">
               {i > 0 && <i aria-hidden className="size-1 rounded-pill bg-led-dim" />}

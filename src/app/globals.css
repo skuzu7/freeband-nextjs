@@ -317,6 +317,16 @@
   #print-area {
     box-shadow: none !important;
     margin: 0 !important;
-    padding: 18mm !important;
+    /* Room for the fixed footer below the last line of every page. */
+    padding: 18mm 18mm 34mm !important;
+  }
+  /* A fixed box prints on every page, so the second page keeps the
+     CNPJ, validity and contact the PDF also repeats. */
+  .print-footer {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    margin: 0 18mm 14mm !important;
+    background: #ffffff;
   }
 }

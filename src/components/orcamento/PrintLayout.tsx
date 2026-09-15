@@ -6,7 +6,7 @@
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
 import { orcamento } from '@/data/copy/orcamento';
-import { calcEntrada, calcSaldo, formatCurrency, formatDate } from '@/lib/format';
+import { formatCurrency, formatDate, splitPayment } from '@/lib/format';
 import type { OrcamentoData } from '@/types/orcamento';
 import { Wordmark } from '@/components/brand/Wordmark';
 
@@ -19,21 +19,26 @@ const sectionTitle = 'label-caps mb-3 border-b border-line pb-2 text-led-text';
 const micro = 'label-caps mb-1 text-ink-muted';
 const bodyBlock = 'whitespace-pre-line text-[0.82rem] leading-[1.75] text-ink';
 
+/** "22:00 às —" when only one end of the evening is known; "—" when neither. */
+export function formatSchedule(inicio: string, fim: string): string {
+  if (!inicio && !fim) return doc.empty;
+  return `${inicio || doc.empty} ${doc.horarioJoin} ${fim || doc.empty}`;
+}
+
+/** "Entrada (50%)"; the percentage is the clamped one the amounts use. */
+export function pctLabel(label: string, pct: number | null): string {
+  return `${label} (${pct === null ? doc.empty : `${pct}%`})`;
+}
+
 export function PrintLayout({ data }: PrintLayoutProps) {
   const hasCache = data.cache !== '';
-  const hasEntrada = hasCache && data.entradaPct !== '';
-  const saldoPct = data.entradaPct ? 100 - Number(data.entradaPct) : 0;
+  const payment = splitPayment(data.cache, data.entradaPct);
 
   const rows: ReadonlyArray<readonly [string, string]> = [
     [doc.tipoEvento, data.tipoEvento || doc.empty],
     [doc.data, data.dataEvento ? formatDate(data.dataEvento) : doc.empty],
     [doc.local, data.local || doc.empty],
-    [
-      doc.horario,
-      data.horarioInicio && data.horarioFim
-        ? `${data.horarioInicio} ${doc.horarioJoin} ${data.horarioFim}`
-        : doc.empty,
-    ],
+    [doc.horario, formatSchedule(data.horarioInicio, data.horarioFim)],
     [doc.convidados, data.numConvidados ? `${data.numConvidados} ${doc.pessoas}` : doc.empty],
   ];
 
@@ -43,7 +48,7 @@ export function PrintLayout({ data }: PrintLayoutProps) {
         <div className="flex flex-col gap-3">
           <span className="label-caps text-ink-muted">{doc.kicker}</span>
           <div className="flex flex-col gap-1.5">
-            <span className="label-caps text-ink">Internacional</span>
+            <span className="label-caps text-ink">{bandInfo.brandLine}</span>
             <Wordmark className="h-8 w-auto text-red" title={bandInfo.name} />
           </div>
         </div>
@@ -56,8 +61,8 @@ export function PrintLayout({ data }: PrintLayoutProps) {
       </header>
 
       <section className="mb-8">
-        <div className={micro}>{doc.para}</div>
-        <div className="text-2xl font-semibold tracking-tight text-ink">{data.contratante || doc.empty}</div>
+        <h2 className={micro}>{doc.para}</h2>
+        <p className="text-2xl font-semibold tracking-tight text-ink">{data.contratante || doc.empty}</p>
       </section>
 
       <section className="mb-8 grid grid-cols-2 gap-4 border border-line bg-surface-raise p-5">
@@ -70,7 +75,7 @@ export function PrintLayout({ data }: PrintLayoutProps) {
       </section>
 
       <section className="mb-8">
-        <div className={sectionTitle}>{doc.investimento}</div>
+        <h2 className={sectionTitle}>{doc.investimento}</h2>
         <div className="flex items-baseline justify-between">
           <span className="text-[0.9rem] text-ink-muted">{doc.valorTotal}</span>
           <span className="text-2xl font-semibold tracking-tight text-ink">
@@ -80,15 +85,11 @@ export function PrintLayout({ data }: PrintLayoutProps) {
       </section>
 
       <section className="mb-8">
-        <div className={sectionTitle}>{doc.pagamento}</div>
+        <h2 className={sectionTitle}>{doc.pagamento}</h2>
         <div className="grid grid-cols-2 gap-3">
           <div className="border border-line bg-surface-raise p-4">
-            <div className={micro}>
-              {doc.entrada} ({data.entradaPct || 0}%)
-            </div>
-            <div className="text-lg font-semibold text-ink">
-              {hasEntrada ? calcEntrada(data.cache, data.entradaPct) : doc.empty}
-            </div>
+            <div className={micro}>{pctLabel(doc.entrada, payment.entradaPct)}</div>
+            <div className="text-lg font-semibold text-ink">{payment.entrada}</div>
             {data.entradaData && (
               <div className="mt-1 text-xs text-ink-muted">
                 {doc.ate} {formatDate(data.entradaData)}
@@ -96,12 +97,8 @@ export function PrintLayout({ data }: PrintLayoutProps) {
             )}
           </div>
           <div className="border border-line bg-surface-raise p-4">
-            <div className={micro}>
-              {doc.saldo} ({saldoPct}%)
-            </div>
-            <div className="text-lg font-semibold text-ink">
-              {hasEntrada ? calcSaldo(data.cache, data.entradaPct) : doc.empty}
-            </div>
+            <div className={micro}>{pctLabel(doc.saldo, payment.saldoPct)}</div>
+            <div className="text-lg font-semibold text-ink">{payment.saldo}</div>
             {data.saldoData && (
               <div className="mt-1 text-xs text-ink-muted">
                 {doc.ate} {formatDate(data.saldoData)}
@@ -113,19 +110,19 @@ export function PrintLayout({ data }: PrintLayoutProps) {
 
       {data.itensInclusos && (
         <section className="mb-8">
-          <div className={sectionTitle}>{doc.itens}</div>
+          <h2 className={sectionTitle}>{doc.itens}</h2>
           <div className={bodyBlock}>{data.itensInclusos}</div>
         </section>
       )}
 
       {data.observacoes && (
         <section className="mb-8">
-          <div className={sectionTitle}>{doc.observacoes}</div>
+          <h2 className={sectionTitle}>{doc.observacoes}</h2>
           <div className={bodyBlock}>{data.observacoes}</div>
         </section>
       )}
 
-      <footer className="label-caps mt-auto flex items-end justify-between gap-6 border-t border-line pt-4 text-ink-muted">
+      <footer className="print-footer label-caps mt-auto flex items-end justify-between gap-6 border-t border-line pt-4 text-ink-muted">
         <div className="flex flex-col gap-1">
           {data.validade && (
             <span>

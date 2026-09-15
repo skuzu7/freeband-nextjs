@@ -6,22 +6,41 @@ on:
   pull_request:
     branches: [ main ]
 
+# The workflow only reads the repository.
+permissions:
+  contents: read
+
+# A new push to the same branch supersedes the run in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Dummy secrets: the build and the smoke test only need them to exist.
+  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || 'ci-dummy-admin-password-for-build' }}
+  SESSION_SECRET: ${{ secrets.SESSION_SECRET || 'ci-dummy-session-secret-for-build' }}
+  ORCAMENTO_TOKEN: ${{ secrets.ORCAMENTO_TOKEN || 'ci-dummy-orcamento-token' }}
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          # scripts/generate-tokens.mjs imports TypeScript natively: 22.18+.
+          node-version: 22
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
 
       - name: Run Unit & Security Tests
         run: npm test
@@ -33,6 +52,25 @@ jobs:
 
       - name: Production Build
         run: npm run build
+
+      # The two invariants only a browser can check: no console errors, no
+      # horizontal overflow, no cropped photograph, and nothing moving under
+      # prefers-reduced-motion. Puppeteer's Chrome is fetched by npm ci.
+      - name: Start production server
+        run: |
+          npm start -- --port 3000 > server.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3000/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo "server did not start"; cat server.log; exit 1
+
+      - name: Visual smoke test
+        run: npm run smoke
         env:
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || 'ci-dummy-admin-password-for-build' }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET || 'ci-dummy-session-secret-for-build' }}
+          BASE_URL: http://localhost:3000
+
+      - name: Reduced-motion smoke test
+        run: npm run smoke:motion
+        env:
+          BASE_URL: http://localhost:3000

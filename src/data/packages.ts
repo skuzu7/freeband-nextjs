@@ -8,17 +8,14 @@ export const services = [
   {
     title: 'Casamentos',
     description: 'Experiência musical sofisticada para o dia mais especial da sua vida.',
-    icon: '♥',
   },
   {
     title: 'Formaturas',
     description: 'Energia e repertório jovem para celebrar conquistas e novos começos.',
-    icon: '★',
   },
   {
     title: 'Eventos Corporativos Premium',
     description: 'Profissionalismo e elegância para elevar o nível do seu evento.',
-    icon: '◆',
   },
 ];
 
@@ -50,9 +47,6 @@ export const includedFeatures = [
     items: ['Painel de LED', 'Efeitos especiais', 'Estrutura personalizada conforme evento'],
   },
 ];
-
-// Flat version derived from includedFeatures for the PDF.
-export const serviceIncludes = includedFeatures.flatMap((f) => f.items);
 
 export interface ServicePackage {
   id: string;

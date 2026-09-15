@@ -25,6 +25,10 @@ export const site = {
     cta: { label: 'Orçamento', href: contact.whatsappQuoteLink },
     brandLine: `Desde ${bandInfo.founded} · ${bandInfo.location}`,
     homeLabel: 'Internacional Freeband — início',
+    homeLink: 'Início',
+    landmark: 'Principal',
+    menuLandmark: 'Principal (menu)',
+    menuLabel: 'Menu',
     menuOpen: 'Abrir menu',
     menuClose: 'Fechar menu',
     skipLink: 'Pular para o conteúdo',
@@ -36,6 +40,8 @@ export const site = {
     navHeading: 'Navegar',
     contactHeading: 'Contato',
     rightsNote: 'Todos os direitos reservados',
+    cnpjLabel: 'CNPJ',
+    decadesLabel: 'Décadas de estrada',
     // The decade ribbon, ending at the current year without annual edits.
     years: [
       ...[1969, 1979, 1989, 1999, 2009, 2019].filter((y) => y < new Date().getFullYear()),

@@ -4,7 +4,7 @@ import { Link, Text, View } from '@react-pdf/renderer';
 import { bandInfo, release } from '@/data/band';
 import { contact } from '@/data/contact';
 import { portfolio } from '@/data/copy/portfolio';
-import { CONTENT_WIDTH, pdfColors, pdfStyles } from '../theme';
+import { A4, CONTENT_WIDTH, pdfColors, pdfStyles } from '../theme';
 import { WordmarkPdf } from '../WordmarkPdf';
 import { Fact, PdfPage } from './chrome';
 
@@ -39,7 +39,7 @@ export function Contact() {
         </View>
       </View>
 
-      <View style={{ position: 'absolute', left: 40, right: 40, bottom: 90 }}>
+      <View style={{ position: 'absolute', left: A4.margin, right: A4.margin, bottom: 90 }}>
         <WordmarkPdf width={CONTENT_WIDTH * 0.5} />
         <Text style={{ marginTop: 14, fontSize: 13, fontWeight: 600, letterSpacing: -0.2, color: pdfColors.ink }}>{release.slogan}</Text>
         <Text style={{ ...pdfStyles.caption, marginTop: 6 }}>

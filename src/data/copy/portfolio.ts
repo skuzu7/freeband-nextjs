@@ -24,7 +24,7 @@ export const portfolio = {
     docSubject: 'Portfólio profissional da banda Internacional Freeband',
     pageOf: (n: number, total: number) => `${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')}`,
     cover: {
-      brandLine: 'Internacional',
+      brandLine: bandInfo.brandLine,
       kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
       badge: 'Portfólio & Serviços',
       since: (year: number) => `Desde ${year} · ${bandInfo.foundedCity}`,
@@ -45,7 +45,7 @@ export const portfolio = {
       artistsLabel: 'Nomes com quem a Freeband já dividiu o palco',
       partnersLabel: 'Clubes & parceiros',
       archiveLabel: 'Do arquivo',
-      archiveNote: 'Réveillon de praça, baile de clube, arraiá de sócio. Duas destas viradas foram contratadas por prefeitura municipal.',
+      archiveNote: 'Réveillon de praça, arraiá de sócio, baile de clube. No arquivo completo, duas viradas de ano contratadas por prefeituras municipais.',
     },
     gallery: {
       title: 'O palco',

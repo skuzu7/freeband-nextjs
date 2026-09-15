@@ -5,9 +5,12 @@
 //   npm run tokens
 // Node 22.18+/24 strips the types natively; tokens.ts has no imports.
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
 import { renderTokensCss } from '../src/design/tokens.ts';
 
-const OUT = 'src/app/tokens.css';
+// Resolved from this file, so the script writes the same place from any cwd.
+const ROOT = path.resolve(import.meta.dirname, '..');
+const OUT = path.join(ROOT, 'src/app/tokens.css');
 const next = renderTokensCss();
 const prev = existsSync(OUT) ? readFileSync(OUT, 'utf8').replace(/\r\n/g, '\n') : null;
 

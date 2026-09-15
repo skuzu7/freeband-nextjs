@@ -7,11 +7,24 @@
 
 export const SESSION_COOKIE = 'freeband_admin';
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
+/** A session with less than this left is re-issued on the next request. */
+export const SESSION_REFRESH_SECONDS = 60 * 60 * 24; // 1 day
 
-export function sessionCookieOptions() {
+/**
+ * The cookie's name. In production it carries the `__Host-` prefix, which the
+ * browser only accepts from a secure origin, without Domain and with path=/,
+ * so no sibling host under the domain can plant or overwrite it. Outside
+ * production (plain http on localhost) the prefix would make the cookie
+ * unsettable, so it is dropped there.
+ */
+export function sessionCookieName(nodeEnv: string | undefined = process.env.NODE_ENV): string {
+  return nodeEnv === 'production' ? `__Host-${SESSION_COOKIE}` : SESSION_COOKIE;
+}
+
+export function sessionCookieOptions(nodeEnv: string | undefined = process.env.NODE_ENV) {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: nodeEnv === 'production',
     sameSite: 'lax' as const,
     maxAge: SESSION_TTL_SECONDS,
     path: '/',
@@ -38,7 +51,11 @@ async function hmac(payload: string, secret: string): Promise<string> {
   return base64url(signature);
 }
 
-/** Constant-time string comparison for equal-length inputs. */
+/**
+ * Constant-time comparison of two strings of the same length. The early
+ * return on a length mismatch leaks nothing here: every caller passes two
+ * base64url digests of the same fixed size.
+ */
 function timingSafeEqualStr(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let diff = 0;
@@ -56,21 +73,33 @@ export async function createSession(
   return `${exp}.${signature}`;
 }
 
+/**
+ * The expiry (epoch seconds) of a valid, unexpired session cookie value;
+ * null for anything else — missing, malformed, tampered, or past its time.
+ */
+export async function sessionExpiry(
+  value: string | undefined,
+  secret: string,
+  now: number = Date.now(),
+): Promise<number | null> {
+  if (!value) return null;
+  const dot = value.indexOf('.');
+  if (dot <= 0) return null;
+  const expStr = value.slice(0, dot);
+  const signature = value.slice(dot + 1);
+  if (!/^\d+$/.test(expStr) || !signature) return null;
+  const exp = Number(expStr);
+  if (!Number.isFinite(exp) || exp * 1000 < now) return null;
+  const expected = await hmac(expStr, secret);
+  return timingSafeEqualStr(signature, expected) ? exp : null;
+}
+
 export async function verifySession(
   value: string | undefined,
   secret: string,
   now: number = Date.now(),
 ): Promise<boolean> {
-  if (!value) return false;
-  const dot = value.indexOf('.');
-  if (dot <= 0) return false;
-  const expStr = value.slice(0, dot);
-  const signature = value.slice(dot + 1);
-  if (!/^\d+$/.test(expStr) || !signature) return false;
-  const exp = Number(expStr);
-  if (!Number.isFinite(exp) || exp * 1000 < now) return false;
-  const expected = await hmac(expStr, secret);
-  return timingSafeEqualStr(signature, expected);
+  return (await sessionExpiry(value, secret, now)) !== null;
 }
 
 /**

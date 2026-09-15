@@ -9,7 +9,7 @@ export const admin = {
   submitting: 'Entrando...',
   errors: {
     missing: 'Informe a senha.',
-    misconfigured: 'Configuração ausente no servidor (ADMIN_PASSWORD/SESSION_SECRET).',
+    unavailable: 'O acesso está indisponível no momento. Avise a produção.',
     tooMany: 'Muitas tentativas. Aguarde alguns minutos.',
     wrong: 'Senha incorreta.',
   },

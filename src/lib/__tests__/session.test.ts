@@ -8,7 +8,9 @@ import { describe, it, expect } from 'vitest';
 import {
   createSession,
   verifySession,
+  sessionExpiry,
   secretsMatch,
+  sessionCookieName,
   sessionCookieOptions,
   SESSION_COOKIE,
   SESSION_TTL_SECONDS,
@@ -72,6 +74,17 @@ describe('secretsMatch', () => {
   });
 });
 
+describe('sessionExpiry', () => {
+  it('returns the expiry of a valid session and null otherwise', async () => {
+    const now = 1_700_000_000_000;
+    const session = await createSession(SECRET, 100, now);
+    expect(await sessionExpiry(session, SECRET, now)).toBe(now / 1000 + 100);
+    expect(await sessionExpiry(session, SECRET, now + 101_000)).toBeNull();
+    expect(await sessionExpiry(session, 'other', now)).toBeNull();
+    expect(await sessionExpiry(undefined, SECRET, now)).toBeNull();
+  });
+});
+
 describe('sessionCookieOptions', () => {
   it('names the cookie freeband_admin and locks it to httpOnly, lax, path=/', () => {
     expect(SESSION_COOKIE).toBe('freeband_admin');
@@ -82,5 +95,13 @@ describe('sessionCookieOptions', () => {
       maxAge: SESSION_TTL_SECONDS,
     });
     expect(SESSION_TTL_SECONDS).toBe(7 * 24 * 60 * 60);
+  });
+
+  it('is Secure and carries the __Host- prefix in production only', () => {
+    expect(sessionCookieOptions('production').secure).toBe(true);
+    expect(sessionCookieName('production')).toBe('__Host-freeband_admin');
+    expect(sessionCookieOptions('development').secure).toBe(false);
+    expect(sessionCookieName('development')).toBe('freeband_admin');
+    expect(sessionCookieOptions('test').secure).toBe(false);
   });
 });

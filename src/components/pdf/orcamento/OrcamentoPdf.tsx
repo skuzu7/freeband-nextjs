@@ -6,8 +6,9 @@ import { Document, Page, Text, View } from '@react-pdf/renderer';
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
 import { orcamento } from '@/data/copy/orcamento';
-import { calcEntrada, calcSaldo, formatCurrency, formatDate } from '@/lib/format';
+import { formatCurrency, formatDate, splitPayment } from '@/lib/format';
 import type { OrcamentoData } from '@/types/orcamento';
+import { formatSchedule, pctLabel } from '@/components/orcamento/PrintLayout';
 import { pdfColors, pdfStyles, registerPdfFonts } from '../theme';
 import { WordmarkPdf } from '../WordmarkPdf';
 
@@ -25,7 +26,7 @@ function Cell({ label, value }: { label: string; value: string }) {
   return (
     <View style={{ width: '50%', marginBottom: 8 }}>
       <Text style={pdfStyles.labelMuted}>{label}</Text>
-      <Text style={{ marginTop: 2, fontSize: 10, fontWeight: 500, color: pdfColors.ink }}>{value}</Text>
+      <Text style={{ marginTop: 2, fontSize: 10, color: pdfColors.ink }}>{value}</Text>
     </View>
   );
 }
@@ -37,8 +38,7 @@ interface OrcamentoPdfProps {
 export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
   registerPdfFonts();
   const hasCache = data.cache !== '';
-  const hasEntrada = hasCache && data.entradaPct !== '';
-  const saldoPct = data.entradaPct ? 100 - Number(data.entradaPct) : 0;
+  const payment = splitPayment(data.cache, data.entradaPct);
 
   return (
     <Document title={orcamento.preview.docTitle(data.contratante)} author={bandInfo.name} language="pt-BR">
@@ -57,7 +57,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
           <View style={{ gap: 8 }}>
             <Text style={pdfStyles.labelMuted}>{doc.kicker}</Text>
             <View style={{ gap: 4 }}>
-              <Text style={{ ...pdfStyles.label, color: pdfColors.ink }}>Internacional</Text>
+              <Text style={{ ...pdfStyles.label, color: pdfColors.ink }}>{bandInfo.brandLine}</Text>
               <WordmarkPdf width={120} />
             </View>
           </View>
@@ -80,12 +80,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
           <Cell label={doc.tipoEvento} value={data.tipoEvento || doc.empty} />
           <Cell label={doc.data} value={data.dataEvento ? formatDate(data.dataEvento) : doc.empty} />
           <Cell label={doc.local} value={data.local || doc.empty} />
-          <Cell
-            label={doc.horario}
-            value={
-              data.horarioInicio && data.horarioFim ? `${data.horarioInicio} ${doc.horarioJoin} ${data.horarioFim}` : doc.empty
-            }
-          />
+          <Cell label={doc.horario} value={formatSchedule(data.horarioInicio, data.horarioFim)} />
           <Cell label={doc.convidados} value={data.numConvidados ? `${data.numConvidados} ${doc.pessoas}` : doc.empty} />
         </View>
 
@@ -103,12 +98,8 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
           <Text style={sectionTitle}>{doc.pagamento}</Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <View style={{ ...pdfStyles.card, flex: 1 }}>
-              <Text style={pdfStyles.labelMuted}>
-                {doc.entrada} ({data.entradaPct || 0}%)
-              </Text>
-              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>
-                {hasEntrada ? calcEntrada(data.cache, data.entradaPct) : doc.empty}
-              </Text>
+              <Text style={pdfStyles.labelMuted}>{pctLabel(doc.entrada, payment.entradaPct)}</Text>
+              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{payment.entrada}</Text>
               {data.entradaData && (
                 <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
                   {doc.ate} {formatDate(data.entradaData)}
@@ -116,12 +107,8 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
               )}
             </View>
             <View style={{ ...pdfStyles.card, flex: 1 }}>
-              <Text style={pdfStyles.labelMuted}>
-                {doc.saldo} ({saldoPct}%)
-              </Text>
-              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>
-                {hasEntrada ? calcSaldo(data.cache, data.entradaPct) : doc.empty}
-              </Text>
+              <Text style={pdfStyles.labelMuted}>{pctLabel(doc.saldo, payment.saldoPct)}</Text>
+              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{payment.saldo}</Text>
               {data.saldoData && (
                 <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
                   {doc.ate} {formatDate(data.saldoData)}

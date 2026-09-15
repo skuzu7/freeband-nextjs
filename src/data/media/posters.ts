@@ -19,6 +19,8 @@ export interface Poster extends Photo {
   /** True when a city hall is the named promoter. */
   municipal?: boolean;
   category: PosterCategory;
+  /** Printed on the home: the four flyers with enough resolution for that size. */
+  home?: boolean;
 }
 
 export const posters: Poster[] = [
@@ -30,6 +32,7 @@ export const posters: Poster[] = [
     when: '2020',
     venue: 'Praça do Teleférico · 28 a 31 dez',
     category: 'reveillon',
+    home: true,
     aspect: '700/417',
   },
   {
@@ -41,6 +44,7 @@ export const posters: Poster[] = [
     venue: 'Praça da Matriz · 31/12, 23h',
     municipal: true,
     category: 'municipal',
+    home: true,
     aspect: '2048/1152',
   },
   {
@@ -62,6 +66,7 @@ export const posters: Poster[] = [
     when: '09/Nov',
     venue: 'Caiçara Clube Jaú · Palco Social',
     category: 'clube',
+    home: true,
     aspect: '1072/1076',
   },
   {
@@ -72,6 +77,7 @@ export const posters: Poster[] = [
     when: '07/Dez',
     venue: 'Clube de Campo Céu Azul',
     category: 'clube',
+    home: true,
     aspect: '1080/1080',
   },
   {

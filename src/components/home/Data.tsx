@@ -35,7 +35,7 @@ export function Data() {
             </dd>
           </div>
           <div>
-            <dt className="label-caps text-ink-low">E-mail</dt>
+            <dt className="label-caps text-ink-low">{data.emailLabel}</dt>
             <dd className="mt-1">
               <a href={`mailto:${contact.email}`} className="transition-quick break-all text-ink hover:text-led-text">
                 {contact.email}
@@ -43,7 +43,7 @@ export function Data() {
             </dd>
           </div>
           <div>
-            <dt className="label-caps text-ink-low">Instagram</dt>
+            <dt className="label-caps text-ink-low">{data.instagramLabel}</dt>
             <dd className="mt-1">
               <a
                 href={contact.instagramUrl}
@@ -56,7 +56,7 @@ export function Data() {
             </dd>
           </div>
           <div>
-            <dt className="label-caps text-ink-low">Endereço</dt>
+            <dt className="label-caps text-ink-low">{data.addressLabel}</dt>
             <dd className="mt-1 text-ink-muted">{contact.addressFull}</dd>
           </div>
           <p className="text-2xs text-ink-low">{data.meta}</p>
