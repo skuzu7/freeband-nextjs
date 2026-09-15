@@ -1,9 +1,10 @@
 // Visual smoke test. Loads every route at desktop (1440) and phone (390)
 // widths, saves PNGs to ./screenshots/ (gitignored), and fails on: a console
 // error, horizontal overflow, a photograph whose box does not match its file's
-// aspect (i.e. a crop), or the protected route not being reached through the
-// legacy token link. Not wired into vitest — run with `npm run smoke` while a
-// server is up.
+// aspect (i.e. a crop), one photograph covering another, a lightbox picture
+// that does not fit the room its chrome leaves it, or the protected route not
+// being reached through the legacy token link. Not wired into vitest — run
+// with `npm run smoke` while a server is up.
 //
 //   BASE_URL              server to hit (default http://localhost:3000)
 //   ORCAMENTO_TOKEN       legacy token for /orcamento/<token> (from .env.local)
@@ -30,6 +31,17 @@ const VIEWPORTS = {
   mobile: { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
 };
 
+// The lightbox is checked on two shapes the routes above do not cover. A short
+// phone, where the caption wraps to a second line and a near-square flyer is
+// the tightest fit there is: this is where a guessed chrome height shows up as
+// a picture taller than its room. And a wide, short window, where the picture
+// is limited by width rather than by height, which is where sizing it by
+// height alone could clamp it into the wrong aspect.
+const LIGHTBOX_VIEWPORTS = {
+  'phone-short': { width: 320, height: 480, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+  'desktop-short': { width: 1440, height: 720, deviceScaleFactor: 1 },
+};
+
 const failures = [];
 
 async function navigate(page, url) {
@@ -49,11 +61,17 @@ async function navigate(page, url) {
   await new Promise((r) => setTimeout(r, SETTLE_MS));
 }
 
-/** Layout checks that hold on every page: no horizontal overflow, no cropped photo. */
+/**
+ * Layout checks that hold on every page: no horizontal overflow, no cropped
+ * photo, and no photograph sitting on top of another. The crop audit compares
+ * each box to its file and so cannot see occlusion; a picture half covered by
+ * a second picture is just as much "not shown whole".
+ */
 async function audit(page, label) {
   const result = await page.evaluate(() => {
     const overflow = document.documentElement.scrollWidth - document.documentElement.clientWidth;
     const cropped = [];
+    const boxes = [];
     // data-backdrop marks the one photograph allowed to bleed (the fold's
     // stage poster under its scrim); everything else must show whole.
     for (const img of document.querySelectorAll('main img:not([data-backdrop])')) {
@@ -63,11 +81,78 @@ async function audit(page, label) {
       const boxRatio = box.width / box.height;
       const fileRatio = img.naturalWidth / img.naturalHeight;
       if (Math.abs(boxRatio - fileRatio) / fileRatio > 0.03) cropped.push(img.getAttribute('src'));
+      boxes.push({ src: img.getAttribute('src'), box });
     }
-    return { overflow, cropped };
+    // Overlap is symmetric, so each pair is tested once. A shared edge is not
+    // an overlap: two frames of a plate touch when the gap is zero.
+    const covered = [];
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i].box;
+        const b = boxes[j].box;
+        const dx = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const dy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (dx > 1 && dy > 1) covered.push(`${boxes[i].src} over ${boxes[j].src}`);
+      }
+    }
+    return { overflow, cropped, covered };
   });
   if (result.overflow > 1) failures.push(`${label}: horizontal overflow of ${result.overflow}px`);
   for (const src of result.cropped) failures.push(`${label}: cropped photograph ${src}`);
+  for (const pair of result.covered) failures.push(`${label}: photographs overlap — ${pair}`);
+}
+
+/**
+ * The archive's lightbox. The picture is sized by the room the two bars leave
+ * it, so on every flyer and every viewport it has to fit inside that area —
+ * a caption wrapping to a second line takes its space from the picture, never
+ * pushes it off the screen — while keeping its file's aspect.
+ */
+async function auditLightbox(page, label) {
+  const openers = await page.$$('main .plate li button');
+  if (openers.length === 0) {
+    failures.push(`${label}: no flyer opened a lightbox`);
+    return;
+  }
+  for (let i = 0; i < openers.length; i++) {
+    await openers[i].click();
+    const problem = await page.evaluate(async () => {
+      const dialog = document.querySelector('[role="dialog"]');
+      if (!dialog) return 'lightbox did not open';
+      const img = dialog.querySelector('img');
+      if (!img) return 'lightbox has no picture';
+      // The larger variant is fetched on open; measure only once it is there.
+      for (let t = 0; t < 100 && !(img.complete && img.naturalWidth); t++) {
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      if (!img.naturalWidth) return 'lightbox picture never loaded';
+      const name = img.getAttribute('src');
+      const picture = img.parentElement.getBoundingClientRect();
+      // The dialog's own children are the dot field, the top bar, the picture
+      // area and the caption bar; the one holding the picture is the room it
+      // is allowed to take, and the one holding the heading is the bar it must
+      // never reach. Found by containment, so no class name is load-bearing.
+      const children = [...dialog.children];
+      const area = children.find((el) => el.contains(img));
+      const captionBar = children.find((el) => el.querySelector('h2'));
+      if (!area || !captionBar) return `${name}: could not find the picture area or the caption bar`;
+      const room = area.getBoundingClientRect();
+      if (picture.height - room.height > 1 || picture.width - room.width > 1) {
+        return `${name} is ${Math.round(picture.width)}×${Math.round(picture.height)} in a ${Math.round(
+          room.width,
+        )}×${Math.round(room.height)} space`;
+      }
+      if (picture.bottom - captionBar.getBoundingClientRect().top > 1) return `${name} runs into the caption`;
+      const fileRatio = img.naturalWidth / img.naturalHeight;
+      const boxRatio = picture.width / picture.height;
+      if (Math.abs(boxRatio - fileRatio) / fileRatio > 0.03) return `${name} is cropped in the lightbox`;
+      if (dialog.scrollHeight - dialog.clientHeight > 1) return `${name} makes the lightbox scroll`;
+      return null;
+    });
+    if (problem) failures.push(`${label}: ${problem}`);
+    await page.keyboard.press('Escape');
+    await new Promise((r) => setTimeout(r, 80));
+  }
 }
 
 async function run() {
@@ -100,6 +185,13 @@ async function run() {
     }
   }
 
+  for (const [name, viewport] of Object.entries(LIGHTBOX_VIEWPORTS)) {
+    console.log(`> /arquivo lightbox (${name})`);
+    await page.setViewport(viewport);
+    await navigate(page, `${BASE}/arquivo`);
+    await auditLightbox(page, `/arquivo lightbox @${name}`);
+  }
+
   console.log('> /orcamento via legacy token (desktop)');
   await page.setViewport(VIEWPORTS.desktop);
   await navigate(page, `${BASE}/orcamento/${TOKEN}`);
@@ -122,7 +214,11 @@ async function run() {
     for (const f of failures) console.error(`  - ${f}`);
     process.exit(1);
   }
-  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 1} pages clean; screenshots in ${OUT}`);
+  console.log(
+    `✓ ${PUBLIC_ROUTES.length * 2 + 1} pages clean, lightbox checked at ${
+      Object.keys(LIGHTBOX_VIEWPORTS).length
+    } sizes; screenshots in ${OUT}`,
+  );
 }
 
 run().catch((err) => {

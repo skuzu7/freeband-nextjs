@@ -1,9 +1,10 @@
 // src/components/home/Blocos.tsx
 // Block 3 — the thematic blocks as panels on the wall: each photograph
 // resolves out of the dot matrix as it scrolls into view, the wardrobe shot
-// tucked over its corner. On small screens cards stack in a responsive grid so
-// every photograph stays whole and nothing is cut off horizontally; from md:
-// they sit in a horizontal scroll-snap row with a LED position indicator.
+// framed beside the caption under it — both pictures whole, neither covering
+// the other. On small screens cards stack in a responsive grid so every
+// photograph stays whole and nothing is cut off horizontally; from md: they
+// sit in a horizontal scroll-snap row with a LED position indicator.
 import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
 import { ratioOf } from '@/data/media/paths';
@@ -58,11 +59,6 @@ export function Blocos() {
                 sizes="(min-width: 768px) 24rem, 92vw"
                 cols={72}
               />
-              {bloco.figurino && (
-                <div className="absolute right-0 -bottom-6 w-[40%] max-w-[11rem] border-[3px] border-surface shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8)] md:-right-3 md:w-[42%] md:max-w-none">
-                  <Photo photo={bloco.figurino} sizes="10rem" />
-                </div>
-              )}
               <span
                 aria-hidden
                 className="label-caps absolute top-3 left-3 bg-surface/80 px-2 py-1 text-led-text backdrop-blur-sm"
@@ -70,10 +66,21 @@ export function Blocos() {
                 {String(i + 1).padStart(2, '0')}
               </span>
             </div>
-            <div className="pt-2">
-              <h3 className="text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
-              <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
-              {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
+            {/* The wardrobe shot sits beside the caption as a framed print
+                rather than over the corner of the stage photograph: the two
+                pictures are shown whole, and it gains the caption it already
+                carries. Blocks without one (cabaré) just fill the width. */}
+            <div className="flex items-start gap-4">
+              {bloco.figurino && (
+                <div className="w-[26%] max-w-[7.5rem] shrink-0 border-[3px] border-surface shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8)]">
+                  <Photo photo={bloco.figurino} sizes="(min-width: 768px) 8rem, 26vw" />
+                </div>
+              )}
+              <div className="min-w-0">
+                <h3 className="text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
+                <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
+                {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
+              </div>
             </div>
           </li>
         ))}

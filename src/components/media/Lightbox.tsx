@@ -34,8 +34,6 @@ interface LightboxProps {
 }
 
 const FOCUSABLE = 'button:not([disabled])';
-/** Vertical room reserved for the bar and the caption, in rem. */
-const CHROME_REM = 11;
 
 const controlClass =
   'transition-quick inline-flex size-11 items-center justify-center rounded-pill border border-line-strong bg-surface/70 text-ink hover:border-led hover:text-led-text';
@@ -112,8 +110,18 @@ export function Lightbox({ items, index, onClose, onChange, labels }: LightboxPr
   const item = items[index];
   const total = items.length;
   const ratio = ratioOf(item.aspect);
+  // The picture is measured against the room the flex row actually leaves it,
+  // in container units, so the real chrome decides: a caption that wraps to a
+  // second line on a phone takes its space from the picture instead of pushing
+  // it off the screen, and no constant stands in for the bars' height.
+  //
+  // Only the height is set — the width follows from the file's own ratio and
+  // is never wider than the room, so nothing clamps it. Setting height and
+  // max-width together would over-constrain the box: the browser drops the
+  // ratio, and object-cover starts cropping the flyer.
   const frameStyle: CSSProperties = {
-    width: `min(100%, calc((100dvh - ${CHROME_REM}rem) * ${ratio.toFixed(4)}))`,
+    aspectRatio: String(ratio),
+    height: `min(100cqh, calc(100cqw / ${ratio.toFixed(4)}))`,
   };
 
   return (
@@ -138,9 +146,14 @@ export function Lightbox({ items, index, onClose, onChange, labels }: LightboxPr
         </button>
       </div>
 
-      <div className="flex min-h-0 flex-1 items-center justify-center px-[var(--pad-inline)]">
-        <div style={frameStyle} className="max-h-full">
-          <Photo photo={item} sizes="100vw" quality={90} />
+      {/* A size container, so the frame above can measure itself against the
+          room left between the two bars rather than against the viewport. */}
+      <div
+        className="flex min-h-0 flex-1 items-center justify-center px-[var(--pad-inline)]"
+        style={{ containerType: 'size' }}
+      >
+        <div style={frameStyle}>
+          <Photo photo={item} sizes="100vw" quality={90} className="h-full" />
         </div>
       </div>
 
