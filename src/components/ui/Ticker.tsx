@@ -1,7 +1,7 @@
 // src/components/ui/Ticker.tsx
-// A running line of names. The second copy makes the loop seamless and is
-// hidden from assistive tech; under reduced motion the track stops and wraps
-// into a plain list.
+// The names as a plain, wrapped list. This is what the LED marquee shows
+// under prefers-reduced-motion — it never moves, so there is no second copy
+// to loop and no animation to pause.
 import { cn } from '@/lib/cn';
 
 interface TickerProps {
@@ -11,20 +11,16 @@ interface TickerProps {
 }
 
 export function Ticker({ items, label, className }: TickerProps) {
-  const track = (hidden: boolean) => (
-    <ul className="ticker-track" aria-hidden={hidden || undefined}>
-      {items.map((item) => (
-        <li key={item} className="flex items-center gap-8 whitespace-nowrap text-2xl font-medium tracking-tight text-ink">
-          {item}
-          <i aria-hidden className="size-1.5 rounded-pill bg-led" />
-        </li>
-      ))}
-    </ul>
-  );
   return (
     <div className={cn('ticker', className)} role="region" aria-label={label}>
-      {track(false)}
-      {track(true)}
+      <ul className="ticker-track">
+        {items.map((item) => (
+          <li key={item} className="flex items-center gap-8 whitespace-nowrap text-2xl font-medium tracking-tight text-ink">
+            {item}
+            <i aria-hidden className="size-1.5 rounded-pill bg-led" />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

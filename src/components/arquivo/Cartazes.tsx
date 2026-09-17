@@ -73,7 +73,7 @@ export function Cartazes() {
                       onClick={() => setOpenIndex(index)}
                       className="transition-quick block w-full cursor-zoom-in text-left hover:opacity-90"
                     >
-                      <Photo photo={p} sizes={layout.sizes[i]} />
+                      <Photo photo={p} sizes={layout.sizes[i]} priority={r === 0 && i === 0} />
                     </button>
                     <div>
                       <p className="font-medium text-ink">{titleOf(p)}</p>

@@ -7,6 +7,7 @@ vi.mock('next/navigation', () => ({ usePathname: () => '/palco' }));
 
 /** A controllable matchMedia: the test flips `matches` and fires `change`. */
 function mockMatchMedia(initial: boolean) {
+  const original = Object.getOwnPropertyDescriptor(window, 'matchMedia');
   const listeners = new Set<() => void>();
   const mq = {
     matches: initial,
@@ -20,7 +21,8 @@ function mockMatchMedia(initial: boolean) {
       listeners.forEach((cb) => cb());
     },
     restore() {
-      Object.defineProperty(window, 'matchMedia', { configurable: true, writable: true, value: undefined });
+      if (original) Object.defineProperty(window, 'matchMedia', original);
+      else delete (window as { matchMedia?: unknown }).matchMedia;
     },
   };
 }

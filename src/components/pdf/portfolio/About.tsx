@@ -1,7 +1,7 @@
 // src/components/pdf/portfolio/About.tsx
 // Page 2. The release in full, the four numbers, the line-up, the values.
 import { Text, View } from '@react-pdf/renderer';
-import { bandLineup, release } from '@/data/band';
+import { bandLineup, release, yearsActive } from '@/data/band';
 import { portfolio } from '@/data/copy/portfolio';
 import { PhotoPdf } from '../motifs';
 import { pdfColors, pdfStyles } from '../theme';
@@ -25,7 +25,7 @@ export function About() {
 
         <View style={{ flex: 1, gap: 14 }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-            {release.highlights.map((h) => (
+            {release.highlights(yearsActive()).map((h) => (
               <View key={h.label} style={{ ...pdfStyles.card, width: 97 }}>
                 <Text style={{ fontSize: 20, fontWeight: 600, letterSpacing: -0.5, color: pdfColors.led }}>{h.value}</Text>
                 <Text style={{ ...pdfStyles.caption, marginTop: 3 }}>{h.label}</Text>

@@ -6,9 +6,8 @@ import { Document, Page, Text, View } from '@react-pdf/renderer';
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
 import { orcamento } from '@/data/copy/orcamento';
-import { formatCurrency, formatDate, splitPayment } from '@/lib/format';
+import { formatCurrency, formatDate, formatSchedule, pctLabel, splitPayment } from '@/lib/format';
 import type { OrcamentoData } from '@/types/orcamento';
-import { formatSchedule, pctLabel } from '@/components/orcamento/PrintLayout';
 import { pdfColors, pdfStyles, registerPdfFonts } from '../theme';
 import { WordmarkPdf } from '../WordmarkPdf';
 
@@ -80,7 +79,7 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
           <Cell label={doc.tipoEvento} value={data.tipoEvento || doc.empty} />
           <Cell label={doc.data} value={data.dataEvento ? formatDate(data.dataEvento) : doc.empty} />
           <Cell label={doc.local} value={data.local || doc.empty} />
-          <Cell label={doc.horario} value={formatSchedule(data.horarioInicio, data.horarioFim)} />
+          <Cell label={doc.horario} value={formatSchedule(data.horarioInicio, data.horarioFim, doc.horarioJoin)} />
           <Cell label={doc.convidados} value={data.numConvidados ? `${data.numConvidados} ${doc.pessoas}` : doc.empty} />
         </View>
 

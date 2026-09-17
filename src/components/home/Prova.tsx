@@ -38,7 +38,6 @@ export function Prova() {
             className="rise mt-8"
             reels={homeReels}
             pauseLabel={prova.pauseLabel}
-            playLabel={prova.playLabel}
           />
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-ink-low">{prova.videoFootnote}</p>
@@ -64,7 +63,6 @@ export function Prova() {
             items={artists}
             label={prova.namesLabel}
             pauseLabel={prova.namesPause}
-            playLabel={prova.namesPlay}
             className="mt-8"
           />
         </div>

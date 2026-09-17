@@ -25,7 +25,7 @@ export const portfolio = {
     pageOf: (n: number, total: number) => `${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')}`,
     cover: {
       brandLine: bandInfo.brandLine,
-      kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
+      kicker: (years: number) => `${bandLineup.total} no palco. ${years} anos de estrada.`,
       badge: 'Portfólio & Serviços',
       since: (year: number) => `Desde ${year} · ${bandInfo.foundedCity}`,
       numberLabel: 'fundação em Jaú/SP',

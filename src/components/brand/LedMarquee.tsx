@@ -18,7 +18,6 @@ interface LedMarqueeProps {
   items: string[];
   label: string;
   pauseLabel: string;
-  playLabel: string;
   /** Dot rows of the sign. */
   rows?: number;
   /** Scroll speed in dot columns per second. */
@@ -29,7 +28,7 @@ interface LedMarqueeProps {
 const LEVELS = 12;
 const SEPARATOR = '   ·   ';
 
-export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, speed = 26, className }: LedMarqueeProps) {
+export function LedMarquee({ items, label, pauseLabel, rows = 11, speed = 26, className }: LedMarqueeProps) {
   const reduced = useReducedMotion();
   const [userPaused, setUserPaused] = useState(false);
   const [hover, setHover] = useState(false);
@@ -166,6 +165,9 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     void (async () => {
       await document.fonts?.ready;
       if (disposed) return;
+      // The observer's first pass may have rasterised with a fallback face;
+      // this pass must rebuild even when nothing else changed.
+      strip = null;
       resize();
     })();
 
@@ -196,6 +198,9 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
       </div>
       <div className="flex justify-end">
+        {/* A toggle: the name stays put and aria-pressed carries the state,
+            so a screen reader never hears "play, pressed". The dot alone
+            reflects the hover pause. */}
         <button
           type="button"
           aria-pressed={userPaused}
@@ -203,7 +208,7 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
           className="label-caps transition-quick inline-flex items-center gap-2.5 py-1 text-ink-muted hover:text-ink"
         >
           <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
-          {paused ? playLabel : pauseLabel}
+          {pauseLabel}
         </button>
       </div>
     </div>

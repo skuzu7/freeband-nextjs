@@ -10,7 +10,9 @@ import { Label } from '@/components/ui/Label';
 const telHref = `tel:${contact.phoneIntl.replace(/[^\d+]/g, '')}`;
 
 export function Footer() {
-  const year = new Date().getFullYear();
+  const now = new Date();
+  const year = now.getFullYear();
+  const decades = site.footer.decades(now);
   return (
     <footer className="border-t border-line">
       <Container className="grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
@@ -69,7 +71,7 @@ export function Footer() {
           {site.footer.cnpjLabel} {bandInfo.cnpj}
         </p>
         <ul aria-label={site.footer.decadesLabel} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {site.footer.years.map((y, i) => (
+          {decades.map((y, i) => (
             <li key={y} className="flex items-center gap-3">
               {i > 0 && <i aria-hidden className="size-1 rounded-pill bg-led-dim" />}
               <span className="tabular-nums">{y}</span>

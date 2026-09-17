@@ -47,9 +47,10 @@ function writeDraft(data: OrcamentoData | null): void {
 export function Page({ onLogout }: PageProps) {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);
   const [restored, setRestored] = useState(false);
-  // Nothing is written until the stored draft has been read, so a fresh
-  // render can never overwrite the draft with the empty form.
-  const hydrated = useRef(false);
+  // The value the last save wrote (or the draft that was read). The save
+  // effect compares against it, so the first render's empty form can never
+  // overwrite a stored draft, and an unchanged form never rewrites storage.
+  const savedRef = useRef<OrcamentoData | null | undefined>(undefined);
 
   useEffect(() => {
     const draft = readDraft();
@@ -57,36 +58,41 @@ export function Page({ onLogout }: PageProps) {
       // The draft exists only in this browser: reading it in the state
       // initialiser would render HTML the server never sent. After
       // hydration is the one place it can be picked up.
+      savedRef.current = draft;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(draft);
       setRestored(true);
+    } else {
+      savedRef.current = null;
     }
-    hydrated.current = true;
   }, []);
 
+  // Saves settle 300ms after the last keystroke. Leaving is questioned only
+  // in that gap, while typing has not reached storage: once the draft is
+  // written a reload costs nothing and a dialog would only cry wolf. (The
+  // returnValue string is a no-op in current browsers; preventDefault is all.)
   useEffect(() => {
-    if (!hydrated.current) return;
-    const id = window.setTimeout(() => writeDraft(isDefault(data) ? null : data), SAVE_DELAY_MS);
-    return () => window.clearTimeout(id);
-  }, [data]);
-
-  // Leaving with unsaved typing asks first. The draft covers a reload, but
-  // not a navigation that clears site data or a different browser.
-  const dirty = !isDefault(data);
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = orcamento.form.unsavedWarning;
-    };
+    // Not read yet, or nothing changed since the last write: nothing to do.
+    if (savedRef.current === undefined || savedRef.current === data) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
+    const id = window.setTimeout(() => {
+      writeDraft(isDefault(data) ? null : data);
+      savedRef.current = data;
+      window.removeEventListener('beforeunload', warn);
+    }, SAVE_DELAY_MS);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener('beforeunload', warn);
+    };
+  }, [data]);
+  const dirty = !isDefault(data);
 
   const clear = () => {
     setData(defaultOrcamento);
     setRestored(false);
     writeDraft(null);
+    savedRef.current = defaultOrcamento;
   };
 
   return (

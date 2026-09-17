@@ -28,7 +28,7 @@ export function LoginForm({ action }: LoginFormProps) {
         required
         autoFocus
         aria-invalid={state?.error ? true : undefined}
-        aria-describedby="admin-password-erro"
+        aria-describedby={state?.error ? 'admin-password-erro' : undefined}
         className="transition-quick w-full rounded-sm border border-line-strong bg-surface-raise px-4 py-3 text-base text-ink outline-none focus:border-led"
       />
       <Button type="submit" size="lg" disabled={isPending} className="w-full">

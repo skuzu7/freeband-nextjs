@@ -19,12 +19,13 @@ export const FALLBACK_DIM = '#0f2e52';
 /** A colour no token is, so an invalid value can be told from a painted one. */
 const SENTINEL = '#010203';
 
-let probe: CanvasRenderingContext2D | null | undefined;
+let probe: CanvasRenderingContext2D | null = null;
 
 /** rgb(r, g, b) for any colour the browser can paint; null when it cannot, or without a canvas. */
 export function resolveColor(raw: string): string | null {
   if (typeof document === 'undefined') return null;
-  if (probe === undefined) {
+  // Only a real context is kept; a missing one is asked for again next time.
+  if (!probe) {
     const canvas = document.createElement('canvas');
     canvas.width = 1;
     canvas.height = 1;

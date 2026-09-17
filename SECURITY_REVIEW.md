@@ -104,7 +104,10 @@ Corrections to the text above: the constant-time comparison is a Web Crypto
 double-HMAC with a JavaScript XOR loop (`crypto.timingSafeEqual` is not
 available on the Edge runtime); the `secure` flag and the proxy itself were
 untested at the 2026-08-29 baseline. Both are now covered by
-`src/lib/__tests__/session.test.ts` and `src/lib/__tests__/proxy.test.ts`.
+`src/lib/__tests__/session.test.ts` and `src/lib/__tests__/proxy.test.ts`; the
+logout header (`Secure` and `Max-Age=0` on the `__Host-` cookie) is pinned in
+`session.test.ts` after the 2026-09-17 pass found logout leaving the session
+alive in production.
 
 Executed on 2026-09-15 from a clean install:
 

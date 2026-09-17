@@ -12,8 +12,8 @@ export const fold = {
   // The year count comes from the server (see Fold), never from the
   // browser's clock: the two could disagree on New Year's Eve.
   kicker: (yearsActive: number) => `${bandLineup.total} no palco. ${yearsActive} anos de estrada.`,
+  // A toggle with a fixed name; aria-pressed says whether it is on.
   backdropPause: 'Pausar o vídeo de fundo',
-  backdropPlay: 'Reproduzir o vídeo de fundo',
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
@@ -129,7 +129,6 @@ export const prova = {
   videoLead:
     'Trechos de gravações oficiais ao vivo, sem overdubs ou playback — a vibração real dos 11 integrantes, do painel de LED e da iluminação cênica.',
   pauseLabel: 'Pausar os vídeos',
-  playLabel: 'Reproduzir os vídeos',
   videoFootnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',
   arquivoLabel: 'O arquivo',
   arquivoLead:
@@ -139,7 +138,6 @@ export const prova = {
   namesLabel: 'Palcos divididos',
   namesLead: 'Nomes com quem a Freeband já dividiu o palco.',
   namesPause: 'Pausar o letreiro',
-  namesPlay: 'Rodar o letreiro',
 };
 
 export const data = {

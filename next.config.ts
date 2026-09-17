@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90],
+    // The defaults, spelled out: LedPhoto asks the optimizer for w=256 for
+    // its raster, and that width has to stay on this list.
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   turbopack: {
     // Pin the Turbopack workspace root to this project. A stray

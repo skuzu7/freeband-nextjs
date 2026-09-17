@@ -13,7 +13,6 @@ export const bandInfo = {
   taglineLong: 'Experiências musicais de alto padrão para eventos inesquecíveis',
   founded: 1969,
   foundedCity: 'Jaú/SP',
-  yearsActive: new Date().getFullYear() - 1969,
   location: 'Trabiju/SP',
   founder: 'Antônio Lourenço Morales',
   founderTitle: 'Fundador e idealizador',
@@ -40,13 +39,18 @@ export const bandLineup = {
 export const releaseShort =
   'Composta por onze integrantes, oferecemos excelência em som, iluminação moderna, painel de LED e performance vocal, com palco, logística e estrutura completa.';
 
-const YEARS_ACTIVE = bandInfo.yearsActive;
+/**
+ * Years on the road, counted when asked — never at module load, which on a
+ * long-running server would freeze the number at the day the process started.
+ * Server components call it per render; the PDF calls it when generated.
+ */
+export const yearsActive = (now: Date = new Date()): number => now.getFullYear() - bandInfo.founded;
 
 export const release = {
   short: releaseShort,
   full: `Fundada em 1969 na cidade de Jaú/SP por um grupo de amigos com uma proposta inovadora para a época, a Internacional Freeband nasceu para tocar aos finais de semana — todos os integrantes mantinham compromissos profissionais — e rapidamente se tornou uma das trajetórias mais duradouras da música brasileira, ainda presente no cenário até hoje.
 
-Com visão à frente do seu tempo, sempre antenada às tendências tecnológicas, seu fundador S.R. Antônio Lourenço Morales posicionou a Freeband de forma sólida e definitiva no mercado nacional, conquistando espaço nos melhores clubes do Brasil e em empresas dos mais variados segmentos.
+Com visão à frente do seu tempo, sempre antenada às tendências tecnológicas, seu fundador Sr. ${bandInfo.founder} posicionou a Freeband de forma sólida e definitiva no mercado nacional, conquistando espaço nos melhores clubes do Brasil e em empresas dos mais variados segmentos.
 
 A banda realizou duas turnês internacionais ao lado de Jimmy Cliff e Cris Duran e participou de shows de nível nacional com nomes como Lulu Santos, Roupa Nova, Skank, Daniel, Chrystian & Ralf, Ultraje a Rigor, Raça Negra, Erasmo Carlos, César e Paulinho, 14Bis, Beth Carvalho e Jorge Aragão, entre outros. Já se apresentou na maioria dos municípios do estado de São Paulo e em mais de sete estados brasileiros.
 
@@ -54,17 +58,17 @@ Hoje, sediada em Trabiju/SP, a Freeband é totalmente independente em infraestru
 
 ${releaseShort}`,
   // The band's own release, in its own voice — kept verbatim except for the
-  // year, which counts itself so the text never goes stale on the page.
-  manifesto: `Há muitos meios de apresentar a música e todas requerem exposição, carisma, conteúdo e vivência, a maioria quase que copiadas e repetitivas, mas sempre contam com particularidades únicas e próprias, talvez no futuro exauram-se através da existência humana e desvaneçam-se entre os interesses fundamentais do homem.
+  // year, passed in by the caller so the text never goes stale on the page.
+  manifesto: (years: number) => `Há muitos meios de apresentar a música e todas requerem exposição, carisma, conteúdo e vivência, a maioria quase que copiadas e repetitivas, mas sempre contam com particularidades únicas e próprias, talvez no futuro exauram-se através da existência humana e desvaneçam-se entre os interesses fundamentais do homem.
 
-A FREEBAND, contudo, permanece revestida de pontualidade, de firmeza de propósitos e objetivos sempre moldados de cuidados especiais, equilibrados e excessivamente exigentes — afinal, são ${YEARS_ACTIVE} anos de estrada.
+A FREEBAND, contudo, permanece revestida de pontualidade, de firmeza de propósitos e objetivos sempre moldados de cuidados especiais, equilibrados e excessivamente exigentes — afinal, são ${years} anos de estrada.
 
 FREEBAND: sempre um clima de expectativa em nossas apresentações. Novos recursos, a mais moderna tecnologia e os experientíssimos músicos fazem com que nossa produção ofereça a você uma continuidade de bailes e shows que misturam realidade com fantasia, evidenciando o esmero e os detalhes que são fundamentais para a satisfação, o sucesso e a sua identificação musical.`,
   // The line the band closes its own material with.
   slogan: 'Perto de você, com certeza, sempre haverá alguém que já viu.',
-  sloganFootnote: `${YEARS_ACTIVE} anos de sucesso`,
-  highlights: [
-    { value: `${YEARS_ACTIVE}+`, label: 'anos de estrada' },
+  sloganFootnote: (years: number) => `${years} anos de sucesso`,
+  highlights: (years: number) => [
+    { value: `${years}+`, label: 'anos de estrada' },
     { value: String(bandLineup.total), label: 'integrantes no palco' },
     { value: '7+', label: 'estados brasileiros' },
     { value: '2', label: 'turnês internacionais' },
@@ -165,7 +169,6 @@ export const artists = [
   '14Bis',
   'Beth Carvalho',
   'Jorge Aragão',
-  'Placa Luminosa',
   'Jimmy Cliff',
   'Cris Duran',
 ];

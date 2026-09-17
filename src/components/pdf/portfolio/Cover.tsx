@@ -2,7 +2,7 @@
 // Page 1. Night ground, the wordmark in red, the full stage under the moving-
 // head show shown whole, the year in dots.
 import { Page, Text, View } from '@react-pdf/renderer';
-import { bandInfo } from '@/data/band';
+import { bandInfo, yearsActive } from '@/data/band';
 import { portfolio } from '@/data/copy/portfolio';
 import { DotLinePdf, LedNumberPdf, PhotoPdf } from '../motifs';
 import { A4, CONTENT_WIDTH, PDF_FONT, pdfColors } from '../theme';
@@ -10,6 +10,12 @@ import { WordmarkPdf } from '../WordmarkPdf';
 import { pdfPhotos } from './images';
 
 const c = portfolio.pdf.cover;
+
+// The brand line gets a fixed column, so the rule beside it is computed, not
+// measured by hand: label + gap + rule always equals the content width and
+// the rule ends on the same margin as the rules on the inner pages.
+const BRAND_COLUMN = 92;
+const BRAND_GAP = 10;
 
 export function Cover() {
   return (
@@ -24,13 +30,13 @@ export function Cover() {
         paddingHorizontal: A4.margin,
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Text style={{ fontSize: 8, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
-          {c.brandLine}
-        </Text>
-        <View style={{ flex: 1 }}>
-          <DotLinePdf width={CONTENT_WIDTH - 90} color={pdfColors.ledDim} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: BRAND_GAP }}>
+        <View style={{ width: BRAND_COLUMN }}>
+          <Text style={{ fontSize: 8, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
+            {c.brandLine}
+          </Text>
         </View>
+        <DotLinePdf width={CONTENT_WIDTH - BRAND_COLUMN - BRAND_GAP} color={pdfColors.ledDim} />
       </View>
       <View style={{ marginTop: 10 }}>
         <WordmarkPdf width={CONTENT_WIDTH} />
@@ -42,7 +48,7 @@ export function Cover() {
 
       <View style={{ marginTop: 28, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <View style={{ maxWidth: 300 }}>
-          <Text style={{ fontSize: 22, fontWeight: 600, letterSpacing: -0.5, lineHeight: 1.1 }}>{c.kicker}</Text>
+          <Text style={{ fontSize: 22, fontWeight: 600, letterSpacing: -0.5, lineHeight: 1.1 }}>{c.kicker(yearsActive())}</Text>
           <Text style={{ marginTop: 8, fontSize: 10, color: pdfColors.inkOnNightMuted, lineHeight: 1.45 }}>
             {bandInfo.taglineLong}
           </Text>

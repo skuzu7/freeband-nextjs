@@ -1,8 +1,10 @@
 'use client';
 
-// Client-only, like everything under src/components/pdf/: importing this
-// from a Server Component is a build error, which is the point — the PDF
-// toolkit must never enter the server module graph.
+// Client-only, like everything under src/components/pdf/. The directive makes
+// these exports client references for any Server Component that imports them
+// (they would fail on use, not at build time); the guard that keeps the PDF
+// toolkit out of the server bundle is the `ssr: false` dynamic import in
+// Preview and PortfolioDownload. Never import this from a Server Component.
 // src/components/pdf/theme.ts
 // The design system as @react-pdf/renderer understands it: hex colours read
 // from src/design/tokens.ts (paper theme, plus the night colours for the
@@ -69,8 +71,20 @@ export function registerPdfFonts(prefix = typeof window !== 'undefined' ? window
   fontsRegistered = true;
 }
 
-/** Absolute URL for a public asset, so the browser-side renderer can fetch it. */
+let assetBase: string | null = null;
+
+/**
+ * Where the public assets live when the PDF is rendered outside a browser: a
+ * Node test passes the absolute path of `public`, and react-pdf reads the
+ * files straight from disk. In the browser the page's own origin is used.
+ */
+export function setPdfAssetBase(base: string | null): void {
+  assetBase = base;
+}
+
+/** Absolute URL (or, under `setPdfAssetBase`, path) for a public asset. */
 export function pdfUrl(path: string): string {
+  if (assetBase !== null) return `${assetBase}${path}`;
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   return `${origin}${path}`;
 }

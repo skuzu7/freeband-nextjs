@@ -57,7 +57,6 @@ export const palco = {
     headline: 'E é assim que ele se move.',
     lead: 'Cortes reais das gravações de show, direto da câmera e sem overdubs de estúdio — o painel de LED, os vocalistas e a energia exatamente como o seu público vai sentir.',
     pauseLabel: 'Pausar os vídeos',
-    playLabel: 'Reproduzir os vídeos',
     footnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',
   },
 };

@@ -1,5 +1,5 @@
 // "/" — the home in five blocks.
-import { bandInfo } from '@/data/band';
+import { yearsActive } from '@/data/band';
 import { Fold } from '@/components/home/Fold';
 import { Caminhao } from '@/components/home/Caminhao';
 import { Blocos } from '@/components/home/Blocos';
@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <LegacyAnchors />
-      <Fold yearsActive={bandInfo.yearsActive} />
+      <Fold yearsActive={yearsActive()} />
       <Caminhao />
       <Blocos />
       <Prova />

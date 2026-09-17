@@ -1,7 +1,7 @@
 // src/components/pdf/portfolio/Contact.tsx
 // Page 7. Every way to reach the production; the WhatsApp line is a live link.
 import { Link, Text, View } from '@react-pdf/renderer';
-import { bandInfo, release } from '@/data/band';
+import { bandInfo, release, yearsActive } from '@/data/band';
 import { contact } from '@/data/contact';
 import { portfolio } from '@/data/copy/portfolio';
 import { A4, CONTENT_WIDTH, pdfColors, pdfStyles } from '../theme';
@@ -43,7 +43,7 @@ export function Contact() {
         <WordmarkPdf width={CONTENT_WIDTH * 0.5} />
         <Text style={{ marginTop: 14, fontSize: 13, fontWeight: 600, letterSpacing: -0.2, color: pdfColors.ink }}>{release.slogan}</Text>
         <Text style={{ ...pdfStyles.caption, marginTop: 6 }}>
-          {release.sloganFootnote} · {release.values.join(' · ')}
+          {release.sloganFootnote(yearsActive())} · {release.values.join(' · ')}
         </Text>
       </View>
     </PdfPage>

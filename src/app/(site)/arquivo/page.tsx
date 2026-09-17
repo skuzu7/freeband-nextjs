@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: arquivo.seo.title,
   description: arquivo.seo.description,
   alternates: { canonical: '/arquivo' },
+  // Without these the page inherits the home's card, and every inner link
+  // shared on WhatsApp previews as the front page.
+  openGraph: { title: arquivo.seo.title, description: arquivo.seo.description, url: '/arquivo' },
 };
 
 export default function ArquivoPage() {

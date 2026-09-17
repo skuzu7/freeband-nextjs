@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: portfolio.seo.title,
   description: portfolio.seo.description,
   alternates: { canonical: '/portfolio' },
+  // Without these the page inherits the home's card, and every inner link
+  // shared on WhatsApp previews as the front page.
+  openGraph: { title: portfolio.seo.title, description: portfolio.seo.description, url: '/portfolio' },
 };
 
 export default function PortfolioPage() {

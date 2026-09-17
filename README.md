@@ -31,7 +31,7 @@ Scripts:
 - `npm run tokens` — **obrigatório** depois de editar `src/design/tokens.ts`; regenera `src/app/tokens.css` (um teste falha se estiver desatualizado)
 - `npm run blur` — **obrigatório** depois de adicionar ou reencodar qualquer imagem; regenera `src/data/blur.ts` (um teste falha sem a entrada)
 - `npm run optimize:images` — recomprime JPEGs grandes em `public/images` (e pede o `npm run blur` em seguida)
-- `npm run smoke` — Puppeteer em todas as rotas, a 1440 e 390: falha em erro de console, overflow horizontal ou foto cortada; precisa de um servidor no ar (`BASE_URL`, `ORCAMENTO_TOKEN`)
+- `npm run smoke` — Puppeteer em todas as rotas, a 1440 e 390: falha em erro de console, overflow horizontal, foto cortada, uma foto sobre outra ou a foto do lightbox não cabendo entre as barras; precisa de um servidor no ar (`BASE_URL`, `ORCAMENTO_TOKEN`)
 - `npm run smoke:motion` — o mesmo com `prefers-reduced-motion: reduce`: nada pode se mover
 
 O CI (`.github/workflows/ci.yml`) roda auditoria de dependências, testes, lint, typecheck, build e os dois smokes em cada PR e push na `main`.

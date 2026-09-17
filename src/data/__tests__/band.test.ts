@@ -4,7 +4,7 @@
 // line-up roles add up to the total, and every place that prints the total
 // reads it from bandLineup rather than from a literal.
 import { describe, it, expect } from 'vitest';
-import { bandInfo, bandLineup, release } from '../band';
+import { artists, bandLineup, release, yearsActive } from '../band';
 import { fold } from '../copy/home';
 import { portfolio } from '../copy/portfolio';
 import { posters } from '../media/posters';
@@ -18,9 +18,22 @@ describe('bandLineup', () => {
   it('is the number every headline prints', () => {
     const total = String(bandLineup.total);
     expect(fold.proof.find((p) => p.label === 'integrantes no palco')?.value).toBe(total);
-    expect(release.highlights.find((h) => h.label === 'integrantes no palco')?.value).toBe(total);
-    expect(fold.kicker(bandInfo.yearsActive)).toContain(`${total} no palco`);
-    expect(portfolio.pdf.cover.kicker).toContain(`${total} no palco`);
+    const years = yearsActive();
+    expect(release.highlights(years).find((h) => h.label === 'integrantes no palco')?.value).toBe(total);
+    expect(fold.kicker(years)).toContain(`${total} no palco`);
+    expect(portfolio.pdf.cover.kicker(years)).toContain(`${total} no palco`);
+  });
+});
+
+describe('yearsActive', () => {
+  it('counts from the founding for the date it is given, not the date the module loaded', () => {
+    expect(yearsActive(new Date('2026-06-01'))).toBe(57);
+    expect(yearsActive(new Date('2027-01-01'))).toBe(58);
+  });
+
+  it('lists every artist exactly once and only the names the release itself gives', () => {
+    for (const name of artists) expect(release.full).toContain(name);
+    expect(new Set(artists).size).toBe(artists.length);
   });
 });
 

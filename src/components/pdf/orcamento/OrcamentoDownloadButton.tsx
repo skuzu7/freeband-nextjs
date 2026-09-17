@@ -21,7 +21,9 @@ interface OrcamentoDownloadButtonProps {
 export function OrcamentoDownloadButton({ data }: OrcamentoDownloadButtonProps) {
   const holder = useRef<HTMLSpanElement>(null);
   // This replaces the "Gerar PDF" button the producer just pressed: keyboard
-  // focus moves onto the link, so the next Enter downloads.
+  // focus moves onto the link, so the next Enter downloads. The anchor has
+  // no href until the blob is built, and an href-less <a> is not focusable —
+  // hence the explicit tabIndex (PDFDownloadLink spreads it onto the <a>).
   useEffect(() => {
     holder.current?.querySelector('a')?.focus();
   }, []);
@@ -32,6 +34,7 @@ export function OrcamentoDownloadButton({ data }: OrcamentoDownloadButtonProps) 
         fileName={orcamento.preview.fileName(data.contratante)}
         className={linkClass}
         aria-live="polite"
+        tabIndex={0}
       >
         {({ loading }) => (
           <span className={cn(loading && 'opacity-70')}>

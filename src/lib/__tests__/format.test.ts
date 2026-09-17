@@ -6,6 +6,8 @@ import {
   calcSaldo,
   calcEntrada,
   splitPayment,
+  formatSchedule,
+  pctLabel,
 } from "../format";
 
 // Non-breaking space character used by Intl.NumberFormat pt-BR between "R$" and value
@@ -148,5 +150,19 @@ describe("splitPayment", () => {
     const split = splitPayment("-5000", "50");
     expect(split.entrada).toBe("R$ —");
     expect(formatCurrency("-5000")).toBe("R$ —");
+  });
+});
+
+describe("formatSchedule / pctLabel", () => {
+  it("prints whichever end of the evening is known", () => {
+    expect(formatSchedule("22:00", "03:00", "às")).toBe("22:00 às 03:00");
+    expect(formatSchedule("22:00", "", "às")).toBe("22:00 às —");
+    expect(formatSchedule("", "03:00", "às")).toBe("— às 03:00");
+    expect(formatSchedule("", "", "às")).toBe("—");
+  });
+
+  it("marks an unknown percentage with the empty sign, never 0%", () => {
+    expect(pctLabel("Entrada", 50)).toBe("Entrada (50%)");
+    expect(pctLabel("Saldo", null)).toBe("Saldo (—)");
   });
 });

@@ -13,12 +13,11 @@ import { Reel } from './Reel';
 interface ReelGroupProps {
   reels: ReelData[];
   pauseLabel: string;
-  playLabel: string;
   className?: string;
   columns?: 3 | 4;
 }
 
-export function ReelGroup({ reels, pauseLabel, playLabel, className, columns = 3 }: ReelGroupProps) {
+export function ReelGroup({ reels, pauseLabel, className, columns = 3 }: ReelGroupProps) {
   const reduced = useReducedMotion();
   const [userPaused, setUserPaused] = useState<boolean | null>(null);
   const paused = userPaused ?? reduced;
@@ -33,7 +32,7 @@ export function ReelGroup({ reels, pauseLabel, playLabel, className, columns = 3
           className="label-caps transition-quick inline-flex items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
         >
           <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
-          {paused ? playLabel : pauseLabel}
+          {pauseLabel}
         </button>
       </div>
       <div className={cn('grid gap-4', columns === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3')}>

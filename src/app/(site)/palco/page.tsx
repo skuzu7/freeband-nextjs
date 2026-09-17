@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: palco.seo.title,
   description: palco.seo.description,
   alternates: { canonical: '/palco' },
+  // Without these the page inherits the home's card, and every inner link
+  // shared on WhatsApp previews as the front page.
+  openGraph: { title: palco.seo.title, description: palco.seo.description, url: '/palco' },
 };
 
 export default function PalcoPage() {

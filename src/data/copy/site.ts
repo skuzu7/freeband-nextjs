@@ -43,9 +43,11 @@ export const site = {
     cnpjLabel: 'CNPJ',
     decadesLabel: 'Décadas de estrada',
     // The decade ribbon, ending at the current year without annual edits.
-    years: [
-      ...[1969, 1979, 1989, 1999, 2009, 2019].filter((y) => y < new Date().getFullYear()),
-      new Date().getFullYear(),
-    ].map(String),
+    // A function: the footer calls it per render, so a long-running server
+    // does not keep printing the year it was started in.
+    decades: (now: Date = new Date()): string[] => {
+      const year = now.getFullYear();
+      return [...[1969, 1979, 1989, 1999, 2009, 2019].filter((y) => y < year), year].map(String);
+    },
   },
 };

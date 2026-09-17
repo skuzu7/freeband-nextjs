@@ -32,6 +32,19 @@ export interface PaymentSplit {
 }
 
 const PLACEHOLDER = 'R$ —';
+/** The document's own empty mark ("—"), for fields that are not amounts. */
+const EMPTY = '—';
+
+/** "22:00 às —" when only one end of the evening is known; "—" when neither. */
+export function formatSchedule(inicio: string, fim: string, join: string): string {
+  if (!inicio && !fim) return EMPTY;
+  return `${inicio || EMPTY} ${join} ${fim || EMPTY}`;
+}
+
+/** "Entrada (50%)"; the percentage is the clamped one the amounts use, "—" when unknown. */
+export function pctLabel(label: string, pct: number | null): string {
+  return `${label} (${pct === null ? EMPTY : `${pct}%`})`;
+}
 
 /**
  * The two payments of a proposal from the total and the down-payment

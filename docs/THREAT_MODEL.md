@@ -31,7 +31,7 @@ grants the editor and nothing else.
 [ Node runtime ]
         ├──► src/app/orcamento/page.tsx ──► verifies the same cookie again, or redirects to /admin
         └──► src/app/admin/actions.ts ──► loginAction: FailureLimiter, secretsMatch(password), cookie
-                                          logoutAction: deletes the cookie
+                                          logoutAction: overwrites the cookie (Secure, Max-Age=0)
 ```
 
 Environment: `SESSION_SECRET` (HMAC key), `ADMIN_PASSWORD`, `ORCAMENTO_TOKEN`
@@ -49,7 +49,7 @@ redirects to `/admin` and the login refuses to issue a session.
 | **Repudiation (R)** | Not applicable: no server-side state is mutated by the protected area. Failed logins are counted, not logged with identities. | — | `src/app/admin/actions.ts` |
 | **Information Disclosure (I)** | Reading the cookie from JavaScript (XSS); learning which server variable is missing; timing side channels on the password or token compare. | `httpOnly`, `secure` in production, `sameSite=lax`; a static Content-Security-Policy (`frame-ancestors 'none'`, `object-src 'none'`, no third-party scripts) and HSTS; a generic "unavailable" message with the detail in the server log; both compared values are HMACed first so the final comparison runs over digests of equal length. | `src/lib/session.ts` (`secretsMatch`, `timingSafeEqualStr`), `next.config.ts` headers, `session.test.ts` ("cookie flags") |
 | **Denial of Service (D)** | Online guessing of the password or of the legacy URL token; growing the limiter's memory with rotated forwarded addresses. | `FailureLimiter`: five failures per client address and fifty across all addresses per fifteen minutes, expired windows swept on every call; the address comes from `x-real-ip` (platform-verified on Vercel) before `x-forwarded-for`; a fixed 400 ms delay on a wrong password. | `src/lib/__tests__/rateLimit.test.ts`, `proxy.test.ts` ("throttles repeated guesses") |
-| **Elevation of Privilege (E)** | Reaching the editor without passing the proxy (a middleware bypass). | The page itself verifies the cookie and redirects; the proxy is the first gate, not the only one. | `src/app/orcamento/page.tsx`, `proxy.test.ts` (every branch of the gate) |
+| **Elevation of Privilege (E)** | Reaching the editor without passing the proxy (a middleware bypass). | The page itself verifies the cookie and redirects; the proxy is the first gate, not the only one. | `src/app/orcamento/page.tsx`, `proxy.test.ts` (missing secret, no cookie, valid cookie, refresh, legacy link for a logged-in visitor, right token, wrong token throttled, no token configured) |
 
 ---
 
@@ -63,6 +63,13 @@ redirects to `/admin` and the login refuses to issue a session.
 ---
 
 ## 4. Known Limitations
+
+- **Plain HTTP in production.** The `__Host-` cookie is `Secure`; a production
+  build reached over plain `http://` on anything but `localhost` cannot set or
+  clear it, and the login silently loops between `/admin` and `/orcamento`.
+  Vercel and any TLS-terminating host are unaffected. Logout overwrites the
+  cookie with its full attribute set for the same reason: a bare delete header
+  lacks `Secure` and browsers drop it.
 
 - **Per-instance limiter.** Failure counts live in process memory: on a serverless host every instance keeps its own, and a restart clears them. A durable shared store would be the next step if the threat model ever needs it.
 - **Forwarded address trust.** Behind any proxy other than Vercel's, `x-real-ip`/`x-forwarded-for` are only as trustworthy as that proxy; the shared bucket is what holds when they are forged.

@@ -123,6 +123,7 @@ export function LedPanel({
     let disposed = false;
     let ro: ResizeObserver | null = null;
     let io: IntersectionObserver | null = null;
+    const observers: IntersectionObserver[] = [];
 
     try {
       const src: LedSource = JSON.parse(sourceKey);
@@ -290,11 +291,35 @@ export function LedPanel({
         // Unlit panel first, so the box is never blank while waiting for view.
         if (!raf) draw(0);
       };
-      load().catch(() => {
-        // The source never arrived: the panel lights up dark, and the content
-        // takes over on schedule.
-        intensity = null;
-      });
+      const fetchSource = () => {
+        load().catch(() => {
+          // The source never arrived: the panel lights up dark, and the
+          // content takes over on schedule.
+          intensity = null;
+        });
+      };
+      if (reduced && fadeWhenLit) {
+        // The dots fade out the instant the panel comes into view, before any
+        // pixels could land: the fetch would feed a canvas nobody sees.
+        void 0;
+      } else if (typeof IntersectionObserver === 'undefined') {
+        fetchSource();
+      } else {
+        // Wider than the light-up's own margin, so the pixels are in flight
+        // well before the panel starts — and ten panels on the home no longer
+        // all fetch at hydration, racing the LCP for canvases below the fold.
+        const prefetch = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((e) => e.isIntersecting)) {
+              prefetch.disconnect();
+              fetchSource();
+            }
+          },
+          { rootMargin: '300% 0%' },
+        );
+        prefetch.observe(box);
+        observers.push(prefetch);
+      }
     } catch {
       // Nothing the panel does is worth a broken page.
       reveal();
@@ -306,6 +331,7 @@ export function LedPanel({
       window.clearTimeout(watchdog);
       ro?.disconnect();
       io?.disconnect();
+      for (const o of observers) o.disconnect();
     };
   }, [sourceKey, aspect, cols, mode, still, dimDots, fadeWhenLit]);
 

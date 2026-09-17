@@ -1,8 +1,10 @@
 'use client';
 
-// Client-only, like everything under src/components/pdf/: importing this
-// from a Server Component is a build error, which is the point — the PDF
-// toolkit must never enter the server module graph.
+// Client-only, like everything under src/components/pdf/. The directive makes
+// these exports client references for any Server Component that imports them
+// (they would fail on use, not at build time); the guard that keeps the PDF
+// toolkit out of the server bundle is the `ssr: false` dynamic import in
+// Preview and PortfolioDownload. Never import this from a Server Component.
 // src/components/pdf/motifs.tsx
 // The system's motifs, for paper: the dotted rule, a number in the 5×7 LED
 // matrix, and a row of whole photographs laid out by the plate rule.

@@ -96,7 +96,8 @@ describe('proxy', () => {
 
   it('never accepts a legacy token when none is configured', async () => {
     delete process.env.ORCAMENTO_TOKEN;
-    const response = await proxy(request('/orcamento/', { ip: '203.0.113.2' }));
+    const response = await proxy(request('/orcamento/any-token', { ip: '203.0.113.2' }));
     expect(location(response)).toBe(`${ORIGIN}/admin`);
+    expect(response.cookies.get(SESSION_COOKIE)).toBeUndefined();
   });
 });

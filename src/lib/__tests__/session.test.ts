@@ -97,6 +97,23 @@ describe('sessionCookieOptions', () => {
     expect(SESSION_TTL_SECONDS).toBe(7 * 24 * 60 * 60);
   });
 
+  it('clears in production with the attributes a __Host- cookie needs, not a bare delete', async () => {
+    // A browser rejects any __Host- Set-Cookie without Secure — including the
+    // one meant to end the session. Logout must overwrite with the full set.
+    const { ResponseCookies } = await import('next/dist/compiled/@edge-runtime/cookies');
+    const headers = new Headers();
+    new ResponseCookies(headers).set(sessionCookieName('production'), '', {
+      ...sessionCookieOptions('production'),
+      maxAge: 0,
+    });
+    const header = headers.get('set-cookie') ?? '';
+    expect(header).toMatch(/^__Host-freeband_admin=;/);
+    expect(header).toMatch(/Max-Age=0/);
+    expect(header).toMatch(/Secure/);
+    expect(header).toMatch(/HttpOnly/);
+    expect(header).toMatch(/Path=\//);
+  });
+
   it('is Secure and carries the __Host- prefix in production only', () => {
     expect(sessionCookieOptions('production').secure).toBe(true);
     expect(sessionCookieName('production')).toBe('__Host-freeband_admin');

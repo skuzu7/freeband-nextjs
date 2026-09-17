@@ -4,6 +4,11 @@
 // attempts. It lives in process memory: on a serverless host every instance
 // keeps its own, which blunts online guessing against a single-admin site but
 // is not a substitute for a durable store or a WAF.
+//
+// The shared bucket is a deliberate trade: fifty junk attempts from anywhere
+// lock the login for one window on that instance, including for the one real
+// producer. Accepted, because the alternative — a per-address limit only — is
+// no limit at all behind a forged forwarded header, and the window is short.
 
 export interface RateLimitOptions {
   /** Failures one key may accumulate inside a window before it is refused. */

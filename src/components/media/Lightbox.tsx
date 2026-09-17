@@ -153,14 +153,19 @@ export function Lightbox({ items, index, onClose, onChange, labels }: LightboxPr
         style={{ containerType: 'size' }}
       >
         <div style={frameStyle}>
-          <Photo photo={item} sizes="100vw" quality={90} className="h-full" />
+          {/* The frame is capped by height, so on a desktop it is well short
+              of the viewport's width; asking for 100vw fetched the 1920
+              variant for a ~960px box. */}
+          <Photo photo={item} sizes="(min-width: 48rem) 80vw, 100vw" quality={90} className="h-full" />
         </div>
       </div>
 
       {/* Caption and the two steppers share one bar, so nothing ever sits on
           top of the picture — on a phone the flyer's own text stays legible. */}
       <div className="flex shrink-0 items-center justify-between gap-6 px-[var(--pad-inline)] py-5">
-        <div className="min-w-0">
+        {/* Arrow keys change the flyer while the dialog stays open, so the
+            new caption is announced rather than silently swapped. */}
+        <div className="min-w-0" aria-live="polite">
           <h2 id={titleId} className="text-lg font-semibold text-ink">
             {item.title}
           </h2>

@@ -119,7 +119,7 @@ export function Fold({ yearsActive }: FoldProps) {
           className="label-caps transition-quick absolute top-20 right-[var(--pad-inline)] z-10 inline-flex min-h-11 items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
         >
           <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
-          {paused ? fold.backdropPlay : fold.backdropPause}
+          {fold.backdropPause}
         </button>
       )}
       <Container className="relative z-10 flex flex-col gap-8 pb-10 pt-32 md:gap-10">

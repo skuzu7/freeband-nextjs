@@ -74,3 +74,8 @@ jobs:
         run: npm run smoke:motion
         env:
           BASE_URL: http://localhost:3000
+
+      # A smoke failure caused by the server, not the page, is only visible here.
+      - name: Server log
+        if: failure()
+        run: cat server.log || true

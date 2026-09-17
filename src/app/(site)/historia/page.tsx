@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: historia.seo.title,
   description: historia.seo.description,
   alternates: { canonical: '/historia' },
+  // Without these the page inherits the home's card, and every inner link
+  // shared on WhatsApp previews as the front page.
+  openGraph: { title: historia.seo.title, description: historia.seo.description, url: '/historia' },
 };
 
 export default function HistoriaPage() {

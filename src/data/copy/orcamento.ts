@@ -57,7 +57,6 @@ export const orcamento = {
     // The draft is kept in the browser between visits.
     draftRestored: 'Rascunho anterior recuperado.',
     clearDraft: 'Limpar formulário',
-    unsavedWarning: 'A proposta não foi salva. Sair mesmo assim?',
   },
   preview: {
     step: '02 · Preview A4',

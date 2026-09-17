@@ -49,6 +49,9 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
 
 export async function logoutAction(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: sessionCookieName(), path: '/' });
+  // Overwritten with the same attributes it was set with, not `delete()`:
+  // that serialises without `Secure`, and a browser drops any `__Host-`
+  // Set-Cookie lacking it — the session would survive logout in production.
+  cookieStore.set(sessionCookieName(), '', { ...sessionCookieOptions(), maxAge: 0 });
   redirect('/admin');
 }

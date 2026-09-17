@@ -24,7 +24,6 @@ export function Show() {
           reels={reels}
           columns={4}
           pauseLabel={palco.video.pauseLabel}
-          playLabel={palco.video.playLabel}
         />
         <p className="mt-4 text-sm text-ink-low">{palco.video.footnote}</p>
       </Container>
