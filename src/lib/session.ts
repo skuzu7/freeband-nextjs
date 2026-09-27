@@ -31,6 +31,15 @@ export function sessionCookieOptions(nodeEnv: string | undefined = process.env.N
   };
 }
 
+/**
+ * Options that expire the cookie. They repeat every attribute it was set
+ * with: a browser drops a `__Host-` Set-Cookie that lacks `Secure`, so a bare
+ * `cookies().delete(name)` would leave a production session standing.
+ */
+export function expiredSessionCookieOptions(nodeEnv: string | undefined = process.env.NODE_ENV) {
+  return { ...sessionCookieOptions(nodeEnv), maxAge: 0, expires: new Date(0) };
+}
+
 const encoder = new TextEncoder();
 
 function base64url(bytes: ArrayBuffer): string {

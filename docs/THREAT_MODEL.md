@@ -31,7 +31,7 @@ grants the editor and nothing else.
 [ Node runtime ]
         ├──► src/app/orcamento/page.tsx ──► verifies the same cookie again, or redirects to /admin
         └──► src/app/admin/actions.ts ──► loginAction: FailureLimiter, secretsMatch(password), cookie
-                                          logoutAction: deletes the cookie
+                                          logoutAction: expires the cookie with the same Secure/Path it was set with
 ```
 
 Environment: `SESSION_SECRET` (HMAC key), `ADMIN_PASSWORD`, `ORCAMENTO_TOKEN`
