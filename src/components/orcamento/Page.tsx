@@ -7,6 +7,7 @@
 // back button or an expired session does not cost the producer the proposal.
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/cn';
 import { orcamento } from '@/data/copy/orcamento';
 import { defaultOrcamento, parseOrcamento, type OrcamentoData } from '@/types/orcamento';
 import { Wordmark } from '@/components/brand/Wordmark';
@@ -47,6 +48,8 @@ function writeDraft(data: OrcamentoData | null): void {
 export function Page({ onLogout }: PageProps) {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);
   const [restored, setRestored] = useState(false);
+  // What "Limpar formulário" threw away, until the producer types again.
+  const [cleared, setCleared] = useState<OrcamentoData | null>(null);
   // Nothing is written until the stored draft has been read, so a fresh
   // render can never overwrite the draft with the empty form.
   const hydrated = useRef(false);
@@ -84,21 +87,35 @@ export function Page({ onLogout }: PageProps) {
   }, [dirty]);
 
   const clear = () => {
+    setCleared(data);
     setData(defaultOrcamento);
     setRestored(false);
     writeDraft(null);
   };
 
+  const undoClear = () => {
+    if (!cleared) return;
+    setData(cleared);
+    setCleared(null);
+  };
+
+  const edit = (next: OrcamentoData) => {
+    setCleared(null);
+    setData(next);
+  };
+
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="no-print flex h-16 items-center justify-between gap-6 border-b border-line bg-surface-high px-[var(--pad-inline)]">
-        <div className="flex items-center gap-5">
-          <Wordmark className="h-5 w-auto text-red" title={orcamento.header.brand} />
-          <span aria-hidden className="h-5 w-px bg-line-strong" />
-          <h1 className="label-caps text-ink-muted">{orcamento.header.title}</h1>
+      <header className="no-print flex h-16 items-center justify-between gap-4 border-b border-line bg-surface-high px-[var(--pad-inline)] sm:gap-6">
+        <div className="flex min-w-0 items-center gap-5">
+          <Wordmark className="h-5 w-auto shrink-0 text-red" title={orcamento.header.brand} />
+          {/* On a phone the title gives its room to the two exits; it stays
+              the page's heading for screen readers. */}
+          <span aria-hidden className="hidden h-5 w-px bg-line-strong sm:block" />
+          <h1 className="label-caps sr-only text-ink-muted sm:not-sr-only">{orcamento.header.title}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/" className="label-caps transition-quick px-3 py-2 text-ink-muted hover:text-ink">
+        <div className="flex shrink-0 items-center gap-2">
+          <Link href="/" className="label-caps transition-quick whitespace-nowrap px-3 py-2 text-ink-muted hover:text-ink">
             {orcamento.header.back}
           </Link>
           {onLogout && (
@@ -124,16 +141,30 @@ export function Page({ onLogout }: PageProps) {
                   {orcamento.form.title}
                 </h2>
               </div>
-              {dirty && (
-                <Button variant="ghost" onClick={clear}>
-                  {orcamento.form.clearDraft}
-                </Button>
-              )}
+              {/* Always laid out, hidden while there is nothing to clear: on a
+                  phone it wraps to its own line, and appearing on the first
+                  keystroke would shove the form down under the finger. */}
+              <Button variant="ghost" onClick={clear} className={cn(!dirty && 'invisible')}>
+                {orcamento.form.clearDraft}
+              </Button>
             </header>
-            <p aria-live="polite" className="mb-6 min-h-[1.25em] text-sm text-ink-muted">
-              {restored && orcamento.form.draftRestored}
+            <p aria-live="polite" className="mb-6 flex min-h-[1.25em] items-center gap-3 text-sm text-ink-muted">
+              {cleared ? (
+                <>
+                  {orcamento.form.draftCleared}
+                  <button
+                    type="button"
+                    onClick={undoClear}
+                    className="label-caps transition-quick text-led-text underline underline-offset-4 hover:text-ink"
+                  >
+                    {orcamento.form.undoClear}
+                  </button>
+                </>
+              ) : (
+                restored && orcamento.form.draftRestored
+              )}
             </p>
-            <Form data={data} onChange={setData} />
+            <Form data={data} onChange={edit} />
           </div>
         </section>
         <section

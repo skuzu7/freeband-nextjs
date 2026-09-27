@@ -32,9 +32,10 @@ export const orcamento = {
     inicio: 'Início',
     fim: 'Fim',
     convidados: 'Convidados',
-    convidadosPlaceholder: '0',
+    // Examples, not values: a "0" in an empty box reads as already filled in.
+    convidadosPlaceholder: 'Ex.: 300',
     cache: 'Valor do Cachê (R$)',
-    cachePlaceholder: '0,00',
+    cachePlaceholder: 'Ex.: 15000',
     entradaPct: 'Entrada (%)',
     entradaData: 'Data da Entrada',
     saldoData: 'Data do Saldo',
@@ -57,6 +58,9 @@ export const orcamento = {
     // The draft is kept in the browser between visits.
     draftRestored: 'Rascunho anterior recuperado.',
     clearDraft: 'Limpar formulário',
+    // Clearing is one tap; taking it back is one more.
+    draftCleared: 'Formulário limpo.',
+    undoClear: 'Desfazer',
     unsavedWarning: 'A proposta não foi salva. Sair mesmo assim?',
   },
   preview: {
