@@ -57,24 +57,29 @@ export function Preview({ data, onPrint }: PreviewProps) {
   const pdfData = useDebounced(data, PDF_DEBOUNCE_MS);
   const frameRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState<{ scale: number; height: number; pages: number } | null>(null);
 
   // The transform does not take part in layout, so the frame is sized by hand
-  // from the sheet's real (unscaled) box whenever either side changes.
+  // from the document's real (unscaled) box whenever either side changes.
+  // The height is read from the content, never from the sheet: the sheet's
+  // height is the one this effect sets, and measuring it back would shrink
+  // the page by the scale on every pass until nothing was left.
   useEffect(() => {
     const frame = frameRef.current;
     const sheet = sheetRef.current;
-    if (!frame || !sheet || typeof ResizeObserver === 'undefined') return;
+    const content = contentRef.current;
+    if (!frame || !sheet || !content || typeof ResizeObserver === 'undefined') return;
     const measure = () => {
       const width = sheet.offsetWidth;
-      const height = sheet.offsetHeight;
+      const height = content.offsetHeight;
       if (!width || !height) return;
       const scale = Math.min(1, frame.clientWidth / width);
       setFit({ scale, height: height * scale, pages: Math.max(1, Math.ceil((height - 1) / PAGE_HEIGHT_PX)) });
     };
     const ro = new ResizeObserver(measure);
     ro.observe(frame);
-    ro.observe(sheet);
+    ro.observe(content);
     measure();
     return () => ro.disconnect();
   }, []);
@@ -105,7 +110,9 @@ export function Preview({ data, onPrint }: PreviewProps) {
         style={{ containerType: 'inline-size' }}
       >
         <div ref={sheetRef} className="print-scale-reset relative w-[210mm] max-w-none" style={sheetStyle}>
-          <PrintLayout data={data} />
+          <div ref={contentRef}>
+            <PrintLayout data={data} />
+          </div>
           {fit && fit.pages > 1 && (
             <div
               aria-hidden

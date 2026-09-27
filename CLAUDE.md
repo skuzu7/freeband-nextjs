@@ -16,7 +16,7 @@ Marketing site + internal quoting tool for **Internacional Freeband**, a Brazili
 - Single test file: `npx vitest run src/lib/__tests__/session.test.ts`
 - `npm run tokens` — **required after editing `src/design/tokens.ts`**; regenerates `src/app/tokens.css` (a test fails when it is stale)
 - `npm run blur` — **required after adding/re-encoding any image**; regenerates `src/data/blur.ts` (a test fails without it)
-- `npm run smoke` — Puppeteer: every route at 1440 and 390, fails on console errors, horizontal overflow, a cropped photograph, or the legacy token link not reaching `/orcamento`. Needs a server up; honors `BASE_URL`, `ORCAMENTO_TOKEN`, `PUPPETEER_BROWSER_URL` (attach to a running Chrome), `PUPPETEER_EXECUTABLE_PATH`
+- `npm run smoke` — Puppeteer: every route at 1440 and 390, fails on console errors, horizontal overflow, a cropped photograph, the legacy token link not reaching `/orcamento`, or the editor's A4 preview collapsing (checked at both widths). Needs a server up; honors `BASE_URL`, `ORCAMENTO_TOKEN`, `PUPPETEER_BROWSER_URL` (attach to a running Chrome), `PUPPETEER_EXECUTABLE_PATH`
 - `npm run smoke:motion` — Puppeteer with `prefers-reduced-motion: reduce`: asserts no video plays, no CSS animation runs, the LED panel is already lit
 - `npm run optimize:images` — recompress large JPEGs in `public/images`
 

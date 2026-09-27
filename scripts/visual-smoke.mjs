@@ -1,9 +1,9 @@
 // Visual smoke test. Loads every route at desktop (1440) and phone (390)
 // widths, saves PNGs to ./screenshots/ (gitignored), and fails on: a console
 // error, horizontal overflow, a photograph whose box does not match its file's
-// aspect (i.e. a crop), or the protected route not being reached through the
-// legacy token link. Not wired into vitest — run with `npm run smoke` while a
-// server is up.
+// aspect (i.e. a crop), the protected route not being reached through the
+// legacy token link, or its A4 preview collapsing. Not wired into vitest —
+// run with `npm run smoke` while a server is up.
 //
 //   BASE_URL              server to hit (default http://localhost:3000)
 //   ORCAMENTO_TOKEN       legacy token for /orcamento/<token> (from .env.local)
@@ -70,6 +70,24 @@ async function audit(page, label) {
   for (const src of result.cropped) failures.push(`${label}: cropped photograph ${src}`);
 }
 
+/**
+ * The A4 preview is sized by hand from its content; a measuring loop that
+ * feeds on its own output collapses it to nothing while the page still loads
+ * without an error. The sheet must stand at least one scaled page tall.
+ */
+async function auditPreview(page, label) {
+  const result = await page.evaluate(() => {
+    const frame = document.querySelector('[style*="container-type"]');
+    if (!frame) return { missing: true };
+    const { width, height } = frame.getBoundingClientRect();
+    return { width, height };
+  });
+  if (result.missing) failures.push(`${label}: the A4 preview frame is missing`);
+  // 297/210 is the A4 ratio; allow a little for borders and rounding.
+  else if (result.height < result.width * (297 / 210) * 0.95)
+    failures.push(`${label}: the A4 preview is ${Math.round(result.height)}px tall for ${Math.round(result.width)}px wide`);
+}
+
 async function run() {
   const browser = process.env.PUPPETEER_BROWSER_URL
     ? await puppeteer.connect({ browserURL: process.env.PUPPETEER_BROWSER_URL })
@@ -106,8 +124,16 @@ async function run() {
   if (new URL(page.url()).pathname !== '/orcamento') {
     failures.push(`protected smoke did not reach /orcamento (landed on ${page.url()})`);
   } else {
-    await audit(page, '/orcamento @desktop');
-    await page.screenshot({ path: `${OUT}/orcamento-desktop.png`, fullPage: false });
+    for (const [name, viewport] of Object.entries(VIEWPORTS)) {
+      if (name !== 'desktop') {
+        console.log(`> /orcamento (${name})`);
+        await page.setViewport(viewport);
+        await navigate(page, `${BASE}/orcamento`);
+      }
+      await audit(page, `/orcamento @${name}`);
+      await auditPreview(page, `/orcamento @${name}`);
+      await page.screenshot({ path: `${OUT}/orcamento-${name}.png`, fullPage: false });
+    }
   }
 
   if (process.env.PUPPETEER_BROWSER_URL) {
@@ -122,7 +148,7 @@ async function run() {
     for (const f of failures) console.error(`  - ${f}`);
     process.exit(1);
   }
-  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 1} pages clean; screenshots in ${OUT}`);
+  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 2} pages clean; screenshots in ${OUT}`);
 }
 
 run().catch((err) => {
