@@ -2,7 +2,8 @@
 // widths, saves PNGs to ./screenshots/ (gitignored), and fails on: a console
 // error, horizontal overflow, a photograph whose box does not match its file's
 // aspect (i.e. a crop), the protected route not being reached through the
-// legacy token link, or its A4 preview collapsing. Not wired into vitest —
+// legacy token link, its A4 preview collapsing, a 320px phone scrolling
+// sideways, or the portfolio button not producing a PDF. Not wired into vitest —
 // run with `npm run smoke` while a server is up.
 //
 //   BASE_URL              server to hit (default http://localhost:3000)
@@ -11,7 +12,9 @@
 //                         instead of launching one
 //   SMOKE_OUT             output directory (default screenshots)
 import puppeteer from 'puppeteer';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 if (existsSync('.env.local') && typeof process.loadEnvFile === 'function') {
   process.loadEnvFile('.env.local');
@@ -88,6 +91,33 @@ async function auditPreview(page, label) {
     failures.push(`${label}: the A4 preview is ${Math.round(result.height)}px tall for ${Math.round(result.width)}px wide`);
 }
 
+/**
+ * The portfolio button must hand over a real PDF. Run against `next start`
+ * this exercises the production CSP too: a policy that blocks the PDF
+ * engine's WebAssembly passes every page load and still fails here.
+ */
+async function auditPdfDownload(page) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'smoke-pdf-'));
+  try {
+    const cdp = await page.createCDPSession();
+    await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: dir });
+    await navigate(page, `${BASE}/portfolio`);
+    const button = await page.waitForSelector('main button:not([disabled])', { timeout: 60000 });
+    await button.click();
+    const deadline = Date.now() + 60000;
+    let file;
+    while (Date.now() < deadline && !file) {
+      file = readdirSync(dir).find((f) => f.endsWith('.pdf'));
+      if (!file) await new Promise((r) => setTimeout(r, 500));
+    }
+    if (!file) failures.push('/portfolio: the download button produced no PDF within 60s');
+    else if (readFileSync(path.join(dir, file)).subarray(0, 5).toString() !== '%PDF-')
+      failures.push(`/portfolio: ${file} is not a PDF`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 async function run() {
   const browser = process.env.PUPPETEER_BROWSER_URL
     ? await puppeteer.connect({ browserURL: process.env.PUPPETEER_BROWSER_URL })
@@ -117,6 +147,18 @@ async function run() {
       await page.screenshot({ path: `${OUT}/${slug}-${name}.png`, fullPage: route !== '/' || name === 'desktop' });
     }
   }
+
+  // The narrowest phone still sold: the header's wordmark, CTA and menu
+  // button have 280px there, so one extra pixel of padding shows up as a
+  // horizontal scroll on every page. One route is enough to catch it.
+  console.log('> /palco (320)');
+  await page.setViewport({ ...VIEWPORTS.mobile, width: 320, height: 640 });
+  await navigate(page, `${BASE}/palco`);
+  await audit(page, '/palco @320');
+
+  console.log('> /portfolio PDF download');
+  await page.setViewport(VIEWPORTS.desktop);
+  await auditPdfDownload(page);
 
   console.log('> /orcamento via legacy token (desktop)');
   await page.setViewport(VIEWPORTS.desktop);
@@ -148,7 +190,7 @@ async function run() {
     for (const f of failures) console.error(`  - ${f}`);
     process.exit(1);
   }
-  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 2} pages clean; screenshots in ${OUT}`);
+  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 3} pages clean; screenshots in ${OUT}`);
 }
 
 run().catch((err) => {

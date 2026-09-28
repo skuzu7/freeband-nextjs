@@ -2,43 +2,56 @@
 
 // src/components/pdf/orcamento/OrcamentoDownloadButton.tsx
 // The only place the site touches @react-pdf/renderer for the proposal.
-// Preview loads it through a dynamic import with ssr: false, so the PDF
-// toolkit never enters the server bundle.
-import { PDFDownloadLink } from '@react-pdf/renderer';
+// Preview loads it through a dynamic import with ssr: false, only after the
+// producer presses "Gerar PDF", so the PDF toolkit never enters the server
+// bundle nor the editor's first load. That press is also the download: the
+// component starts the first file on mount, and every later press builds a
+// fresh one from what the form holds at that moment.
 import { useEffect, useRef } from 'react';
-import { cn } from '@/lib/cn';
 import { orcamento } from '@/data/copy/orcamento';
 import type { OrcamentoData } from '@/types/orcamento';
+import { Button } from '@/components/ui/Button';
+import { usePdfDownload } from '../usePdfDownload';
 import { OrcamentoPdf } from './OrcamentoPdf';
-
-const linkClass =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm bg-red px-5 py-3 text-sm font-medium uppercase tracking-wide text-on-red transition-quick select-none hover:bg-red-hot';
 
 interface OrcamentoDownloadButtonProps {
   data: OrcamentoData;
 }
 
 export function OrcamentoDownloadButton({ data }: OrcamentoDownloadButtonProps) {
-  const holder = useRef<HTMLSpanElement>(null);
+  const { state, start } = usePdfDownload(
+    () => ({
+      document: <OrcamentoPdf data={data} />,
+      fileName: orcamento.preview.fileName(data.contratante),
+    }),
+    { autoStart: true },
+  );
+  const generating = state === 'generating';
+
   // This replaces the "Gerar PDF" button the producer just pressed: keyboard
-  // focus moves onto the link, so the next Enter downloads.
+  // focus moves onto it, so the next Enter builds the next file. It stays
+  // focusable while busy (aria-disabled, not disabled); the hook ignores
+  // presses until the current file is out.
+  const holder = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    holder.current?.querySelector('a')?.focus();
+    holder.current?.querySelector('button')?.focus();
   }, []);
+
   return (
     <span ref={holder} className="contents">
-      <PDFDownloadLink
-        document={<OrcamentoPdf data={data} />}
-        fileName={orcamento.preview.fileName(data.contratante)}
-        className={linkClass}
-        aria-live="polite"
+      <Button
+        onClick={start}
+        aria-disabled={generating}
+        aria-busy={generating}
+        title={state === 'error' ? orcamento.preview.error : undefined}
+        className={generating ? 'cursor-progress opacity-70' : undefined}
       >
-        {({ loading }) => (
-          <span className={cn(loading && 'opacity-70')}>
-            {loading ? orcamento.preview.generating : orcamento.preview.download}
-          </span>
-        )}
-      </PDFDownloadLink>
+        {generating
+          ? orcamento.preview.generating
+          : state === 'error'
+            ? orcamento.preview.retry
+            : orcamento.preview.generate}
+      </Button>
     </span>
   );
 }

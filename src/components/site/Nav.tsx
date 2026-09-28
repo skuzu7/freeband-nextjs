@@ -83,7 +83,7 @@ export function Nav() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
-        <Container className="flex h-16 items-center justify-between gap-6">
+        <Container className="flex h-16 items-center justify-between gap-3 sm:gap-6">
           <Link
             href="/"
             aria-label={site.nav.homeLabel}
@@ -98,7 +98,7 @@ export function Nav() {
             />
           </Link>
 
-          <nav aria-label={site.nav.landmark} className="hidden items-center gap-8 md:flex">
+          <nav aria-label={site.nav.landmark} className="hidden items-center gap-6 md:flex lg:gap-8">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -120,8 +120,10 @@ export function Nav() {
 
           {/* On phones the quote stays one tap away: the routes fold into
               the menu, the button that books the band does not. */}
-          <div className="flex items-center gap-2 md:hidden">
-            <Button href={site.nav.cta.href} className="min-h-11 px-3.5 py-2 text-xs">
+          {/* Sized to fit a 320px screen: wordmark, CTA and menu button
+              share 280px there, and the smoke test fails on overflow. */}
+          <div className="flex shrink-0 items-center gap-1.5 md:hidden">
+            <Button href={site.nav.cta.href} className="min-h-11 px-3 py-2 text-xs min-[360px]:px-3.5">
               {site.nav.cta.label}
             </Button>
             <button

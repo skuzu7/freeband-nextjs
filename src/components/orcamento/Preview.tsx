@@ -19,7 +19,11 @@ const OrcamentoDownloadButton = dynamic(
   () => import('@/components/pdf/orcamento/OrcamentoDownloadButton').then((m) => m.OrcamentoDownloadButton),
   {
     ssr: false,
-    loading: () => <Button disabled>{orcamento.preview.generating}</Button>,
+    loading: () => (
+      <Button disabled aria-busy>
+        {orcamento.preview.generating}
+      </Button>
+    ),
   },
 );
 
@@ -30,8 +34,6 @@ interface PreviewProps {
 
 /** One A4 page in CSS pixels: 297mm at 96dpi. */
 const PAGE_HEIGHT_PX = (297 * 96) / 25.4;
-/** How long the form may keep typing before the PDF is rebuilt. */
-const PDF_DEBOUNCE_MS = 400;
 
 // 210mm wide document, scaled down to the container's width; at 1 when the
 // column is wider than the page. Until measured, one page tall.
@@ -42,19 +44,8 @@ const initialSheetStyle = {
   '--preview-scale': 'min(1, calc(100cqw / 210mm))',
 } as CSSProperties;
 
-/** The value, settled: it follows `value` only after it stops changing. */
-function useDebounced<T>(value: T, delayMs: number): T {
-  const [settled, setSettled] = useState(value);
-  useEffect(() => {
-    const id = window.setTimeout(() => setSettled(value), delayMs);
-    return () => window.clearTimeout(id);
-  }, [value, delayMs]);
-  return settled;
-}
-
 export function Preview({ data, onPrint }: PreviewProps) {
   const [pdfRequested, setPdfRequested] = useState(false);
-  const pdfData = useDebounced(data, PDF_DEBOUNCE_MS);
   const frameRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -97,7 +88,7 @@ export function Preview({ data, onPrint }: PreviewProps) {
             {orcamento.preview.print}
           </Button>
           {pdfRequested ? (
-            <OrcamentoDownloadButton data={pdfData} />
+            <OrcamentoDownloadButton data={data} />
           ) : (
             <Button onClick={() => setPdfRequested(true)}>{orcamento.preview.generate}</Button>
           )}
