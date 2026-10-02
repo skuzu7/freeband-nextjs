@@ -10,7 +10,13 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { admin } from '@/data/copy/admin';
 import { FailureLimiter, clientAddress } from '@/lib/rateLimit';
-import { createSession, secretsMatch, sessionCookieName, sessionCookieOptions } from '@/lib/session';
+import {
+  createSession,
+  expiredSessionCookieOptions,
+  secretsMatch,
+  sessionCookieName,
+  sessionCookieOptions,
+} from '@/lib/session';
 
 const FAIL_DELAY_MS = 400;
 
@@ -49,6 +55,8 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
 
 export async function logoutAction(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete({ name: sessionCookieName(), path: '/' });
+  // Not cookies().delete(): it omits Secure, and the browser ignores an
+  // unsecured Set-Cookie for the __Host- name, keeping the session alive.
+  cookieStore.set(sessionCookieName(), '', expiredSessionCookieOptions());
   redirect('/admin');
 }

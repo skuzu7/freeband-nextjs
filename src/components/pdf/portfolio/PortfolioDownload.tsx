@@ -12,10 +12,14 @@ const PortfolioDownloadButton = dynamic(
   () => import('./PortfolioDownloadButton').then((m) => m.PortfolioDownloadButton),
   {
     ssr: false,
+    // Same box as the loaded button, so nothing moves when the module lands.
     loading: () => (
-      <Button size="lg" disabled>
-        {portfolio.prepare}
-      </Button>
+      <div className="flex flex-col items-start gap-3">
+        <Button size="lg" disabled aria-busy>
+          {portfolio.prepare}
+        </Button>
+        <p className="min-h-[1.25em] text-sm" />
+      </div>
     ),
   },
 );

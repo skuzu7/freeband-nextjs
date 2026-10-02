@@ -19,7 +19,11 @@ const OrcamentoDownloadButton = dynamic(
   () => import('@/components/pdf/orcamento/OrcamentoDownloadButton').then((m) => m.OrcamentoDownloadButton),
   {
     ssr: false,
-    loading: () => <Button disabled>{orcamento.preview.generating}</Button>,
+    loading: () => (
+      <Button disabled aria-busy>
+        {orcamento.preview.generating}
+      </Button>
+    ),
   },
 );
 
@@ -30,8 +34,6 @@ interface PreviewProps {
 
 /** One A4 page in CSS pixels: 297mm at 96dpi. */
 const PAGE_HEIGHT_PX = (297 * 96) / 25.4;
-/** How long the form may keep typing before the PDF is rebuilt. */
-const PDF_DEBOUNCE_MS = 400;
 
 // 210mm wide document, scaled down to the container's width; at 1 when the
 // column is wider than the page. Until measured, one page tall.
@@ -42,39 +44,33 @@ const initialSheetStyle = {
   '--preview-scale': 'min(1, calc(100cqw / 210mm))',
 } as CSSProperties;
 
-/** The value, settled: it follows `value` only after it stops changing. */
-function useDebounced<T>(value: T, delayMs: number): T {
-  const [settled, setSettled] = useState(value);
-  useEffect(() => {
-    const id = window.setTimeout(() => setSettled(value), delayMs);
-    return () => window.clearTimeout(id);
-  }, [value, delayMs]);
-  return settled;
-}
-
 export function Preview({ data, onPrint }: PreviewProps) {
   const [pdfRequested, setPdfRequested] = useState(false);
-  const pdfData = useDebounced(data, PDF_DEBOUNCE_MS);
   const frameRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState<{ scale: number; height: number; pages: number } | null>(null);
 
   // The transform does not take part in layout, so the frame is sized by hand
-  // from the sheet's real (unscaled) box whenever either side changes.
+  // from the document's real (unscaled) box whenever either side changes.
+  // The height is read from the content, never from the sheet: the sheet's
+  // height is the one this effect sets, and measuring it back would shrink
+  // the page by the scale on every pass until nothing was left.
   useEffect(() => {
     const frame = frameRef.current;
     const sheet = sheetRef.current;
-    if (!frame || !sheet || typeof ResizeObserver === 'undefined') return;
+    const content = contentRef.current;
+    if (!frame || !sheet || !content || typeof ResizeObserver === 'undefined') return;
     const measure = () => {
       const width = sheet.offsetWidth;
-      const height = sheet.offsetHeight;
+      const height = content.offsetHeight;
       if (!width || !height) return;
       const scale = Math.min(1, frame.clientWidth / width);
       setFit({ scale, height: height * scale, pages: Math.max(1, Math.ceil((height - 1) / PAGE_HEIGHT_PX)) });
     };
     const ro = new ResizeObserver(measure);
     ro.observe(frame);
-    ro.observe(sheet);
+    ro.observe(content);
     measure();
     return () => ro.disconnect();
   }, []);
@@ -92,7 +88,7 @@ export function Preview({ data, onPrint }: PreviewProps) {
             {orcamento.preview.print}
           </Button>
           {pdfRequested ? (
-            <OrcamentoDownloadButton data={pdfData} />
+            <OrcamentoDownloadButton data={data} />
           ) : (
             <Button onClick={() => setPdfRequested(true)}>{orcamento.preview.generate}</Button>
           )}
@@ -105,7 +101,9 @@ export function Preview({ data, onPrint }: PreviewProps) {
         style={{ containerType: 'inline-size' }}
       >
         <div ref={sheetRef} className="print-scale-reset relative w-[210mm] max-w-none" style={sheetStyle}>
-          <PrintLayout data={data} />
+          <div ref={contentRef}>
+            <PrintLayout data={data} />
+          </div>
           {fit && fit.pages > 1 && (
             <div
               aria-hidden

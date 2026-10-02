@@ -5,6 +5,7 @@
 // proxy and in Node server actions. These cases are the contract the old site
 // shipped with; the rebuild keeps every one of them.
 import { describe, it, expect } from 'vitest';
+import { NextResponse } from 'next/server';
 import {
   createSession,
   verifySession,
@@ -12,6 +13,7 @@ import {
   secretsMatch,
   sessionCookieName,
   sessionCookieOptions,
+  expiredSessionCookieOptions,
   SESSION_COOKIE,
   SESSION_TTL_SECONDS,
 } from '../session';
@@ -103,5 +105,28 @@ describe('sessionCookieOptions', () => {
     expect(sessionCookieOptions('development').secure).toBe(false);
     expect(sessionCookieName('development')).toBe('freeband_admin');
     expect(sessionCookieOptions('test').secure).toBe(false);
+  });
+});
+
+describe('expiredSessionCookieOptions', () => {
+  // A browser ignores a __Host- Set-Cookie without Secure, Path=/ or with a
+  // Domain, so logout must repeat them or the session survives it.
+  it('expires the production cookie with every attribute the __Host- prefix demands', () => {
+    const response = NextResponse.next();
+    response.cookies.set(sessionCookieName('production'), '', expiredSessionCookieOptions('production'));
+    const header = response.headers.get('set-cookie') ?? '';
+    expect(header).toMatch(/^__Host-freeband_admin=;/);
+    expect(header).toMatch(/; Secure/i);
+    expect(header).toMatch(/; Path=\//);
+    expect(header).toMatch(/; Max-Age=0/);
+    expect(header).toMatch(/; Expires=Thu, 01 Jan 1970/);
+    expect(header).not.toMatch(/Domain=/i);
+  });
+
+  it('keeps the same flags as the live cookie outside production', () => {
+    expect(expiredSessionCookieOptions('development')).toMatchObject({
+      ...sessionCookieOptions('development'),
+      maxAge: 0,
+    });
   });
 });

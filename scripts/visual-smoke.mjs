@@ -1,9 +1,10 @@
 // Visual smoke test. Loads every route at desktop (1440) and phone (390)
 // widths, saves PNGs to ./screenshots/ (gitignored), and fails on: a console
 // error, horizontal overflow, a photograph whose box does not match its file's
-// aspect (i.e. a crop), or the protected route not being reached through the
-// legacy token link. Not wired into vitest — run with `npm run smoke` while a
-// server is up.
+// aspect (i.e. a crop), the protected route not being reached through the
+// legacy token link, its A4 preview collapsing, a 320px phone scrolling
+// sideways, or the portfolio button not producing a PDF. Not wired into vitest —
+// run with `npm run smoke` while a server is up.
 //
 //   BASE_URL              server to hit (default http://localhost:3000)
 //   ORCAMENTO_TOKEN       legacy token for /orcamento/<token> (from .env.local)
@@ -11,7 +12,9 @@
 //                         instead of launching one
 //   SMOKE_OUT             output directory (default screenshots)
 import puppeteer from 'puppeteer';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 
 if (existsSync('.env.local') && typeof process.loadEnvFile === 'function') {
   process.loadEnvFile('.env.local');
@@ -70,6 +73,51 @@ async function audit(page, label) {
   for (const src of result.cropped) failures.push(`${label}: cropped photograph ${src}`);
 }
 
+/**
+ * The A4 preview is sized by hand from its content; a measuring loop that
+ * feeds on its own output collapses it to nothing while the page still loads
+ * without an error. The sheet must stand at least one scaled page tall.
+ */
+async function auditPreview(page, label) {
+  const result = await page.evaluate(() => {
+    const frame = document.querySelector('[style*="container-type"]');
+    if (!frame) return { missing: true };
+    const { width, height } = frame.getBoundingClientRect();
+    return { width, height };
+  });
+  if (result.missing) failures.push(`${label}: the A4 preview frame is missing`);
+  // 297/210 is the A4 ratio; allow a little for borders and rounding.
+  else if (result.height < result.width * (297 / 210) * 0.95)
+    failures.push(`${label}: the A4 preview is ${Math.round(result.height)}px tall for ${Math.round(result.width)}px wide`);
+}
+
+/**
+ * The portfolio button must hand over a real PDF. Run against `next start`
+ * this exercises the production CSP too: a policy that blocks the PDF
+ * engine's WebAssembly passes every page load and still fails here.
+ */
+async function auditPdfDownload(page) {
+  const dir = mkdtempSync(path.join(tmpdir(), 'smoke-pdf-'));
+  try {
+    const cdp = await page.createCDPSession();
+    await cdp.send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: dir });
+    await navigate(page, `${BASE}/portfolio`);
+    const button = await page.waitForSelector('main button:not([disabled])', { timeout: 60000 });
+    await button.click();
+    const deadline = Date.now() + 60000;
+    let file;
+    while (Date.now() < deadline && !file) {
+      file = readdirSync(dir).find((f) => f.endsWith('.pdf'));
+      if (!file) await new Promise((r) => setTimeout(r, 500));
+    }
+    if (!file) failures.push('/portfolio: the download button produced no PDF within 60s');
+    else if (readFileSync(path.join(dir, file)).subarray(0, 5).toString() !== '%PDF-')
+      failures.push(`/portfolio: ${file} is not a PDF`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 async function run() {
   const browser = process.env.PUPPETEER_BROWSER_URL
     ? await puppeteer.connect({ browserURL: process.env.PUPPETEER_BROWSER_URL })
@@ -100,14 +148,34 @@ async function run() {
     }
   }
 
+  // The narrowest phone still sold: the header's wordmark, CTA and menu
+  // button have 280px there, so one extra pixel of padding shows up as a
+  // horizontal scroll on every page. One route is enough to catch it.
+  console.log('> /palco (320)');
+  await page.setViewport({ ...VIEWPORTS.mobile, width: 320, height: 640 });
+  await navigate(page, `${BASE}/palco`);
+  await audit(page, '/palco @320');
+
+  console.log('> /portfolio PDF download');
+  await page.setViewport(VIEWPORTS.desktop);
+  await auditPdfDownload(page);
+
   console.log('> /orcamento via legacy token (desktop)');
   await page.setViewport(VIEWPORTS.desktop);
   await navigate(page, `${BASE}/orcamento/${TOKEN}`);
   if (new URL(page.url()).pathname !== '/orcamento') {
     failures.push(`protected smoke did not reach /orcamento (landed on ${page.url()})`);
   } else {
-    await audit(page, '/orcamento @desktop');
-    await page.screenshot({ path: `${OUT}/orcamento-desktop.png`, fullPage: false });
+    for (const [name, viewport] of Object.entries(VIEWPORTS)) {
+      if (name !== 'desktop') {
+        console.log(`> /orcamento (${name})`);
+        await page.setViewport(viewport);
+        await navigate(page, `${BASE}/orcamento`);
+      }
+      await audit(page, `/orcamento @${name}`);
+      await auditPreview(page, `/orcamento @${name}`);
+      await page.screenshot({ path: `${OUT}/orcamento-${name}.png`, fullPage: false });
+    }
   }
 
   if (process.env.PUPPETEER_BROWSER_URL) {
@@ -122,7 +190,7 @@ async function run() {
     for (const f of failures) console.error(`  - ${f}`);
     process.exit(1);
   }
-  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 1} pages clean; screenshots in ${OUT}`);
+  console.log(`✓ ${PUBLIC_ROUTES.length * 2 + 3} pages clean; screenshots in ${OUT}`);
 }
 
 run().catch((err) => {

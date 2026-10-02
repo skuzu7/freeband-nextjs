@@ -11,9 +11,12 @@ export const portfolio = {
   label: 'Portfólio & Serviços',
   headline: 'Portfólio Digital',
   lead: 'Baixe nosso portfólio completo com história, galeria, serviços e informações de contato.',
-  prepare: 'Preparar PDF',
-  generating: 'Gerando PDF...',
-  download: 'Baixar Portfólio PDF',
+  // Shown while the PDF module itself is still loading.
+  prepare: 'Preparando…',
+  generating: 'Gerando PDF…',
+  generatingNote: 'Montando as sete páginas no seu navegador. O download começa sozinho.',
+  error: 'Não foi possível gerar o PDF. Tente de novo em instantes.',
+  download: 'Baixar portfólio (PDF)',
   fileName: 'Internacional-Freeband-Portfolio.pdf',
   back: 'Voltar ao site',
 

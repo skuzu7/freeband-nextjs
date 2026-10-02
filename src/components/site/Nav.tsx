@@ -2,8 +2,9 @@
 
 // src/components/site/Nav.tsx
 // Sticky header: wordmark, the four routes, the red CTA. On small screens the
-// routes fold into a full-screen dialog with focus kept inside; Escape closes
-// it and hands focus back to the button that opened it.
+// CTA stays in the header and the routes fold into a full-screen dialog with
+// focus kept inside; Escape closes it and hands focus back to the button that
+// opened it.
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
@@ -82,7 +83,7 @@ export function Nav() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
-        <Container className="flex h-16 items-center justify-between gap-6">
+        <Container className="flex h-16 items-center justify-between gap-3 sm:gap-6">
           <Link
             href="/"
             aria-label={site.nav.homeLabel}
@@ -97,7 +98,7 @@ export function Nav() {
             />
           </Link>
 
-          <nav aria-label={site.nav.landmark} className="hidden items-center gap-8 md:flex">
+          <nav aria-label={site.nav.landmark} className="hidden items-center gap-6 md:flex lg:gap-8">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -117,27 +118,36 @@ export function Nav() {
             <Button href={site.nav.cta.href}>{site.nav.cta.label}</Button>
           </nav>
 
-          <button
-            ref={triggerRef}
-            type="button"
-            className="transition-quick -mr-2 flex size-11 items-center justify-center rounded-sm text-ink hover:text-led-text md:hidden"
-            aria-expanded={open}
-            aria-controls={panelId}
-            aria-label={open ? site.nav.menuClose : site.nav.menuOpen}
-            onClick={() => setOpen(!open)}
-          >
-            <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" />
-              ) : (
-                <>
-                  <path d="M3 7h18" />
-                  <path d="M3 12h18" />
-                  <path d="M3 17h18" />
-                </>
-              )}
-            </svg>
-          </button>
+          {/* On phones the quote stays one tap away: the routes fold into
+              the menu, the button that books the band does not. */}
+          {/* Sized to fit a 320px screen: wordmark, CTA and menu button
+              share 280px there, and the smoke test fails on overflow. */}
+          <div className="flex shrink-0 items-center gap-1.5 md:hidden">
+            <Button href={site.nav.cta.href} className="min-h-11 px-3 py-2 text-xs min-[360px]:px-3.5">
+              {site.nav.cta.label}
+            </Button>
+            <button
+              ref={triggerRef}
+              type="button"
+              className="transition-quick -mr-2 flex size-11 items-center justify-center rounded-sm text-ink hover:text-led-text"
+              aria-expanded={open}
+              aria-controls={panelId}
+              aria-label={open ? site.nav.menuClose : site.nav.menuOpen}
+              onClick={() => setOpen(!open)}
+            >
+              <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                {open ? (
+                  <path d="M6 6l12 12M18 6L6 18" />
+                ) : (
+                  <>
+                    <path d="M3 7h18" />
+                    <path d="M3 12h18" />
+                    <path d="M3 17h18" />
+                  </>
+                )}
+              </svg>
+            </button>
+          </div>
         </Container>
       </header>
 
