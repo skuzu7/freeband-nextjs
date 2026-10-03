@@ -35,6 +35,7 @@ export function Atos() {
           ))}
         </section>
       ))}
+      <p className="-mt-10 text-sm text-ink-low md:-mt-16">{palco.photoCredit}</p>
     </Container>
   );
 }

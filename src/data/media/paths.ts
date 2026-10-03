@@ -21,8 +21,26 @@ export const images = {
   palcoCountryLed: '/images/palco-country-led.jpeg',
   palcoAnos70: '/images/palco-anos-70.jpeg',
   palcoCabare: '/images/palco-cabare.jpeg',
-  // Clube Náutico Araraquara (Jonas Matheus), watermark strip cropped off.
+  // Clube Náutico Araraquara, photographs by Jonas Matheus. The club stamped
+  // its logo over the bottom-right corner and the credit down the right
+  // margin; both are cropped off the files (1465×888 landscape, 955×1365
+  // portrait) and the credit is printed on the page instead.
   palcoAnos50: '/images/palco-anos-50.jpeg',
+  nauticoQuatroVozes: '/images/nautico-quatro-vozes.jpeg',
+  nauticoVozFeminina: '/images/nautico-voz-feminina.jpeg',
+  nauticoDoisVocalistas: '/images/nautico-dois-vocalistas.jpeg',
+  nauticoVocalistasPalco: '/images/nautico-vocalistas-palco.jpeg',
+  nauticoVocalBandana: '/images/nautico-vocal-bandana.jpeg',
+  nauticoVocalFloral: '/images/nautico-vocal-floral.jpeg',
+  nauticoBlocoCirco: '/images/nautico-bloco-circo.jpeg',
+  nauticoCircoFrente: '/images/nautico-circo-frente.jpeg',
+  nauticoBailarinaCirco: '/images/nautico-bailarina-circo.jpeg',
+  nauticoBlocoAnos50: '/images/nautico-bloco-anos-50.jpeg',
+  nauticoBailarinoCirco: '/images/nautico-bailarino-circo.jpeg',
+  nauticoBandaTriangulo: '/images/nautico-banda-triangulo.jpeg',
+  nauticoPalcoLuzes: '/images/nautico-palco-luzes.jpeg',
+  nauticoBaterista: '/images/nautico-baterista.jpeg',
+  nauticoTecladoFeixes: '/images/nautico-teclado-feixes.jpeg',
   // Golden sequin frontman, 2010×2130 camera scan.
   vocalPaete: '/images/vocal-paete-ouro.jpeg',
   // Wardrobe — shot backstage, one per block of the show.

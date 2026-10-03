@@ -48,29 +48,71 @@ async function navigate(page, url) {
     }
     scrollTo(0, 0);
   });
+  // A lazy image only starts once the scroll rests near it, and the pass
+  // above does not rest: without this the frames further down are still
+  // empty when audit() runs, and an empty frame has nothing to measure.
+  await page.evaluate(async () => {
+    const pending = [];
+    for (const img of document.images) {
+      img.loading = 'eager';
+      if (!img.complete)
+        pending.push(
+          new Promise((resolve) => {
+            img.addEventListener('load', resolve, { once: true });
+            img.addEventListener('error', resolve, { once: true });
+          }),
+        );
+    }
+    await Promise.race([Promise.all(pending), new Promise((r) => setTimeout(r, 20000))]);
+  });
   await page.waitForNetworkIdle({ idleTime: 500, timeout: 15000 }).catch(() => {});
   await new Promise((r) => setTimeout(r, SETTLE_MS));
 }
 
-/** Layout checks that hold on every page: no horizontal overflow, no cropped photo. */
+/**
+ * Layout checks that hold on every page: no horizontal overflow, every
+ * photograph loaded, none cropped, none laid over another.
+ */
 async function audit(page, label) {
   const result = await page.evaluate(() => {
     const overflow = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+    const unloaded = [];
     const cropped = [];
+    const frames = [];
     // data-backdrop marks the one photograph allowed to bleed (the fold's
     // stage poster under its scrim); everything else must show whole.
     for (const img of document.querySelectorAll('main img:not([data-backdrop])')) {
-      if (!img.naturalWidth || !img.parentElement) continue;
+      if (!img.parentElement) continue;
+      if (!img.naturalWidth) {
+        unloaded.push(img.getAttribute('src'));
+        continue;
+      }
       const box = img.parentElement.getBoundingClientRect();
       if (!box.width || !box.height) continue;
       const boxRatio = box.width / box.height;
       const fileRatio = img.naturalWidth / img.naturalHeight;
       if (Math.abs(boxRatio - fileRatio) / fileRatio > 0.03) cropped.push(img.getAttribute('src'));
+      frames.push({ src: img.getAttribute('src'), rect: img.getBoundingClientRect() });
     }
-    return { overflow, cropped };
+    // A frame tucked over another hides part of it just as a crop would. The
+    // smaller of an overlapping pair is the one on top.
+    const covered = [];
+    for (const under of frames) {
+      for (const over of frames) {
+        if (over === under) continue;
+        if (over.rect.width * over.rect.height >= under.rect.width * under.rect.height) continue;
+        const w = Math.min(under.rect.right, over.rect.right) - Math.max(under.rect.left, over.rect.left);
+        const h = Math.min(under.rect.bottom, over.rect.bottom) - Math.max(under.rect.top, over.rect.top);
+        if (w > 1 && h > 1 && (w * h) / (under.rect.width * under.rect.height) > 0.01)
+          covered.push(`${under.src} under ${over.src}`);
+      }
+    }
+    return { overflow, unloaded, cropped, covered };
   });
   if (result.overflow > 1) failures.push(`${label}: horizontal overflow of ${result.overflow}px`);
+  for (const src of result.unloaded) failures.push(`${label}: photograph did not load ${src}`);
   for (const src of result.cropped) failures.push(`${label}: cropped photograph ${src}`);
+  for (const pair of result.covered) failures.push(`${label}: covered photograph ${pair}`);
 }
 
 /**

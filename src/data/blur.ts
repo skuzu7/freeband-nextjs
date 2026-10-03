@@ -57,8 +57,38 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoOAAsABABoJbACdAELXQYgmoAA/un45kNANOhIhbS2yymcyjjaf+blCl5x1E2cVVUuDEqRuFcZF3J9iAebalkv9pSiv7CrQBahn8G9YAAAAA==",
   "/images/nautico-araraquara.jpeg":
     "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoOAAoABABoJbACdADDh80AZAAA/k9tN5RomSpOKTYr15fAKfKRzDplEM8xbQmbAe6wLIhu4MUJ0xGCWii3DWA0S557rjFfjN+Cnjdm6b5K1meF00AAAA==",
+  "/images/nautico-bailarina-circo.jpeg":
+    "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQAgCdASoKAA4ABABoJbACdAYuRqftg7BFbEAA/rXxbM1dwdyr03kdP+KrNwSS49aDsU3NmbR0UcaqHJbn1fILUs0EoW/Itdty/Emu5Yoyr6bCebhc+J6eDVs6zbroHaoMdq4RSo50AA==",
+  "/images/nautico-bailarino-circo.jpeg":
+    "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAABQAgCdASoKAA4ABABoJZgCdIEy4ADZ9M3Pk4gA/sI+c6HQapKUva457jb9kbXGFW7zVAsBoRELcOBez9ulEN4rPC20aeS3ybDXkHBItX0jwdjQuEpB88PgAAA=",
+  "/images/nautico-banda-triangulo.jpeg":
+    "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoOAAgABABoJbACdADR532VgkAA/onQl/dVWGyf9e+d5C9IUzST2QQ9iYIi53m/pncz98a/E3jcj07UH/I3El/T0vz+6Upl+9pSI3l9OgvAAA==",
+  "/images/nautico-baterista.jpeg":
+    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoOAAgABABoJZgCdACybSDwAAD+9HP1dR1WYFN/rPOdAQDAwJMxu2GGnERe5nBHd184pJXsruFrdwXY4pOAYrg2T/wictBAAAA=",
+  "/images/nautico-bloco-anos-50.jpeg":
+    "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoOAAgABABoJYgCdAEXtA8Hs2AA/u0oJJw0Aqm719Jnd3WyBQHUKb3BDudaJ8/vtBk2sr3pmpZFLGSM91dvAQIAAAA=",
+  "/images/nautico-bloco-circo.jpeg":
+    "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADwAQCdASoOAAgABABoJbACdADjfj2zwIgA/cY6F+HGdkM10qwpMEAeNaZMjP+pmHXXknQBDJKBfq5qtGUttdr7fsUjTPnzzJR+Sd+3YOjYa+UAklAEK6yb5ApPo0AA",
+  "/images/nautico-circo-frente.jpeg":
+    "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoOAAgABABoJbACdADNHeF3jCgA/pvCXP1HI4GxwuKHYYQTBx7lROq6NMIxYKPve4CrBsgGB6QknkYr6lUbWDiwknlz6H2Gb4apz9vQSAA=",
+  "/images/nautico-dois-vocalistas.jpeg":
+    "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoOAAgABABoJbACdAELhXS6DUQA/uzebgqdcSlVwHMJxb+EpuhLcbcGzQjeYnQ5C2JgB85a8bopBzROgTBmebgCGD0XATzPFpRU5hwAAAA=",
+  "/images/nautico-palco-luzes.jpeg":
+    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoOAAgABABoJbACdAC9vOtwAP7m5SMQYCb18CMsSCvRFII5Tvr5UxX3085Id76EsnTUuaYqBKziT+Cz4tlhkQRNd1KZX767AAA=",
+  "/images/nautico-quatro-vozes.jpeg":
+    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoOAAgABABoJbACdACl0W3NkAD8NqfL0dWcPkNXC1LNTq7hQh0MiRt84HfwRybqjoa2a/Y+4UzvUFcofTPQQn7KL0iE/BthYAA=",
+  "/images/nautico-teclado-feixes.jpeg":
+    "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQAgCdASoKAA4ABABoJbACdEf/geeMtvFxIAAA/qbLE/fY5kNyFU6Zk6GKQ82CnBXnpM5yjNxmBuX30ldu9BLxKp9qd4U9WNLypt8m/Nb7Pd62Z7ke5bZ2+DVwlWpZgAA=",
+  "/images/nautico-vocal-bandana.jpeg":
+    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoOAAgABABoJbACdADM4QCXp3oAAMrx2QWLNYgdnVp5U+cAuizr327t7xZ5IMP29/QAInxHSsCVrf+AAAA=",
+  "/images/nautico-vocal-floral.jpeg":
+    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoKAA4ABABoJZACdAELTedWxPAAAP7hTt0CngPCtaFhm4CmGCzJGbz0mIZjm1CgifD5n+Lv+Jefzr/QKcjdJksl9cgLnCmgAAA=",
+  "/images/nautico-vocalistas-palco.jpeg":
+    "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoKAA4ABABoJbACdAEUpOE/QAD+8aC4xtvISBH8Xs74XL1TKOZ0WeR5t9Hp8FfNYsTeDOm0VPtdqt8uW5YyAA==",
+  "/images/nautico-voz-feminina.jpeg":
+    "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAQCdASoOAAgABABoJbACdADhg7KK0AD+3i2+ndFl8zeUPuXD5s/cxQtAkpz5zrJ1ILt7T6/vE4b5UcwJQYx+8CYeOwEA3OC7c+9IOrB32fSjZZAAAA==",
   "/images/palco-anos-50.jpeg":
-    "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoKAA4ABABoJbACdAD8Xy1j0aqAAP7I/V6TcYRoq85WnvgdQlB9skXZvTx2AZeJZxESch4e7mV/cM0M/KNvm4kP/80Scm+2DWzA/gK8qzwbFuAA",
+    "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoKAA4ABABoJbACdAD7JA6lIA2AAP7I/V6TcYRoq6qgxOM3n8vD2xxavfGOGDf1FiSjesx+jMXerBlKIdkxdTBWuqzxROTfbBrZgfwFeVZ4Ni3AAAA=",
   "/images/palco-anos-70.jpeg":
     "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoKAA4ABABoJaACdAEVvIz10ffqgAD+n+2pSxzgmytRt7jtHFmgIedTsBgKHcjdnfriN0vFx9Y+KA9PiwgqKqf9dYWnEiOACPraU/HK3xQGNv67Xi4AAA==",
   "/images/palco-asas-led.jpeg":
