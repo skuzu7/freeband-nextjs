@@ -17,7 +17,6 @@ interface PhotoProps {
   quality?: 75 | 90;
   grade?: ImageGrade;
   className?: string;
-  imgClassName?: string;
 }
 
 export function Photo({
@@ -27,7 +26,6 @@ export function Photo({
   quality = 75,
   grade,
   className,
-  imgClassName,
 }: PhotoProps) {
   const blur = blurMap[photo.src];
   return (
@@ -44,7 +42,7 @@ export function Photo({
         quality={quality}
         placeholder={blur ? 'blur' : 'empty'}
         blurDataURL={blur}
-        className={cn('object-cover', grade === 'vintage' && 'grade-vintage', imgClassName)}
+        className={cn('object-cover', grade === 'vintage' && 'grade-vintage')}
       />
     </div>
   );

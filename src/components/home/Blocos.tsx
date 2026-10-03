@@ -8,12 +8,11 @@ import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
 import { ratioOf } from '@/data/media/paths';
 import { LedPhoto } from '@/components/brand/LedPhoto';
-import { LedText } from '@/components/brand/LedText';
 import { Container } from '@/components/ui/Container';
-import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
 import { SnapDots } from '@/components/ui/SnapDots';
 import { Photo } from '@/components/media/Photo';
+import { BlockHeader } from '@/components/home/BlockHeader';
 
 const ROW_ID = 'blocos-row';
 
@@ -21,13 +20,7 @@ export function Blocos() {
   return (
     <Section id="blocos" labelledBy="blocos-title" className="overflow-hidden border-t border-line">
       <Container className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <header className="max-w-[60ch]">
-          <Label dot>{blocos.label}</Label>
-          <div className="mt-4">
-            <LedText id="blocos-title" text={blocos.headline} className="text-4xl font-semibold tracking-display text-ink" />
-          </div>
-          <p className="rise mt-5 text-lg text-ink-muted">{blocos.lead}</p>
-        </header>
+        <BlockHeader id="blocos-title" label={blocos.label} headline={blocos.headline} lead={blocos.lead} />
         <SnapDots
           rowId={ROW_ID}
           count={blocos.items.length}

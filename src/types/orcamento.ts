@@ -53,15 +53,3 @@ export const defaultOrcamento: OrcamentoData = {
   observacoes: '',
   validade: '',
 };
-
-/** Reads a stored draft back into a whole OrcamentoData; unknown shapes yield null. */
-export function parseOrcamento(raw: unknown): OrcamentoData | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const source = raw as Record<string, unknown>;
-  const data = { ...defaultOrcamento };
-  for (const field of ORCAMENTO_FIELDS) {
-    const value = source[field];
-    if (typeof value === 'string') data[field] = value;
-  }
-  return data;
-}

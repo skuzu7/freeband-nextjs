@@ -21,7 +21,7 @@ export const pdfColors = {
   // paper
   surface: paper('surface'),
   raise: paper('surface-raise'),
-  high: '#ffffff',
+  high: paper('surface-high'),
   ink: paper('ink'),
   inkMuted: paper('ink-muted'),
   // The paper "line" token is translucent; the PDF has no alpha compositing
@@ -46,12 +46,16 @@ export const CONTENT_WIDTH = A4.width - A4.margin * 2;
 
 let fontsRegistered = false;
 
+// Read at call time, never hoisted to a module constant: a caller outside a
+// browser may define `window` only after this module is imported.
+const pageOrigin = () => (typeof window !== 'undefined' ? window.location.origin : '');
+
 /**
  * Registers the three static Outfit weights. Idempotent. The files live in
  * public/fonts and are fetched from the page's own origin; a caller outside a
  * browser (a Node probe, a test) passes the origin or a file path prefix.
  */
-export function registerPdfFonts(prefix = typeof window !== 'undefined' ? window.location.origin : ''): void {
+export function registerPdfFonts(prefix = pageOrigin()): void {
   if (fontsRegistered) return;
   Font.register({
     family: PDF_FONT,
@@ -71,8 +75,7 @@ export function registerPdfFonts(prefix = typeof window !== 'undefined' ? window
 
 /** Absolute URL for a public asset, so the browser-side renderer can fetch it. */
 export function pdfUrl(path: string): string {
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  return `${origin}${path}`;
+  return `${pageOrigin()}${path}`;
 }
 
 export const pdfStyles = StyleSheet.create({

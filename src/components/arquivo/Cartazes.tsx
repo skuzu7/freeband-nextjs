@@ -23,22 +23,18 @@ function chunk<T>(list: T[], size: number): T[][] {
 
 const titleOf = (p: Poster) => `${p.town} · ${p.event}`;
 const metaOf = (p: Poster) => [p.when !== '—' ? p.when : null, p.venue].filter(Boolean).join(' · ');
+const postersOf = (key: FilterKey): Poster[] =>
+  key === 'todos' ? posters : posters.filter((p) => p.category === key);
 
 const counts = Object.fromEntries(
-  arquivo.filters.map((f) => [
-    f.key,
-    f.key === 'todos' ? posters.length : posters.filter((p) => p.category === f.key).length,
-  ]),
+  arquivo.filters.map((f) => [f.key, postersOf(f.key).length]),
 ) as Record<FilterKey, number>;
 
 export function Cartazes() {
   const [filter, setFilter] = useState<FilterKey>('todos');
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const visible = useMemo(
-    () => (filter === 'todos' ? posters : posters.filter((p) => p.category === filter)),
-    [filter],
-  );
+  const visible = useMemo(() => postersOf(filter), [filter]);
   const items: LightboxItem[] = useMemo(
     () => visible.map((p) => ({ src: p.src, alt: p.alt, aspect: p.aspect, title: titleOf(p), meta: metaOf(p) })),
     [visible],

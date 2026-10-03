@@ -22,6 +22,8 @@ export const contact = {
   // The CNPJ lives with the band's identity: bandInfo.cnpj in band.ts.
 };
 
+export const telHref = `tel:${contact.phoneIntl.replace(/[^\d+]/g, '')}`;
+
 /** WhatsApp link that opens with a message about a specific package. */
 export function whatsappPackageLink(intro: string, packageName: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`${intro} ${packageName}`)}`;

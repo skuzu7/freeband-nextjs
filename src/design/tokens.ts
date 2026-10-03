@@ -187,6 +187,13 @@ export function resolveColor(name: string, theme: keyof typeof themes = 'dark'):
   return palette[value] ?? value;
 }
 
+/** One `--color-*` declaration per semantic name; palette names become var(). */
+function semanticLines(map: SemanticMap): string[] {
+  return Object.entries(map).map(
+    ([k, v]) => `--color-${k}: ${v in tokens.palette ? `var(--color-${v})` : v};`,
+  );
+}
+
 function block(selector: string, lines: string[]): string {
   return `${selector} {\n${lines.map((l) => `  ${l}`).join('\n')}\n}\n`;
 }
@@ -201,10 +208,7 @@ export function renderTokensCss(): string {
   theme.push('/* palette */');
   for (const [k, v] of Object.entries(tokens.palette)) theme.push(`--color-${k}: ${v};`);
   theme.push('', '/* semantic (dark) */');
-  for (const [k, v] of Object.entries(themes.dark)) {
-    const ref = v in tokens.palette ? `var(--color-${v})` : v;
-    theme.push(`--color-${k}: ${ref};`);
-  }
+  theme.push(...semanticLines(themes.dark));
   theme.push('', '/* type */');
   for (const [k, v] of Object.entries(tokens.font)) theme.push(`--font-${k}: ${v};`);
   for (const [k, v] of Object.entries(tokens.text)) theme.push(`--text-${k}: ${v};`);
@@ -217,11 +221,7 @@ export function renderTokensCss(): string {
   for (const [k, v] of Object.entries(tokens.layout)) theme.push(`--${k}: ${v};`);
 
   const scoped = (name: 'paper' | 'sepia', scheme: 'light' | 'dark') => {
-    const lines: string[] = [];
-    for (const [k, v] of Object.entries(themes[name])) {
-      const ref = v in tokens.palette ? `var(--color-${v})` : v;
-      lines.push(`--color-${k}: ${ref};`);
-    }
+    const lines = semanticLines(themes[name]);
     lines.push(`color-scheme: ${scheme};`);
     return block(`[data-theme='${name}']`, lines);
   };

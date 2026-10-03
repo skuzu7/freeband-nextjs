@@ -8,6 +8,7 @@
 import { useEffect, useId, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/cn';
+import { cycleFocus } from '@/lib/focusTrap';
 import { ratioOf, type Photo as PhotoData } from '@/data/media/paths';
 import { DotGrid } from '@/components/brand/DotGrid';
 import { Photo } from './Photo';
@@ -87,18 +88,7 @@ export function Lightbox({ items, index, onClose, onChange, labels }: LightboxPr
         change((current - 1 + total) % total);
         return;
       }
-      if (event.key !== 'Tab' || !panelRef.current) return;
-      const focusables = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      cycleFocus(event, panelRef.current, FOCUSABLE);
     };
     document.addEventListener('keydown', onKeyDown);
     return () => {

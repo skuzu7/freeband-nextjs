@@ -6,9 +6,9 @@ import { Document, Page, Text, View } from '@react-pdf/renderer';
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
 import { orcamento } from '@/data/copy/orcamento';
-import { formatCurrency, formatDate, splitPayment } from '@/lib/format';
+import { formatDate } from '@/lib/format';
+import { buildProposta } from '@/lib/proposta';
 import type { OrcamentoData } from '@/types/orcamento';
-import { formatSchedule, pctLabel } from '@/components/orcamento/PrintLayout';
 import { pdfColors, pdfStyles, registerPdfFonts } from '../theme';
 import { WordmarkPdf } from '../WordmarkPdf';
 
@@ -21,6 +21,8 @@ const sectionTitle = {
   borderBottomWidth: 0.75,
   borderBottomColor: pdfColors.line,
 } as const;
+const bigValue = { fontSize: 20, fontWeight: 600, letterSpacing: -0.4, color: pdfColors.ink } as const;
+const bodyBlock = { ...pdfStyles.body, color: pdfColors.ink } as const;
 
 function Cell({ label, value }: { label: string; value: string }) {
   return (
@@ -31,14 +33,27 @@ function Cell({ label, value }: { label: string; value: string }) {
   );
 }
 
+function PaymentCard({ label, value, date }: { label: string; value: string; date: string }) {
+  return (
+    <View style={{ ...pdfStyles.card, flex: 1 }}>
+      <Text style={pdfStyles.labelMuted}>{label}</Text>
+      <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{value}</Text>
+      {date && (
+        <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
+          {doc.ate} {formatDate(date)}
+        </Text>
+      )}
+    </View>
+  );
+}
+
 interface OrcamentoPdfProps {
   data: OrcamentoData;
 }
 
 export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
   registerPdfFonts();
-  const hasCache = data.cache !== '';
-  const payment = splitPayment(data.cache, data.entradaPct);
+  const v = buildProposta(data);
 
   return (
     <Document title={orcamento.preview.docTitle(data.contratante)} author={bandInfo.name} language="pt-BR">
@@ -71,64 +86,44 @@ export function OrcamentoPdf({ data }: OrcamentoPdfProps) {
 
         <View style={{ marginBottom: 20 }}>
           <Text style={pdfStyles.labelMuted}>{doc.para}</Text>
-          <Text style={{ marginTop: 3, fontSize: 20, fontWeight: 600, letterSpacing: -0.4, color: pdfColors.ink }}>
+          <Text style={{ marginTop: 3, ...bigValue }}>
             {data.contratante || doc.empty}
           </Text>
         </View>
 
         <View style={{ ...pdfStyles.card, flexDirection: 'row', flexWrap: 'wrap', padding: 14, paddingBottom: 6, marginBottom: 20 }}>
-          <Cell label={doc.tipoEvento} value={data.tipoEvento || doc.empty} />
-          <Cell label={doc.data} value={data.dataEvento ? formatDate(data.dataEvento) : doc.empty} />
-          <Cell label={doc.local} value={data.local || doc.empty} />
-          <Cell label={doc.horario} value={formatSchedule(data.horarioInicio, data.horarioFim)} />
-          <Cell label={doc.convidados} value={data.numConvidados ? `${data.numConvidados} ${doc.pessoas}` : doc.empty} />
+          {v.rows.map(([label, value]) => (
+            <Cell key={label} label={label} value={value} />
+          ))}
         </View>
 
         <View style={{ marginBottom: 20 }}>
           <Text style={sectionTitle}>{doc.investimento}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <Text style={{ fontSize: 10, color: pdfColors.inkMuted }}>{doc.valorTotal}</Text>
-            <Text style={{ fontSize: 20, fontWeight: 600, letterSpacing: -0.4, color: pdfColors.ink }}>
-              {hasCache ? formatCurrency(data.cache) : doc.empty}
-            </Text>
+            <Text style={bigValue}>{v.total}</Text>
           </View>
         </View>
 
         <View style={{ marginBottom: 20 }}>
           <Text style={sectionTitle}>{doc.pagamento}</Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            <View style={{ ...pdfStyles.card, flex: 1 }}>
-              <Text style={pdfStyles.labelMuted}>{pctLabel(doc.entrada, payment.entradaPct)}</Text>
-              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{payment.entrada}</Text>
-              {data.entradaData && (
-                <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
-                  {doc.ate} {formatDate(data.entradaData)}
-                </Text>
-              )}
-            </View>
-            <View style={{ ...pdfStyles.card, flex: 1 }}>
-              <Text style={pdfStyles.labelMuted}>{pctLabel(doc.saldo, payment.saldoPct)}</Text>
-              <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{payment.saldo}</Text>
-              {data.saldoData && (
-                <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
-                  {doc.ate} {formatDate(data.saldoData)}
-                </Text>
-              )}
-            </View>
+            <PaymentCard label={v.entradaLabel} value={v.entradaValor} date={data.entradaData} />
+            <PaymentCard label={v.saldoLabel} value={v.saldoValor} date={data.saldoData} />
           </View>
         </View>
 
         {data.itensInclusos && (
           <View style={{ marginBottom: 20 }}>
             <Text style={sectionTitle}>{doc.itens}</Text>
-            <Text style={{ ...pdfStyles.body, color: pdfColors.ink }}>{data.itensInclusos}</Text>
+            <Text style={bodyBlock}>{data.itensInclusos}</Text>
           </View>
         )}
 
         {data.observacoes && (
           <View style={{ marginBottom: 20 }}>
             <Text style={sectionTitle}>{doc.observacoes}</Text>
-            <Text style={{ ...pdfStyles.body, color: pdfColors.ink }}>{data.observacoes}</Text>
+            <Text style={bodyBlock}>{data.observacoes}</Text>
           </View>
         )}
 

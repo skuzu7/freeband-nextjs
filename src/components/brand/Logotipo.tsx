@@ -10,8 +10,6 @@ interface LogotipoProps {
   className?: string;
   /** Sizing for the wordmark itself — pass a height, leave the width auto. */
   markClassName?: string;
-  /** Hides the "INTERNACIONAL" line and its rule (tight spots, e.g. the nav). */
-  compact?: boolean;
   /** Renders wordmark with authentic extruded red acrylic stage lighting. */
   acrylic?: boolean;
   /** Adds soft ambient stage glow. */
@@ -22,19 +20,16 @@ interface LogotipoProps {
 export function Logotipo({
   className,
   markClassName = 'h-[clamp(2.5rem,7vi,5.5rem)] w-auto',
-  compact = false,
   acrylic = false,
   glow = false,
   title,
 }: LogotipoProps) {
   return (
     <span className={cn('flex flex-col items-start gap-2', className)}>
-      {!compact && (
-        <span className="flex w-full items-center gap-3 text-ink-muted">
-          <span className="label-caps">{bandInfo.brandLine}</span>
-          <span aria-hidden className="dot-line flex-1" />
-        </span>
-      )}
+      <span className="flex w-full items-center gap-3 text-ink-muted">
+        <span className="label-caps">{bandInfo.brandLine}</span>
+        <span aria-hidden className="dot-line flex-1" />
+      </span>
       <Wordmark
         acrylic={acrylic}
         glow={glow}

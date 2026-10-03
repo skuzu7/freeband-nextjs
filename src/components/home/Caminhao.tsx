@@ -10,12 +10,12 @@ import { estrutura } from '@/data/media/estrutura';
 import { servicePackages, services, type ServicePackage } from '@/data/packages';
 import { DotGrid } from '@/components/brand/DotGrid';
 import { LedNumber } from '@/components/brand/LedNumber';
-import { LedText } from '@/components/brand/LedText';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
 import { PlateRow } from '@/components/media/PlateRow';
+import { BlockHeader } from '@/components/home/BlockHeader';
 
 function PackageCard({ pkg }: { pkg: ServicePackage }) {
   return (
@@ -60,13 +60,7 @@ export function Caminhao() {
   return (
     <Section id="caminhao" labelledBy="caminhao-title">
       <Container>
-        <header className="max-w-[60ch]">
-          <Label dot>{caminhao.label}</Label>
-          <div className="mt-4">
-            <LedText id="caminhao-title" text={caminhao.headline} className="text-4xl font-semibold tracking-display text-ink" />
-          </div>
-          <p className="rise mt-5 text-lg text-ink-muted">{caminhao.lead}</p>
-        </header>
+        <BlockHeader id="caminhao-title" label={caminhao.label} headline={caminhao.headline} lead={caminhao.lead} />
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
           {servicePackages.map((pkg) => (

@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
+import { cycleFocus } from '@/lib/focusTrap';
 import { bandInfo } from '@/data/band';
 import { site } from '@/data/copy/site';
 import { Wordmark } from '@/components/brand/Wordmark';
@@ -49,18 +50,7 @@ export function Nav() {
         triggerRef.current?.focus();
         return;
       }
-      if (event.key !== 'Tab' || !panelRef.current) return;
-      const focusables = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      cycleFocus(event, panelRef.current, FOCUSABLE);
     };
     document.addEventListener('keydown', onKeyDown);
     // The dialog is md:hidden, so a rotation into desktop width would leave

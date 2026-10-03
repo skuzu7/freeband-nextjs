@@ -140,7 +140,6 @@ export function Fold({ yearsActive }: FoldProps) {
               aspect={WORDMARK_ASPECT}
               cols={180}
               onLit={() => setLit(true)}
-              field={false}
               dimDots={false}
               fadeWhenLit
               className="w-full"

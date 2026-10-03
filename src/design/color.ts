@@ -58,6 +58,9 @@ function linearToSrgb(c: number): number {
   return clamp01(v);
 }
 
+/** Linear-light component → gamma-encoded 0..255 integer. */
+const to8bit = (linear: number) => Math.round(linearToSrgb(linear) * 255);
+
 function hexToLinear(input: string): Rgba {
   let hex = input.trim().slice(1);
   if (hex.length === 3 || hex.length === 4) {
@@ -127,18 +130,14 @@ export function contrastRatio(fg: string, bg: string): number {
 /** `#rrggbb` for an opaque colour (alpha dropped). */
 export function toHex(input: string): string {
   const c = parseColor(input);
-  const h = (v: number) =>
-    Math.round(linearToSrgb(v) * 255)
-      .toString(16)
-      .padStart(2, '0');
+  const h = (v: number) => to8bit(v).toString(16).padStart(2, '0');
   return `#${h(c.r)}${h(c.g)}${h(c.b)}`;
 }
 
 /** `rgba(r, g, b, a)` string a canvas 2D context accepts everywhere. */
 export function toRgba(input: string, alphaOverride?: number): string {
   const c = parseColor(input);
-  const n = (v: number) => Math.round(linearToSrgb(v) * 255);
-  return `rgba(${n(c.r)}, ${n(c.g)}, ${n(c.b)}, ${alphaOverride ?? c.alpha})`;
+  return `rgba(${to8bit(c.r)}, ${to8bit(c.g)}, ${to8bit(c.b)}, ${alphaOverride ?? c.alpha})`;
 }
 
 /** Linear interpolation between two colours in linear-light sRGB. */
@@ -146,6 +145,6 @@ export function mix(a: string, b: string, t: number): string {
   const ca = parseColor(a);
   const cb = parseColor(b);
   const k = clamp01(t);
-  const n = (x: number, y: number) => Math.round(linearToSrgb(x + (y - x) * k) * 255);
+  const n = (x: number, y: number) => to8bit(x + (y - x) * k);
   return `rgb(${n(ca.r, cb.r)}, ${n(ca.g, cb.g)}, ${n(ca.b, cb.b)})`;
 }

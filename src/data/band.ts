@@ -2,7 +2,7 @@
 // Who the band is: identity, line-up, the release in its own words, the five
 // eras, the names it has shared stages with. Extracted from the official
 // Internacional Freeband brochure and the "Orçamento Exclusivo" portfolio.
-import { images, type Photo } from './media/paths';
+import { images, type CaptionedPhoto } from './media/paths';
 
 export const bandInfo = {
   name: 'Internacional Freeband',
@@ -34,6 +34,16 @@ export const bandLineup = {
   ],
 };
 
+// Canonical phrases built from the line-up, read by the home, /palco and the
+// portfolio PDF so the count is written in one place.
+export const lineupLabel = `A formação · ${bandLineup.total} no palco`;
+export const bandKicker = (yearsActive: number) => `${bandLineup.total} no palco. ${yearsActive} anos de estrada.`;
+export const credentials = [
+  { value: String(bandLineup.total), label: 'integrantes no palco' },
+  { value: '7+', label: 'estados brasileiros' },
+  { value: '2', label: 'turnês internacionais' },
+];
+
 // The band's own one-line description of what it delivers. Canonical: the
 // meta description, the Palco lead and the closing paragraph of the release
 // all read from here, so the sentence is edited in exactly one place.
@@ -63,14 +73,12 @@ FREEBAND: sempre um clima de expectativa em nossas apresentações. Novos recurs
   // The line the band closes its own material with.
   slogan: 'Perto de você, com certeza, sempre haverá alguém que já viu.',
   sloganFootnote: `${YEARS_ACTIVE} anos de sucesso`,
-  highlights: [
-    { value: `${YEARS_ACTIVE}+`, label: 'anos de estrada' },
-    { value: String(bandLineup.total), label: 'integrantes no palco' },
-    { value: '7+', label: 'estados brasileiros' },
-    { value: '2', label: 'turnês internacionais' },
-  ],
+  highlights: [{ value: `${YEARS_ACTIVE}+`, label: 'anos de estrada' }, ...credentials],
   values: ['Pontualidade', 'Honestidade', 'Profissionalismo'],
 };
+
+// Splits the release texts into paragraphs at their blank lines.
+export const paragraphsOf = (text: string) => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 /** How an era's photograph is treated: stage colour, printed artefact, or faded print. */
 export type ImageGrade = 'live' | 'poster' | 'vintage';
@@ -79,7 +87,7 @@ export interface Era {
   year: string;
   title: string;
   description: string;
-  image: Photo & { caption: string; grade: ImageGrade };
+  image: CaptionedPhoto & { grade: ImageGrade };
 }
 
 // Each era carries its own archival photograph, rendered WHOLE at the file's

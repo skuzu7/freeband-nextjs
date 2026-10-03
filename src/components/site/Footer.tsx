@@ -1,13 +1,11 @@
 // src/components/site/Footer.tsx
 import Link from 'next/link';
 import { bandInfo } from '@/data/band';
-import { contact } from '@/data/contact';
+import { contact, telHref } from '@/data/contact';
 import { site } from '@/data/copy/site';
 import { Logotipo } from '@/components/brand/Logotipo';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
-
-const telHref = `tel:${contact.phoneIntl.replace(/[^\d+]/g, '')}`;
 
 export function Footer() {
   const year = new Date().getFullYear();

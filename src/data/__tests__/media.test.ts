@@ -10,7 +10,7 @@ import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { images } from '@/data/media/paths';
+import { images, ratioOf } from '@/data/media/paths';
 import { stageFrames, retratoPaete, STAGE_CATEGORIES } from '@/data/media/frames';
 import { figurinos } from '@/data/media/figurinos';
 import { estrutura } from '@/data/media/estrutura';
@@ -38,15 +38,10 @@ async function real(url: string) {
   return { width, height, ratio: width / height, longEdge: Math.max(width, height) };
 }
 
-function declared(aspect: string) {
-  const [w, h] = aspect.split('/').map(Number);
-  return w / h;
-}
-
 async function expectAspect(url: string, aspect: string, label: string) {
   const r = await real(url);
   expect(
-    Math.abs(r.ratio - declared(aspect)) / declared(aspect),
+    Math.abs(r.ratio - ratioOf(aspect)) / ratioOf(aspect),
     `${label}: declared ${aspect} but file is ${r.width}x${r.height}`,
   ).toBeLessThan(TOLERANCE);
   return r;
@@ -121,6 +116,15 @@ describe('aspect ratios and resolution', () => {
       expect(poster.town).toBeTruthy();
       expect(poster.event).toBeTruthy();
       expect(POSTER_CATEGORIES).toContain(poster.category);
+    }
+  });
+
+  it('home posters — the flagged flyers clear the frame floor', async () => {
+    const home = posters.filter((p) => p.home);
+    expect(home.length).toBeGreaterThan(0);
+    for (const poster of home) {
+      const r = await real(poster.src);
+      expect(r.longEdge, `${poster.town} below frame floor`).toBeGreaterThanOrEqual(FRAME_MIN_LONG_EDGE);
     }
   });
 

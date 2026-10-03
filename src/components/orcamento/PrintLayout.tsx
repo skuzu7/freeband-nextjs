@@ -2,11 +2,13 @@
 // The proposal as an HTML page: what the preview scales and what print
 // outputs. Paper tokens only, so it matches the editor around it; the PDF
 // twin is src/components/pdf/orcamento/OrcamentoPdf.tsx and reads the same
-// copy and the same format helpers, so the two never disagree on a number.
+// copy and the same view-model (src/lib/proposta.ts), so the two never
+// disagree on a number.
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
 import { orcamento } from '@/data/copy/orcamento';
-import { formatCurrency, formatDate, splitPayment } from '@/lib/format';
+import { formatDate } from '@/lib/format';
+import { buildProposta } from '@/lib/proposta';
 import type { OrcamentoData } from '@/types/orcamento';
 import { Wordmark } from '@/components/brand/Wordmark';
 
@@ -19,28 +21,8 @@ const sectionTitle = 'label-caps mb-3 border-b border-line pb-2 text-led-text';
 const micro = 'label-caps mb-1 text-ink-muted';
 const bodyBlock = 'whitespace-pre-line text-[0.82rem] leading-[1.75] text-ink';
 
-/** "22:00 às —" when only one end of the evening is known; "—" when neither. */
-export function formatSchedule(inicio: string, fim: string): string {
-  if (!inicio && !fim) return doc.empty;
-  return `${inicio || doc.empty} ${doc.horarioJoin} ${fim || doc.empty}`;
-}
-
-/** "Entrada (50%)"; the percentage is the clamped one the amounts use. */
-export function pctLabel(label: string, pct: number | null): string {
-  return `${label} (${pct === null ? doc.empty : `${pct}%`})`;
-}
-
 export function PrintLayout({ data }: PrintLayoutProps) {
-  const hasCache = data.cache !== '';
-  const payment = splitPayment(data.cache, data.entradaPct);
-
-  const rows: ReadonlyArray<readonly [string, string]> = [
-    [doc.tipoEvento, data.tipoEvento || doc.empty],
-    [doc.data, data.dataEvento ? formatDate(data.dataEvento) : doc.empty],
-    [doc.local, data.local || doc.empty],
-    [doc.horario, formatSchedule(data.horarioInicio, data.horarioFim)],
-    [doc.convidados, data.numConvidados ? `${data.numConvidados} ${doc.pessoas}` : doc.empty],
-  ];
+  const v = buildProposta(data);
 
   return (
     <div id="print-area" className="flex min-h-[297mm] w-[210mm] max-w-full flex-col bg-surface-high p-[18mm] text-ink">
@@ -66,7 +48,7 @@ export function PrintLayout({ data }: PrintLayoutProps) {
       </section>
 
       <section className="mb-8 grid grid-cols-2 gap-4 border border-line bg-surface-raise p-5">
-        {rows.map(([label, value]) => (
+        {v.rows.map(([label, value]) => (
           <div key={label}>
             <div className={micro}>{label}</div>
             <div className="text-[0.9rem] font-medium text-ink">{value}</div>
@@ -78,9 +60,7 @@ export function PrintLayout({ data }: PrintLayoutProps) {
         <h2 className={sectionTitle}>{doc.investimento}</h2>
         <div className="flex items-baseline justify-between">
           <span className="text-[0.9rem] text-ink-muted">{doc.valorTotal}</span>
-          <span className="text-2xl font-semibold tracking-tight text-ink">
-            {hasCache ? formatCurrency(data.cache) : doc.empty}
-          </span>
+          <span className="text-2xl font-semibold tracking-tight text-ink">{v.total}</span>
         </div>
       </section>
 
@@ -88,8 +68,8 @@ export function PrintLayout({ data }: PrintLayoutProps) {
         <h2 className={sectionTitle}>{doc.pagamento}</h2>
         <div className="grid grid-cols-2 gap-3">
           <div className="border border-line bg-surface-raise p-4">
-            <div className={micro}>{pctLabel(doc.entrada, payment.entradaPct)}</div>
-            <div className="text-lg font-semibold text-ink">{payment.entrada}</div>
+            <div className={micro}>{v.entradaLabel}</div>
+            <div className="text-lg font-semibold text-ink">{v.entradaValor}</div>
             {data.entradaData && (
               <div className="mt-1 text-xs text-ink-muted">
                 {doc.ate} {formatDate(data.entradaData)}
@@ -97,8 +77,8 @@ export function PrintLayout({ data }: PrintLayoutProps) {
             )}
           </div>
           <div className="border border-line bg-surface-raise p-4">
-            <div className={micro}>{pctLabel(doc.saldo, payment.saldoPct)}</div>
-            <div className="text-lg font-semibold text-ink">{payment.saldo}</div>
+            <div className={micro}>{v.saldoLabel}</div>
+            <div className="text-lg font-semibold text-ink">{v.saldoValor}</div>
             {data.saldoData && (
               <div className="mt-1 text-xs text-ink-muted">
                 {doc.ate} {formatDate(data.saldoData)}

@@ -1,7 +1,7 @@
 // src/components/pdf/portfolio/About.tsx
 // Page 2. The release in full, the four numbers, the line-up, the values.
 import { Text, View } from '@react-pdf/renderer';
-import { bandLineup, release } from '@/data/band';
+import { bandLineup, paragraphsOf, release } from '@/data/band';
 import { portfolio } from '@/data/copy/portfolio';
 import { PhotoPdf } from '../motifs';
 import { pdfColors, pdfStyles } from '../theme';
@@ -9,7 +9,7 @@ import { Fact, PdfPage } from './chrome';
 import { pdfPhotos } from './images';
 
 const c = portfolio.pdf.about;
-const paragraphs = release.full.split(/\n\s*\n/).map((p) => p.trim());
+const paragraphs = paragraphsOf(release.full);
 
 export function About() {
   return (
