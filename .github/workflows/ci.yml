@@ -39,8 +39,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # What ships is held to high: the runtime tree has to be clean. The dev
+      # tree only fails on critical, because eslint-config-next pulls braces
+      # through fast-glob and no braces release fixes its high advisory; it
+      # runs at lint time and never reaches the site.
       - name: Audit dependencies
-        run: npm audit --audit-level=high
+        run: |
+          npm audit --omit=dev --audit-level=high
+          npm audit --audit-level=critical
 
       - name: Run Unit & Security Tests
         run: npm test
