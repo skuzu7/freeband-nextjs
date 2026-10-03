@@ -1,7 +1,8 @@
 // src/components/home/Blocos.tsx
 // Block 3 — the thematic blocks as panels on the wall: each photograph
-// resolves out of the dot matrix as it scrolls into view, the wardrobe shot
-// tucked over its corner. On small screens cards stack in a responsive grid so
+// resolves out of the dot matrix as it scrolls into view. The wardrobe shot
+// and the block's number sit beside the text, under the frame: nothing is
+// laid over a photograph. On small screens cards stack in a responsive grid so
 // every photograph stays whole and nothing is cut off horizontally; from md:
 // they sit in a horizontal scroll-snap row with a LED position indicator.
 import type { CSSProperties } from 'react';
@@ -45,28 +46,21 @@ export function Blocos() {
             className="rise flex w-full flex-col gap-5 md:w-auto"
             style={{ '--ratio': ratioOf(bloco.photo.aspect).toFixed(4) } as CSSProperties}
           >
-            <div className="relative">
-              <LedPhoto
-                photo={bloco.photo}
-                sizes="(min-width: 768px) 24rem, 92vw"
-                cols={72}
-              />
+            <LedPhoto photo={bloco.photo} sizes="(min-width: 768px) 24rem, 92vw" cols={72} />
+            <div className="flex items-start gap-4">
+              <div className="min-w-0 flex-1">
+                <span aria-hidden className="label-caps text-led-text">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
+                <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
+                {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
+              </div>
               {bloco.figurino && (
-                <div className="absolute right-0 -bottom-6 w-[40%] max-w-[11rem] border-[3px] border-surface shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8)] md:-right-3 md:w-[42%] md:max-w-none">
-                  <Photo photo={bloco.figurino} sizes="10rem" />
+                <div className="w-24 shrink-0 md:w-28">
+                  <Photo photo={bloco.figurino} sizes="7rem" />
                 </div>
               )}
-              <span
-                aria-hidden
-                className="label-caps absolute top-3 left-3 bg-surface/80 px-2 py-1 text-led-text backdrop-blur-sm"
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-            </div>
-            <div className="pt-2">
-              <h3 className="text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
-              <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
-              {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
             </div>
           </li>
         ))}

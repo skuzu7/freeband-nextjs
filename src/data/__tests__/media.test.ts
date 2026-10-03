@@ -73,8 +73,8 @@ describe('files', () => {
 });
 
 describe('aspect ratios and resolution', () => {
-  it('stageFrames — 17 frames in three acts, gallery floor', async () => {
-    expect(stageFrames.length).toBe(17);
+  it('stageFrames — 32 frames in three acts, gallery floor', async () => {
+    expect(stageFrames.length).toBe(32);
     for (const frame of stageFrames) {
       const r = await expectAspect(frame.src, frame.aspect, frame.id);
       expect(r.longEdge, `${frame.id} below gallery floor`).toBeGreaterThanOrEqual(GALLERY_MIN_LONG_EDGE);
@@ -125,6 +125,21 @@ describe('aspect ratios and resolution', () => {
     for (const poster of home) {
       const r = await real(poster.src);
       expect(r.longEdge, `${poster.town} below frame floor`).toBeGreaterThanOrEqual(FRAME_MIN_LONG_EDGE);
+    }
+  });
+
+  it('Clube Náutico frames — cropped clear of the club stamp and the credit', async () => {
+    // Measured on the originals: the credit runs down x 1473–1487 (landscape)
+    // or 963–985 (portrait) and the stamp starts at y≈893 or y≈1375. A file
+    // any wider or taller than these two boxes still carries one of them; the
+    // 2% aspect tolerance above cannot tell 970 px from 955.
+    const nautico = Object.entries(images).filter(
+      ([key]) => (key.startsWith('nautico') && key !== 'nauticoAraraquara') || key === 'palcoAnos50',
+    );
+    expect(nautico.length).toBe(16);
+    for (const [key, src] of nautico) {
+      const r = await real(src);
+      expect(['1465x888', '955x1365'], key).toContain(`${r.width}x${r.height}`);
     }
   });
 
