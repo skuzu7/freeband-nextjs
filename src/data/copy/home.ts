@@ -1,8 +1,8 @@
 // src/data/copy/home.ts
 // The home in five blocks: fold, "o que chega no caminhão", blocos temáticos,
 // prova, "qual é a data?". Every string a component on "/" renders.
-import { bandInfo, bandLineup } from '../band';
-import { images, type Photo } from '../media/paths';
+import { bandInfo, bandKicker, credentials, lineupLabel } from '../band';
+import { images, type CaptionedPhoto, type Photo } from '../media/paths';
 
 export const fold = {
   badge: `Banda de baile e show · desde ${bandInfo.founded}`,
@@ -11,19 +11,14 @@ export const fold = {
   wordmarkLabel: 'Freeband',
   // The year count comes from the server (see Fold), never from the
   // browser's clock: the two could disagree on New Year's Eve.
-  kicker: (yearsActive: number) => `${bandLineup.total} no palco. ${yearsActive} anos de estrada.`,
+  kicker: bandKicker,
   backdropPause: 'Pausar o vídeo de fundo',
   backdropPlay: 'Reproduzir o vídeo de fundo',
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
   // Credential strip directly under the fold — the numbers a buyer weighs.
-  proof: [
-    { value: String(bandInfo.founded), label: 'fundada em Jaú/SP' },
-    { value: String(bandLineup.total), label: 'integrantes no palco' },
-    { value: '7+', label: 'estados brasileiros' },
-    { value: '2', label: 'turnês internacionais' },
-  ],
+  proof: [{ value: String(bandInfo.founded), label: 'fundada em Jaú/SP' }, ...credentials],
 };
 
 export const caminhao = {
@@ -33,7 +28,7 @@ export const caminhao = {
   highlightBadge: 'Mais pedido',
   ctaLabel: 'Pedir valores',
   whatsappMessage: 'Olá! Gostaria de saber mais sobre o',
-  lineupLabel: `A formação · ${bandLineup.total} no palco`,
+  lineupLabel,
   lineupNote: 'Tudo ao vivo',
   formatsLabel: 'Formatos atendidos',
   estruturaLabel: 'A estrutura, montada · fotos de montagens nossas',
@@ -45,7 +40,7 @@ export interface Bloco {
   note: string;
   photo: Photo;
   /** The wardrobe shot for the block, when one exists. */
-  figurino?: Photo & { caption: string };
+  figurino?: CaptionedPhoto;
 }
 
 const blocoItems: Bloco[] = [

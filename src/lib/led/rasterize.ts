@@ -105,6 +105,21 @@ export function lightUpOrder(cols: number, rows: number, mode: LightUpMode, seed
   return out;
 }
 
+const LIGHT_DELAY_SPAN = 0.7;
+const LIGHT_RAMP = 0.3;
+
+/** Ease-out cubic for each dot's own switch-on. */
+const easeOut = (t: number) => 1 - (1 - t) ** 3;
+
+/**
+ * How far a dot is switched on, 0..1, at timeline position `t` given its
+ * lightUpOrder `delay`. Each dot switches on over the last 30% of the
+ * timeline after its own delay, so the sweep reads as a wave, not a hard edge.
+ */
+export function dotProgress(t: number, delay: number): number {
+  return t >= 1 ? 1 : easeOut(Math.min(1, Math.max(0, (t - delay * LIGHT_DELAY_SPAN) / LIGHT_RAMP)));
+}
+
 /**
  * Dot radius for an intensity 0..255. An unlit dot keeps `minRatio` of the
  * maximum so the panel reads as a panel even where nothing is drawn.
@@ -155,6 +170,9 @@ export interface DotLayout {
   maxRadius: number;
 }
 
+/** Radius of a fully lit dot, as a fraction of the pitch. */
+export const MAX_RADIUS_RATIO = 0.42;
+
 /** Centres a cols×rows grid in a width×height box with square pitch. */
 export function layoutDots(cols: number, rows: number, width: number, height: number): DotLayout {
   const pitch = Math.min(width / cols, height / rows);
@@ -164,7 +182,7 @@ export function layoutDots(cols: number, rows: number, width: number, height: nu
     pitch,
     offsetX: (width - gridW) / 2 + pitch / 2,
     offsetY: (height - gridH) / 2 + pitch / 2,
-    maxRadius: pitch * 0.42,
+    maxRadius: pitch * MAX_RADIUS_RATIO,
   };
 }
 

@@ -7,13 +7,13 @@ import { prova } from '@/data/copy/home';
 import { posters } from '@/data/media/posters';
 import { reels } from '@/data/media/reels';
 import { LedMarquee } from '@/components/brand/LedMarquee';
-import { LedText } from '@/components/brand/LedText';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
 import { PlateRow } from '@/components/media/PlateRow';
 import { ReelGroup } from '@/components/media/ReelGroup';
+import { BlockHeader } from '@/components/home/BlockHeader';
 
 export function Prova() {
   const homeReels = reels.slice(0, 3);
@@ -27,13 +27,7 @@ export function Prova() {
     <Section id="prova" labelledBy="prova-title" className="border-t border-line">
       <Container className="flex flex-col gap-20">
         <div>
-          <header className="max-w-[60ch]">
-            <Label dot>{prova.label}</Label>
-            <div className="mt-4">
-              <LedText id="prova-title" text={prova.headline} className="text-4xl font-semibold tracking-display text-ink" />
-            </div>
-            <p className="rise mt-5 text-lg text-ink-muted">{prova.videoLead}</p>
-          </header>
+          <BlockHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
           <ReelGroup
             className="rise mt-8"
             reels={homeReels}

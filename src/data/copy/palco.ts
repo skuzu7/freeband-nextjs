@@ -1,6 +1,6 @@
 // src/data/copy/palco.ts
 // /palco — the full gallery: three acts, wardrobe, rig, the four reels.
-import { bandLineup, releaseShort } from '../band';
+import { lineupLabel, releaseShort } from '../band';
 import type { StageCategory } from '../media/frames';
 
 export interface Act {
@@ -18,7 +18,7 @@ export const palco = {
   label: 'O palco',
   headline: 'O espetáculo ao vivo,\ndo primeiro ao último acorde.',
   lead: `${releaseShort} Todas as fotografias abaixo são registros reais dos nossos eventos — sem modelos ou fotos de banco de imagens.`,
-  lineupLabel: `A formação · ${bandLineup.total} no palco`,
+  lineupLabel,
   lineupNote: 'Tudo ao vivo',
   // The gallery reads as a programme in three acts. Keys match the
   // StageFrame categories in src/data/media/frames.ts.

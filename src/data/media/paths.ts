@@ -69,14 +69,21 @@ export const images = {
   reveillomParanapanema: '/images/reveillom-paranapanema.jpeg',
 } as const;
 
-export type ImageKey = keyof typeof images;
+/** Pixel dimensions written as "W/H". */
+export type Aspect = `${number}/${number}`;
 
 /** A photograph as the layout needs it: file, description, real "W/H". */
 export interface Photo {
   src: string;
   alt: string;
   /** The file's NATIVE pixel dimensions as "W/H" — checked by the media test. */
-  aspect: string;
+  aspect: Aspect;
+}
+
+/** A photograph that carries its own caption. */
+export interface CaptionedPhoto extends Photo {
+  /** Short caption rendered under the frame — what the picture shows. */
+  caption: string;
 }
 
 /** Numeric ratio (w/h) of an "W/H" aspect string. */

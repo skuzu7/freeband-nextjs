@@ -3,6 +3,7 @@
 // (1440×1080i masters), deinterlaced and delivered at 1280×720/30, each under
 // ~2.3 MB. `poster` is the clip's own first frame, so nothing pops when the
 // video takes over.
+import type { Aspect } from './paths';
 
 export interface Reel {
   src: string;
@@ -11,7 +12,7 @@ export interface Reel {
   alt: string;
   caption: string;
   tag: string;
-  aspect: string;
+  aspect: Aspect;
 }
 
 export const reels: Reel[] = [

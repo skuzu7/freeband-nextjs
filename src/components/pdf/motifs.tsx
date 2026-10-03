@@ -7,7 +7,7 @@
 // The system's motifs, for paper: the dotted rule, a number in the 5×7 LED
 // matrix, and a row of whole photographs laid out by the plate rule.
 import { Circle, Image, Svg, View } from '@react-pdf/renderer';
-import { ledDots } from '@/components/brand/LedNumber';
+import { ledDots } from '@/lib/led/matrix';
 import { ratioOf } from '@/data/media/paths';
 import { pdfColors, pdfUrl } from './theme';
 

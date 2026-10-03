@@ -1,7 +1,7 @@
 // src/components/historia/Release.tsx
 // The release in full and the band's own manifesto, verbatim, beside the
 // golden-sequin portrait that bridges the classic era and today's show.
-import { release } from '@/data/band';
+import { paragraphsOf, release } from '@/data/band';
 import { historia } from '@/data/copy/historia';
 import { retratoPaete } from '@/data/media/frames';
 import { Container } from '@/components/ui/Container';
@@ -9,8 +9,6 @@ import { Label } from '@/components/ui/Label';
 import { Prose } from '@/components/ui/Prose';
 import { Section } from '@/components/ui/Section';
 import { Photo } from '@/components/media/Photo';
-
-const paragraphs = (text: string) => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 export function Release() {
   return (
@@ -22,7 +20,7 @@ export function Release() {
             {historia.release.headline}
           </h2>
           <Prose className="mt-8">
-            {paragraphs(release.full).map((p) => (
+            {paragraphsOf(release.full).map((p) => (
               <p key={p.slice(0, 40)}>{p}</p>
             ))}
           </Prose>
@@ -33,7 +31,7 @@ export function Release() {
           <blockquote className="m-0 border-l-2 border-led pl-6">
             <Label>{historia.manifestoLabel}</Label>
             <Prose className="mt-4 text-ink">
-              {paragraphs(release.manifesto).map((p) => (
+              {paragraphsOf(release.manifesto).map((p) => (
                 <p key={p.slice(0, 40)}>{p}</p>
               ))}
             </Prose>

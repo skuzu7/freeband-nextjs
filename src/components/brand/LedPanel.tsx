@@ -8,8 +8,7 @@
 // Budget: at most ~6 000 dots, one requestAnimationFrame loop that runs only
 // while the panel is in view and only until the light-up finishes, then a
 // single static frame. Under prefers-reduced-motion the final frame is drawn
-// once and nothing moves. Before hydration (or without canvas) the box shows
-// the CSS dot field.
+// once and nothing moves. Before hydration (or without canvas) the box is empty.
 //
 // The panel fails open: whatever stops it from lighting — no 2D context, no
 // IntersectionObserver, an exception — ends in `onLit`, so the content the
@@ -17,21 +16,13 @@
 // tokens through src/lib/led/palette.ts, whatever syntax the stylesheet shipped.
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/cn';
+import { cappedDpr, measureCanvasBox } from '@/lib/led/canvas';
+import { paintDots } from '@/lib/led/paint';
 import { buildPalette, readLedColors } from '@/lib/led/palette';
-import {
-  dotRadius,
-  fitGrid,
-  layoutDots,
-  levels,
-  lightUpOrder,
-  parseDurationMs,
-  quantize,
-  sampleGrid,
-  type LightUpMode,
-} from '@/lib/led/rasterize';
+import { dotProgress, fitGrid, layoutDots, levels, lightUpOrder, parseDurationMs, sampleGrid } from '@/lib/led/rasterize';
 import { glyphsToPixels, imageToPixels, textToPixels } from '@/lib/led/sources';
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
 import { GLYPHS, WORDMARK } from './Wordmark';
-import { DotGrid } from './DotGrid';
 
 export type LedSource =
   | { kind: 'text'; text: string; weight?: number; align?: 'left' | 'center'; tracking?: number }
@@ -44,9 +35,6 @@ interface LedPanelProps {
   aspect: number;
   /** Columns of dots; rows follow the aspect. Capped at ~6 000 dots total. */
   cols?: number;
-  mode?: LightUpMode;
-  /** Skip the animation and draw the lit panel at once. */
-  still?: boolean;
   /** Fired once, after the panel has finished lighting up. */
   onLit?: () => void;
   /**
@@ -54,8 +42,6 @@ interface LedPanelProps {
    * panel sits over a photograph: only the lit dots should appear.
    */
   dimDots?: boolean;
-  /** Paint the CSS dot field under the canvas. Off over a photograph. */
-  field?: boolean;
   /**
    * Fade the dots out once lit, so what the caller renders on top (the sharp
    * vector) takes over — the LED wall becoming the acrylic sign.
@@ -70,18 +56,12 @@ const MAX_DOTS = 6000;
 /** Slack after the light-up's own duration before the watchdog reveals the content. */
 const WATCHDOG_SLACK_MS = 1500;
 
-/** Ease-out cubic for each dot's own switch-on. */
-const easeOut = (t: number) => 1 - (1 - t) ** 3;
-
 export function LedPanel({
   source,
   aspect,
   cols = 96,
-  mode,
-  still = false,
   onLit,
   dimDots = true,
-  field = true,
   fadeWhenLit = false,
   className,
   children,
@@ -127,8 +107,8 @@ export function LedPanel({
     try {
       const src: LedSource = JSON.parse(sourceKey);
       const grid = fitGrid(aspect, cols, MAX_DOTS);
-      const order = lightUpOrder(grid.cols, grid.rows, mode ?? (src.kind === 'image' ? 'radial' : 'sweep'));
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const order = lightUpOrder(grid.cols, grid.rows, src.kind === 'image' ? 'radial' : 'sweep');
+      const reduced = prefersReducedMotion();
       const durationMs = parseDurationMs(getComputedStyle(box).getPropertyValue('--dur-light'));
       const { led: ledColor, dim: dimColor } = readLedColors(box);
       const palette = buildPalette(dimColor, ledColor, LEVELS);
@@ -147,32 +127,14 @@ export function LedPanel({
       const draw = (t: number) => {
         if (cssW === 0 || cssH === 0) return;
         const cells = intensity ?? unlit;
-        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        const dpr = cappedDpr();
         const layout = layoutDots(grid.cols, grid.rows, cssW, cssH);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, cssW, cssH);
-        const paths = Array.from({ length: LEVELS }, () => new Path2D());
-        for (let r = 0; r < grid.rows; r++) {
-          for (let c = 0; c < grid.cols; c++) {
-            const i = r * grid.cols + c;
-            // Each dot switches on over the last 30% of the timeline after its
-            // own delay, so the sweep reads as a wave, not a hard edge.
-            const p = t >= 1 ? 1 : easeOut(Math.min(1, Math.max(0, (t - order[i] * 0.7) / 0.3)));
-            const v = cells[i] * p;
-            // Over a photograph the switched-off cells are not drawn at all.
-            if (!dimDots && v <= 0) continue;
-            const level = quantize(v, LEVELS);
-            const radius = dotRadius(v, layout.maxRadius);
-            const x = layout.offsetX + c * layout.pitch;
-            const y = layout.offsetY + r * layout.pitch;
-            paths[level].moveTo(x + radius, y);
-            paths[level].arc(x, y, radius, 0, Math.PI * 2);
-          }
-        }
-        for (let l = 0; l < LEVELS; l++) {
-          ctx.fillStyle = palette[l];
-          ctx.fill(paths[l]);
-        }
+        paintDots(ctx, cells, grid, layout, palette, {
+          skipUnlit: !dimDots,
+          progress: t >= 1 ? undefined : (i) => dotProgress(t, order[i]),
+        });
       };
 
       const finish = () => {
@@ -199,7 +161,7 @@ export function LedPanel({
 
       const start = () => {
         if (disposed || litRef.current) return;
-        if (reduced || still) {
+        if (reduced) {
           finish();
           return;
         }
@@ -212,17 +174,14 @@ export function LedPanel({
       };
 
       const resize = () => {
-        const rect = box.getBoundingClientRect();
-        const dpr = Math.min(2, window.devicePixelRatio || 1);
-        const w = Math.max(1, Math.round(rect.width * dpr));
-        const h = Math.max(1, Math.round(rect.height * dpr));
-        if (w === canvas.width && h === canvas.height && cssW === rect.width && cssH === rect.height) return;
-        cssW = rect.width;
-        cssH = rect.height;
+        const m = measureCanvasBox(box);
+        if (m.w === canvas.width && m.h === canvas.height && cssW === m.cssW && cssH === m.cssH) return;
+        cssW = m.cssW;
+        cssH = m.cssH;
         // Sizing the bitmap clears it: redraw the frame the panel is showing.
         // Mid-animation the next tick repaints, so nothing to do here.
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = m.w;
+        canvas.height = m.h;
         if (!raf) draw(litRef.current ? 1 : 0);
       };
       if (typeof ResizeObserver !== 'undefined') {
@@ -307,7 +266,7 @@ export function LedPanel({
       ro?.disconnect();
       io?.disconnect();
     };
-  }, [sourceKey, aspect, cols, mode, still, dimDots, fadeWhenLit]);
+  }, [sourceKey, aspect, cols, dimDots, fadeWhenLit]);
 
   return (
     <div
@@ -315,7 +274,6 @@ export function LedPanel({
       className={cn('relative isolate overflow-hidden', className)}
       style={{ aspectRatio: String(aspect) }}
     >
-      {field && <DotGrid />}
       <canvas
         ref={canvasRef}
         aria-hidden

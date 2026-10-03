@@ -10,7 +10,9 @@ import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { buildPalette, readLedColors } from '@/lib/led/palette';
 import { useReducedMotion } from '@/lib/useReducedMotion';
-import { dotRadius, quantize, sampleGrid } from '@/lib/led/rasterize';
+import { measureCanvasBox } from '@/lib/led/canvas';
+import { paintDots } from '@/lib/led/paint';
+import { MAX_RADIUS_RATIO, sampleGrid } from '@/lib/led/rasterize';
 import { textStripToPixels } from '@/lib/led/sources';
 import { Ticker } from '@/components/ui/Ticker';
 
@@ -72,7 +74,7 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     const buildStrip = () => {
       const pixels = textStripToPixels(text, rows, { fontFamily, weight: 600, tracking: 0.02 });
       if (!pixels) return;
-      const grid = sampleGrid(pixels.data, pixels.width, pixels.height, pixels.cols, rows);
+      const cells = sampleGrid(pixels.data, pixels.width, pixels.height, pixels.cols, rows);
       const pitch = cssH / rows;
       stripW = pixels.cols * pitch;
       const w = Math.max(1, Math.ceil(stripW * dpr));
@@ -85,23 +87,13 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
       const sctx = strip.getContext('2d') as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
       if (!sctx) return;
       sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const maxR = pitch * 0.42;
-      const paths = Array.from({ length: LEVELS }, () => new Path2D());
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < pixels.cols; c++) {
-          const v = grid[r * pixels.cols + c];
-          const radius = dotRadius(v, maxR);
-          const x = c * pitch + pitch / 2;
-          const y = r * pitch + pitch / 2;
-          const p = paths[quantize(v, LEVELS)];
-          p.moveTo(x + radius, y);
-          p.arc(x, y, radius, 0, Math.PI * 2);
-        }
-      }
-      paths.forEach((p, i) => {
-        sctx.fillStyle = palette[i];
-        sctx.fill(p);
-      });
+      paintDots(
+        sctx,
+        cells,
+        { cols: pixels.cols, rows },
+        { pitch, offsetX: pitch / 2, offsetY: pitch / 2, maxRadius: pitch * MAX_RADIUS_RATIO },
+        palette,
+      );
     };
 
     const draw = () => {
@@ -138,16 +130,14 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     startRef.current = start;
 
     const resize = () => {
-      const rect = box.getBoundingClientRect();
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      const w = Math.max(1, Math.round(rect.width * dpr));
-      const h = Math.max(1, Math.round(rect.height * dpr));
+      const m = measureCanvasBox(box);
+      dpr = m.dpr;
       // The observer fires once on observe(); the strip is rebuilt only when
       // the box actually changed.
-      if (w === canvas.width && h === canvas.height && cssH === rect.height && strip) return;
-      cssH = rect.height;
-      canvas.width = w;
-      canvas.height = h;
+      if (m.w === canvas.width && m.h === canvas.height && cssH === m.cssH && strip) return;
+      cssH = m.cssH;
+      canvas.width = m.w;
+      canvas.height = m.h;
       buildStrip();
       draw();
     };

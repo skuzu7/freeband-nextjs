@@ -1,7 +1,7 @@
 // src/data/copy/portfolio.ts
 // /portfolio — the public download page — and every string printed inside the
 // portfolio PDF itself.
-import { bandInfo, bandLineup } from '../band';
+import { bandInfo, bandKicker, lineupLabel } from '../band';
 
 export const portfolio = {
   seo: {
@@ -28,7 +28,7 @@ export const portfolio = {
     pageOf: (n: number, total: number) => `${String(n).padStart(2, '0')} / ${String(total).padStart(2, '0')}`,
     cover: {
       brandLine: bandInfo.brandLine,
-      kicker: `${bandLineup.total} no palco. ${bandInfo.yearsActive} anos de estrada.`,
+      kicker: bandKicker(bandInfo.yearsActive),
       badge: 'Portfólio & Serviços',
       since: (year: number) => `Desde ${year} · ${bandInfo.foundedCity}`,
       numberLabel: 'fundação em Jaú/SP',
@@ -36,7 +36,7 @@ export const portfolio = {
     about: {
       title: 'Quem somos',
       valuesTitle: 'Nossos valores',
-      lineupLabel: `A formação · ${bandLineup.total} no palco`,
+      lineupLabel,
       photoCaption: 'Banda completa · iluminação robotizada',
     },
     timeline: {

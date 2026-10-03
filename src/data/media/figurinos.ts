@@ -1,12 +1,8 @@
 // src/data/media/figurinos.ts
 // The wardrobe, shot backstage. Evidence that the show has blocks.
-import { images, type Photo } from './paths';
+import { images, type CaptionedPhoto } from './paths';
 
-export interface WardrobeShot extends Photo {
-  caption: string;
-}
-
-export const figurinos: WardrobeShot[] = [
+export const figurinos: CaptionedPhoto[] = [
   {
     src: images.figurinoPlumas,
     alt: 'Bailarinos em figurino vermelho com plumas e chapéus',

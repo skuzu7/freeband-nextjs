@@ -5,6 +5,7 @@ import {
   sampleGrid,
   fitGrid,
   lightUpOrder,
+  dotProgress,
   dotRadius,
   layoutDots,
   quantize,
@@ -111,6 +112,33 @@ describe('lightUpOrder', () => {
       expect(v).toBeLessThanOrEqual(1);
     }
     expect(new Set(Array.from(a).map((v) => v.toFixed(3))).size).toBeGreaterThan(50);
+  });
+});
+
+describe('dotProgress', () => {
+  it('is fully on once the timeline ends, whatever the delay', () => {
+    expect(dotProgress(1, 0)).toBe(1);
+    expect(dotProgress(1, 1)).toBe(1);
+    expect(dotProgress(1.2, 0.5)).toBe(1);
+  });
+
+  it('starts each dot at its own delay and ramps it over 30% of the timeline', () => {
+    expect(dotProgress(0, 0)).toBe(0);
+    expect(dotProgress(0.7, 1)).toBe(0); // the last dot has not started yet
+    expect(dotProgress(0.3, 0)).toBe(1); // the first dot is already fully on
+  });
+
+  it('never decreases as time advances and stays inside [0, 1]', () => {
+    for (const delay of [0, 0.25, 0.5, 0.75, 1]) {
+      let prev = 0;
+      for (let step = 0; step <= 120; step++) {
+        const p = dotProgress(step / 100, delay);
+        expect(p).toBeGreaterThanOrEqual(prev);
+        expect(p).toBeGreaterThanOrEqual(0);
+        expect(p).toBeLessThanOrEqual(1);
+        prev = p;
+      }
+    }
   });
 });
 

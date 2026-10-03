@@ -5,7 +5,7 @@ import { Page, Text, View } from '@react-pdf/renderer';
 import { bandInfo } from '@/data/band';
 import { portfolio } from '@/data/copy/portfolio';
 import { DotLinePdf, LedNumberPdf, PhotoPdf } from '../motifs';
-import { A4, CONTENT_WIDTH, PDF_FONT, pdfColors } from '../theme';
+import { A4, CONTENT_WIDTH, PDF_FONT, pdfColors, pdfStyles } from '../theme';
 import { WordmarkPdf } from '../WordmarkPdf';
 import { pdfPhotos } from './images';
 
@@ -55,20 +55,7 @@ export function Cover() {
         </View>
       </View>
 
-      <View
-        style={{
-          position: 'absolute',
-          left: A4.margin,
-          right: A4.margin,
-          bottom: 40,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderTopWidth: 0.75,
-          borderTopColor: pdfColors.nightRaise,
-          paddingTop: 10,
-        }}
-      >
+      <View style={{ ...pdfStyles.footer, bottom: 40, borderTopColor: pdfColors.nightRaise, paddingTop: 10 }}>
         <Text style={{ fontSize: 7.5, fontWeight: 600, letterSpacing: 1.6, textTransform: 'uppercase', color: pdfColors.ledBright }}>
           {c.badge}
         </Text>

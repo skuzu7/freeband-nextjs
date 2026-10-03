@@ -25,7 +25,11 @@ export interface PlateLayout {
   style: CSSProperties;
   /** next/image `sizes` per frame, in order. */
   sizes: string[];
-  /** Per-frame inline style carrying the ratio the mobile strip sizes by. */
+  /**
+   * Per-frame inline style carrying `--ratio`. Nothing inside a `.plate` reads
+   * it today (the only CSS reader is `.snap-row > *`, fed by Blocos.tsx); kept
+   * so the pre-rendered HTML stays the same.
+   */
   frameStyle: CSSProperties[];
 }
 
@@ -55,8 +59,6 @@ export function plateLayout(frames: PhotoData[], rowFraction = 1): PlateLayout {
 interface PlateRowProps {
   frames: PlateFrame[];
   className?: string;
-  /** Render the caption under each frame. */
-  captions?: boolean;
   priority?: boolean;
   /** Fraction of the viewport the whole row occupies on desktop (1 = full). */
   rowFraction?: number;
@@ -69,7 +71,6 @@ interface PlateRowProps {
 export function PlateRow({
   frames,
   className,
-  captions = true,
   priority = false,
   rowFraction = 1,
   quality,
@@ -86,7 +87,7 @@ export function PlateRow({
           ) : (
             <Photo photo={frame} sizes={layout.sizes[i]} priority={priority && i === 0} quality={quality} />
           )}
-          {captions && frame.caption && (
+          {frame.caption && (
             <figcaption className="label-caps text-ink-low">{frame.caption}</figcaption>
           )}
         </figure>

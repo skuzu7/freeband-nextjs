@@ -1,15 +1,13 @@
 // src/components/home/Data.tsx
 // Block 5 — "Qual é a data?": the question coming on in dots, the WhatsApp
 // CTA and every way to reach the production. The footer follows.
-import { contact } from '@/data/contact';
+import { contact, telHref } from '@/data/contact';
 import { data } from '@/data/copy/home';
 import { LedText } from '@/components/brand/LedText';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
 import { WhatsAppCta } from '@/components/site/WhatsAppCta';
-
-const telHref = `tel:${contact.phoneIntl.replace(/[^\d+]/g, '')}`;
 
 export function Data() {
   return (

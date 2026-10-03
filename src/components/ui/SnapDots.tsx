@@ -7,6 +7,7 @@
 // id so the row itself can stay a server component.
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
+import { prefersReducedMotion } from '@/lib/useReducedMotion';
 
 interface SnapDotsProps {
   /** id of the `.snap-row` element. */
@@ -57,7 +58,7 @@ export function SnapDots({ rowId, count, label, prev, next, className }: SnapDot
     const { row, items } = found;
     const target = items[Math.max(0, Math.min(items.length - 1, active + dir))];
     if (!target) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = prefersReducedMotion();
     row.scrollTo({ left: target.offsetLeft - (items[0]?.offsetLeft ?? 0), behavior: reduce ? 'auto' : 'smooth' });
   };
 

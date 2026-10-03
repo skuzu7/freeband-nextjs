@@ -2,15 +2,13 @@
 // The live-show photography, curated as a programme in three acts. Order here
 // IS the reading order on /palco. Nothing below ~900px on the long edge gets
 // in — the old site's 600×400 thumbnails live only in the PDF.
-import { images, type Photo } from './paths';
+import { images, type CaptionedPhoto, type Photo } from './paths';
 
 export const STAGE_CATEGORIES = ['vocais', 'blocos', 'efeitos'] as const;
 export type StageCategory = (typeof STAGE_CATEGORIES)[number];
 
-export interface StageFrame extends Photo {
+export interface StageFrame extends CaptionedPhoto {
   id: string;
-  /** Short caption rendered under the frame — what the picture shows. */
-  caption: string;
   /** Which of the three acts the frame belongs to. */
   category: StageCategory;
   /**

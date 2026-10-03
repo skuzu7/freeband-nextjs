@@ -8,8 +8,9 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
+import { isDefault, readDraft, writeDraft } from '@/lib/orcamentoDraft';
 import { orcamento } from '@/data/copy/orcamento';
-import { defaultOrcamento, parseOrcamento, type OrcamentoData } from '@/types/orcamento';
+import { defaultOrcamento, type OrcamentoData } from '@/types/orcamento';
 import { Wordmark } from '@/components/brand/Wordmark';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/Label';
@@ -20,30 +21,7 @@ interface PageProps {
   onLogout?: () => Promise<void>;
 }
 
-export const DRAFT_KEY = 'freeband_orcamento_draft';
 const SAVE_DELAY_MS = 300;
-
-function isDefault(data: OrcamentoData): boolean {
-  return (Object.keys(defaultOrcamento) as Array<keyof OrcamentoData>).every((k) => data[k] === defaultOrcamento[k]);
-}
-
-function readDraft(): OrcamentoData | null {
-  try {
-    const raw = window.localStorage.getItem(DRAFT_KEY);
-    return raw ? parseOrcamento(JSON.parse(raw)) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeDraft(data: OrcamentoData | null): void {
-  try {
-    if (data === null) window.localStorage.removeItem(DRAFT_KEY);
-    else window.localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-  } catch {
-    /* storage unavailable: the editor still works, just without a draft */
-  }
-}
 
 export function Page({ onLogout }: PageProps) {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);

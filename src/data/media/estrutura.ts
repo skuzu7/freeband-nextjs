@@ -1,13 +1,9 @@
 // src/data/media/estrutura.ts
 // The mounted rig, photographed at real setups: the receipt for every line
 // the packages list. Each caption points at a package feature.
-import { images, type Photo } from './paths';
+import { images, type CaptionedPhoto } from './paths';
 
-export interface EstruturaShot extends Photo {
-  caption: string;
-}
-
-export const estrutura: EstruturaShot[] = [
+export const estrutura: CaptionedPhoto[] = [
   {
     src: images.estruturaBoate,
     alt: 'Estrutura de boate montada com pista de LED, painéis e iluminação em neon rosa e azul',

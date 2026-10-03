@@ -13,10 +13,11 @@ function subscribe(onChange: () => void): () => void {
   return () => mq.removeEventListener('change', onChange);
 }
 
-function snapshot(): boolean {
+/** The preference right now, for code that reads it once outside of render. */
+export function prefersReducedMotion(): boolean {
   return typeof matchMedia !== 'undefined' && matchMedia(QUERY).matches;
 }
 
 export function useReducedMotion(): boolean {
-  return useSyncExternalStore(subscribe, snapshot, () => false);
+  return useSyncExternalStore(subscribe, prefersReducedMotion, () => false);
 }

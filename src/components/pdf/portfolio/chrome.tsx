@@ -39,11 +39,11 @@ export function PdfPage({ n, label, title, lead, children }: PdfPageProps) {
 }
 
 /** A small caps label above a value, the PDF's version of <dt>/<dd>. */
-export function Fact({ label, value, big = false }: { label: string; value: string; big?: boolean }) {
+export function Fact({ label, value }: { label: string; value: string }) {
   return (
     <View>
       <Text style={pdfStyles.labelMuted}>{label}</Text>
-      <Text style={{ marginTop: 2, fontSize: big ? 13 : 10, fontWeight: big ? 600 : 400, color: pdfStyles.h2.color }}>
+      <Text style={{ marginTop: 2, fontSize: 10, fontWeight: 400, color: pdfStyles.h2.color }}>
         {value}
       </Text>
     </View>

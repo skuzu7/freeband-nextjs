@@ -33,7 +33,6 @@ export function LedPhoto({ photo, sizes, cols = 96, priority, quality, className
       source={{ kind: 'image', src: rasterSrc(photo.src), fit: 'cover' }}
       aspect={ratioOf(photo.aspect)}
       cols={cols}
-      field={false}
       fadeWhenLit
       onLit={() => setLit(true)}
       className={cn('bg-surface-raise', className)}

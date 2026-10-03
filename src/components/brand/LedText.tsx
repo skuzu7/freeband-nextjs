@@ -102,7 +102,6 @@ export function LedText({
           source={{ kind: 'text', text: measure.lines, weight, align: 'left', tracking }}
           aspect={measure.aspect}
           cols={cols}
-          field={false}
           dimDots={false}
           fadeWhenLit
           onLit={() => setLit(true)}
