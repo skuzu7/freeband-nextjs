@@ -43,6 +43,9 @@ export const palco = {
       note: 'Moving heads e feixes robotizados sincronizados via timecode, painel de LED de alta definição e impacto visual de grande festival.',
     },
   ] satisfies Act[],
+  // The club's stamp and the credit were cropped off those files (see
+  // src/data/media/paths.ts), so the credit is printed here.
+  photoCredit: 'Fotos do show no Clube Náutico Araraquara: Jonas Matheus.',
   figurinos: {
     label: 'Bastidores · Figurinos',
     lead: 'O espetáculo se transforma junto com o repertório: dezenas de trocas completas de figurino, adereços e coreografias exclusivas para transportar o público pelas grandes eras da música.',

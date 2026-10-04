@@ -53,7 +53,7 @@ const blocoItems: Bloco[] = [
       photo: {
         src: images.palcoAnos50,
         alt: 'Vocalista de jaqueta espelhada e bailarina de saia de poá do bloco anos 50 diante do painel de LED',
-        aspect: '970/1365',
+        aspect: '955/1365',
       },
       figurino: {
         src: images.figurinoAnos50,
