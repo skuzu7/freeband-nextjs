@@ -137,7 +137,10 @@ export function Lightbox({ items, index, onClose, onChange, labels }: LightboxPr
       {/* Caption and the two steppers share one bar, so nothing ever sits on
           top of the picture — on a phone the flyer's own text stays legible. */}
       <div className="flex shrink-0 items-center justify-between gap-6 px-[var(--pad-inline)] py-5">
-        <div className="min-w-0">
+        {/* A live region: stepping through the set swaps this text while the
+            dialog stays open, and nothing else tells a screen reader. Atomic,
+            so title and meta are read together as one caption. */}
+        <div className="min-w-0" aria-live="polite" aria-atomic="true">
           <h2 id={titleId} className="text-lg font-semibold text-ink">
             {item.title}
           </h2>

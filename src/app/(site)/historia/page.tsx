@@ -6,11 +6,13 @@ import { Capitulo1969 } from '@/components/historia/Capitulo1969';
 import { Eras } from '@/components/historia/Eras';
 import { Release } from '@/components/historia/Release';
 import { Nomes } from '@/components/historia/Nomes';
+import { socialMetadata } from '@/app/shared-metadata';
 
 export const metadata: Metadata = {
   title: historia.seo.title,
   description: historia.seo.description,
   alternates: { canonical: '/historia' },
+  ...socialMetadata({ ...historia.seo, path: '/historia' }),
 };
 
 export default function HistoriaPage() {

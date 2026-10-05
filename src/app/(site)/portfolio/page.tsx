@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/site/PageHeader';
 import { PortfolioDownload } from '@/components/pdf/portfolio/PortfolioDownload';
+import { socialMetadata } from '@/app/shared-metadata';
 
 export const metadata: Metadata = {
   title: portfolio.seo.title,
   description: portfolio.seo.description,
   alternates: { canonical: '/portfolio' },
+  ...socialMetadata({ ...portfolio.seo, path: '/portfolio' }),
 };
 
 export default function PortfolioPage() {

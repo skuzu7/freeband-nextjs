@@ -27,7 +27,11 @@ export function About() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
             {release.highlights.map((h) => (
               <View key={h.label} style={{ ...pdfStyles.card, width: 97 }}>
-                <Text style={{ fontSize: 20, fontWeight: 600, letterSpacing: -0.5, color: pdfColors.led }}>{h.value}</Text>
+                {/* Its own line height: the page's is inherited as a fixed
+                    13.8pt box, which a 20pt figure overflows onto the label. */}
+                <Text style={{ fontSize: 20, fontWeight: 600, letterSpacing: -0.5, lineHeight: 1.1, color: pdfColors.led }}>
+                  {h.value}
+                </Text>
                 <Text style={{ ...pdfStyles.caption, marginTop: 3 }}>{h.label}</Text>
               </View>
             ))}

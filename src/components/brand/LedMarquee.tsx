@@ -156,6 +156,9 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
     void (async () => {
       await document.fonts?.ready;
       if (disposed) return;
+      // The observer's first report may have rasterised the strip in a
+      // fallback face; drop it, so this pass rebuilds for an unchanged box too.
+      strip = null;
       resize();
     })();
 
@@ -186,14 +189,17 @@ export function LedMarquee({ items, label, pauseLabel, playLabel, rows = 11, spe
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
       </div>
       <div className="flex justify-end">
+        {/* Named after what a press does, so no aria-pressed: the two
+            together announce "play, pressed" over a sign that is stopped. */}
         <button
           type="button"
-          aria-pressed={userPaused}
           onClick={() => setUserPaused((p) => !p)}
           className="label-caps transition-quick inline-flex items-center gap-2.5 py-1 text-ink-muted hover:text-ink"
         >
           <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
-          {paused ? playLabel : pauseLabel}
+          {/* The dot shows whether the sign is moving; the name follows only
+              the press, so a pointer resting on the sign does not rename it. */}
+          {userPaused ? playLabel : pauseLabel}
         </button>
       </div>
     </div>

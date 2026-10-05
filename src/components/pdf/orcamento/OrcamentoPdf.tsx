@@ -21,7 +21,7 @@ const sectionTitle = {
   borderBottomWidth: 0.75,
   borderBottomColor: pdfColors.line,
 } as const;
-const bigValue = { fontSize: 20, fontWeight: 600, letterSpacing: -0.4, color: pdfColors.ink } as const;
+const bigValue = { fontSize: 20, fontWeight: 600, letterSpacing: -0.4, lineHeight: 1.15, color: pdfColors.ink } as const;
 const bodyBlock = { ...pdfStyles.body, color: pdfColors.ink } as const;
 
 function Cell({ label, value }: { label: string; value: string }) {
@@ -37,7 +37,7 @@ function PaymentCard({ label, value, date }: { label: string; value: string; dat
   return (
     <View style={{ ...pdfStyles.card, flex: 1 }}>
       <Text style={pdfStyles.labelMuted}>{label}</Text>
-      <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, color: pdfColors.ink }}>{value}</Text>
+      <Text style={{ marginTop: 3, fontSize: 14, fontWeight: 600, lineHeight: 1.2, color: pdfColors.ink }}>{value}</Text>
       {date && (
         <Text style={{ marginTop: 2, fontSize: 8, color: pdfColors.inkMuted }}>
           {doc.ate} {formatDate(date)}

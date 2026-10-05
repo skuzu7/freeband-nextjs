@@ -11,6 +11,13 @@ import { pdfPhotos } from './images';
 
 const c = portfolio.pdf.cover;
 
+// The brand line sits in a fixed column (the word is 90pt wide at this size
+// and tracking), so the rule beside it is computed, not measured by hand:
+// column + gap + rule is the content width. Column and gap make 17 pitches of
+// the rule, so its dots fall where the inner pages' rules put theirs.
+const BRAND_COLUMN = 92;
+const BRAND_GAP = 10;
+
 export function Cover() {
   return (
     <Page
@@ -24,13 +31,13 @@ export function Cover() {
         paddingHorizontal: A4.margin,
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Text style={{ fontSize: 8, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
-          {c.brandLine}
-        </Text>
-        <View style={{ flex: 1 }}>
-          <DotLinePdf width={CONTENT_WIDTH - 90} color={pdfColors.ledDim} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: BRAND_GAP }}>
+        <View style={{ width: BRAND_COLUMN }}>
+          <Text style={{ fontSize: 8, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
+            {c.brandLine}
+          </Text>
         </View>
+        <DotLinePdf width={CONTENT_WIDTH - BRAND_COLUMN - BRAND_GAP} color={pdfColors.ledDim} />
       </View>
       <View style={{ marginTop: 10 }}>
         <WordmarkPdf width={CONTENT_WIDTH} />

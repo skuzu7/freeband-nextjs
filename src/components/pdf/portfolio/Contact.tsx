@@ -15,7 +15,9 @@ export function Contact() {
     <PdfPage n={7} label={c.title} title={c.headline} lead={c.lead}>
       <View style={{ ...pdfStyles.card, padding: 20, marginTop: 6 }}>
         <Text style={pdfStyles.labelMuted}>{c.whatsappLabel}</Text>
-        <Text style={{ marginTop: 4, fontSize: 26, fontWeight: 600, letterSpacing: -0.5, color: pdfColors.ink }}>{contact.phone}</Text>
+        <Text style={{ marginTop: 4, fontSize: 26, fontWeight: 600, letterSpacing: -0.5, lineHeight: 1.1, color: pdfColors.ink }}>
+          {contact.phone}
+        </Text>
         <Link src={contact.whatsappQuoteLink} style={{ marginTop: 6, fontSize: 9.5, color: pdfColors.led, textDecoration: 'none' }}>
           {c.whatsappCta} →
         </Link>

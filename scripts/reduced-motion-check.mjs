@@ -16,7 +16,10 @@ const failures = [];
 async function run() {
   const browser = process.env.PUPPETEER_BROWSER_URL
     ? await puppeteer.connect({ browserURL: process.env.PUPPETEER_BROWSER_URL })
-    : await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    : await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      });
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
   await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);

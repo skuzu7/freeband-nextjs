@@ -4,11 +4,13 @@ import { arquivo } from '@/data/copy/arquivo';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/site/PageHeader';
 import { Cartazes } from '@/components/arquivo/Cartazes';
+import { socialMetadata } from '@/app/shared-metadata';
 
 export const metadata: Metadata = {
   title: arquivo.seo.title,
   description: arquivo.seo.description,
   alternates: { canonical: '/arquivo' },
+  ...socialMetadata({ ...arquivo.seo, path: '/arquivo' }),
 };
 
 export default function ArquivoPage() {

@@ -26,9 +26,10 @@ export function ReelGroup({ reels, pauseLabel, playLabel, className, columns = 3
   return (
     <div className={cn('flex flex-col gap-5', className)}>
       <div className="flex justify-end">
+        {/* Named after what a press does, so no aria-pressed: the two
+            together announce "play, pressed" over clips that are stopped. */}
         <button
           type="button"
-          aria-pressed={paused}
           onClick={() => setUserPaused(!paused)}
           className="label-caps transition-quick inline-flex items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
         >

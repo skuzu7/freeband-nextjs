@@ -5,6 +5,7 @@ import { tokens } from '@/design/tokens';
 import { bandInfo, release } from '@/data/band';
 import { contact } from '@/data/contact';
 import { site } from '@/data/copy/site';
+import { sharedOpenGraph, sharedTwitter } from './shared-metadata';
 import './globals.css';
 
 // One family for everything. The private variable is mapped to --font-sans
@@ -20,21 +21,11 @@ export const metadata: Metadata = {
   title: { default: site.seo.title, template: site.seo.titleTemplate },
   description: site.seo.description,
   alternates: { canonical: '/' },
-  openGraph: {
-    title: site.seo.ogTitle,
-    description: site.seo.ogDescription,
-    // /og.jpg is a 1200×630 card built from the wordmark and the stage frame.
-    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: site.seo.ogTitle }],
-    locale: 'pt_BR',
-    type: 'website',
-    siteName: bandInfo.name,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: site.seo.ogTitle,
-    description: site.seo.ogDescription,
-    images: ['/og.jpg'],
-  },
+  // The home's card. The fields every route repeats come from
+  // shared-metadata.ts: an inner page that sets either object replaces this
+  // one whole, so it rebuilds it from the same parts.
+  openGraph: { ...sharedOpenGraph, title: site.seo.ogTitle, description: site.seo.ogDescription },
+  twitter: { ...sharedTwitter, title: site.seo.ogTitle, description: site.seo.ogDescription },
 };
 
 export const viewport: Viewport = {

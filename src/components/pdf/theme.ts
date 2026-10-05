@@ -73,9 +73,22 @@ export function registerPdfFonts(prefix = pageOrigin()): void {
   fontsRegistered = true;
 }
 
-/** Absolute URL for a public asset, so the browser-side renderer can fetch it. */
+// Null on the site: only a render outside a browser sets it.
+let assetBase: string | null = null;
+
+/**
+ * Points `pdfUrl` at the public assets when the PDF is rendered outside a
+ * browser: a Node test passes the `file://` URL of `public`, and react-pdf
+ * reads the photographs from disk. `null` goes back to the page's own origin,
+ * which is all the site ever uses.
+ */
+export function setPdfAssetBase(base: string | null): void {
+  assetBase = base;
+}
+
+/** Absolute URL for a public asset, so the renderer can fetch it. */
 export function pdfUrl(path: string): string {
-  return `${pageOrigin()}${path}`;
+  return `${assetBase ?? pageOrigin()}${path}`;
 }
 
 export const pdfStyles = StyleSheet.create({

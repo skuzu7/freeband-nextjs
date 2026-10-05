@@ -111,10 +111,11 @@ export function Fold({ yearsActive }: FoldProps) {
       className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
     >
       <Backdrop paused={paused} />
+      {/* Named after what a press does, so no aria-pressed: the two together
+          announce "play, pressed" over a loop that is stopped. */}
       {!reduced && (
         <button
           type="button"
-          aria-pressed={paused}
           onClick={() => setPaused((p) => !p)}
           className="label-caps transition-quick absolute top-20 right-[var(--pad-inline)] z-10 inline-flex min-h-11 items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
         >

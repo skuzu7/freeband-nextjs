@@ -8,11 +8,13 @@ import { Atos } from '@/components/palco/Atos';
 import { Figurinos } from '@/components/palco/Figurinos';
 import { Estrutura } from '@/components/palco/Estrutura';
 import { Show } from '@/components/palco/Show';
+import { socialMetadata } from '@/app/shared-metadata';
 
 export const metadata: Metadata = {
   title: palco.seo.title,
   description: palco.seo.description,
   alternates: { canonical: '/palco' },
+  ...socialMetadata({ ...palco.seo, path: '/palco' }),
 };
 
 export default function PalcoPage() {
