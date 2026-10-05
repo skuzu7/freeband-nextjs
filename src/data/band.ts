@@ -83,11 +83,15 @@ export const paragraphsOf = (text: string) => text.split(/\n\s*\n/).map((p) => p
 /** How an era's photograph is treated: stage colour, printed artefact, or faded print. */
 export type ImageGrade = 'live' | 'poster' | 'vintage';
 
+export type EraImage = CaptionedPhoto & { grade: ImageGrade };
+
 export interface Era {
   year: string;
   title: string;
   description: string;
-  image: CaptionedPhoto & { grade: ImageGrade };
+  image: EraImage;
+  /** A second artefact from the same years, shown beside `image` on /historia. */
+  extra?: EraImage;
 }
 
 // Each era carries its own archival photograph, rendered WHOLE at the file's
@@ -130,6 +134,13 @@ export const timeline: Era[] = [
       aspect: '800/800',
       grade: 'poster',
       caption: 'A formação internacional',
+    },
+    extra: {
+      src: images.anos2000,
+      alt: 'Cartaz dos anos 2000 com retratos dos integrantes sobre fundo espacial e duas fotos de grupo com o logotipo Internacional Freeband',
+      aspect: '800/800',
+      grade: 'poster',
+      caption: 'Os integrantes, um a um',
     },
   },
   {

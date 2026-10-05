@@ -1,7 +1,8 @@
 // src/components/historia/Eras.tsx
 // Five eras. The first is the chapter just above, so it appears here as a
 // line of text only; the other four alternate photograph and text, each
-// picture whole at its own ratio and graded as the archive marks it.
+// picture whole at its own ratio and graded as the archive marks it. An era
+// with a second artefact shows the two side by side in a wider column.
 import { cn } from '@/lib/cn';
 import { timeline } from '@/data/band';
 import { historia } from '@/data/copy/historia';
@@ -37,17 +38,44 @@ export function Eras() {
                 </li>
               );
             }
+            const pair = era.extra ? [era.image, era.extra] : null;
             return (
               <li key={era.year} className="grid gap-6 md:grid-cols-12 md:items-center md:gap-10">
-                <figure className={cn('m-0 md:col-span-5', flip ? 'md:col-start-8' : 'md:col-start-1')}>
-                  <Photo
-                    photo={era.image}
-                    grade={era.image.grade}
-                    sizes="(min-width: 1408px) 560px, (min-width: 768px) 40vw, 100vw"
-                  />
-                  <figcaption className="label-caps mt-3 text-ink-low">{era.image.caption}</figcaption>
-                </figure>
-                <div className={cn('md:col-span-6 md:row-start-1', flip ? 'md:col-start-1' : 'md:col-start-7')}>
+                {pair ? (
+                  <div
+                    className={cn(
+                      'grid gap-4 sm:grid-cols-2 md:col-span-7',
+                      flip ? 'md:col-start-6' : 'md:col-start-1',
+                    )}
+                  >
+                    {pair.map((image) => (
+                      <figure key={image.src} className="m-0">
+                        <Photo
+                          photo={image}
+                          grade={image.grade}
+                          sizes="(min-width: 1408px) 366px, (min-width: 768px) 28vw, (min-width: 640px) 46vw, 100vw"
+                        />
+                        <figcaption className="label-caps mt-3 text-ink-low">{image.caption}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                ) : (
+                  <figure className={cn('m-0 md:col-span-5', flip ? 'md:col-start-8' : 'md:col-start-1')}>
+                    <Photo
+                      photo={era.image}
+                      grade={era.image.grade}
+                      sizes="(min-width: 1408px) 560px, (min-width: 768px) 40vw, 100vw"
+                    />
+                    <figcaption className="label-caps mt-3 text-ink-low">{era.image.caption}</figcaption>
+                  </figure>
+                )}
+                <div
+                  className={cn(
+                    pair ? 'md:col-span-4' : 'md:col-span-6',
+                    'md:row-start-1',
+                    flip ? 'md:col-start-1' : pair ? 'md:col-start-9' : 'md:col-start-7',
+                  )}
+                >
                   <Label>{era.year}</Label>
                   <h3 className="mt-3 text-2xl font-semibold text-ink">{era.title}</h3>
                   <p className="mt-3 max-w-[48ch] text-ink-muted">{era.description}</p>

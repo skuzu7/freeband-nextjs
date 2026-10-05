@@ -73,8 +73,8 @@ describe('files', () => {
 });
 
 describe('aspect ratios and resolution', () => {
-  it('stageFrames — 32 frames in three acts, gallery floor', async () => {
-    expect(stageFrames.length).toBe(32);
+  it('stageFrames — 33 frames in three acts, gallery floor', async () => {
+    expect(stageFrames.length).toBe(33);
     for (const frame of stageFrames) {
       const r = await expectAspect(frame.src, frame.aspect, frame.id);
       expect(r.longEdge, `${frame.id} below gallery floor`).toBeGreaterThanOrEqual(GALLERY_MIN_LONG_EDGE);
@@ -91,10 +91,12 @@ describe('aspect ratios and resolution', () => {
   it('timeline — five eras, each with its own whole photograph', async () => {
     expect(timeline.length).toBe(5);
     for (const era of timeline) {
-      const r = await expectAspect(era.image.src, era.image.aspect, era.year);
-      expect(r.longEdge, `${era.year} photo below floor`).toBeGreaterThanOrEqual(FRAME_MIN_LONG_EDGE);
-      expect(era.image.alt).toBeTruthy();
-      expect(era.image.caption).toBeTruthy();
+      for (const image of era.extra ? [era.image, era.extra] : [era.image]) {
+        const r = await expectAspect(image.src, image.aspect, era.year);
+        expect(r.longEdge, `${era.year} photo below floor`).toBeGreaterThanOrEqual(FRAME_MIN_LONG_EDGE);
+        expect(image.alt).toBeTruthy();
+        expect(image.caption).toBeTruthy();
+      }
     }
   });
 
@@ -188,7 +190,7 @@ describe('blur placeholders', () => {
       ...stageFrames.map((f) => f.src),
       ...figurinos.map((f) => f.src),
       ...estrutura.map((f) => f.src),
-      ...timeline.map((e) => e.image.src),
+      ...timeline.flatMap((e) => (e.extra ? [e.image.src, e.extra.src] : [e.image.src])),
       ...posters.map((p) => p.src),
       ...reels.map((r) => r.poster),
       ...blocos.items.flatMap((b) => [b.photo.src, b.figurino?.src].filter((s): s is string => !!s)),

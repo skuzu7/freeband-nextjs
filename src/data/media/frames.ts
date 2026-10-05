@@ -132,6 +132,15 @@ export const stageFrames: StageFrame[] = [
     aspect: '955/1365',
     plate: 5,
   },
+  {
+    id: 'palco-frente-havai',
+    src: images.palcoFrenteHavai,
+    alt: 'Vocalistas ao microfone no centro do palco e bailarinas nas pontas com os braços erguidos, sob luz vermelha e treliças de iluminação',
+    caption: 'Frente de palco completa · Vocalistas e bailarinas no Baile do Havaí',
+    category: 'vocais',
+    aspect: '2048/1150',
+    plate: 6,
+  },
   // ── ATO II · blocos temáticos ──────────────────────────────────────────
   {
     id: 'palco-coracoes',

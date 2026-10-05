@@ -35,6 +35,8 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoLAA4ABABoJbACdADdh2zu7+hWAAD+725yunUIDHmJOuUgnX+NbnPu/WAQccD5/M2Shgb1fz3GML+qCQ9Vz0hm0Boiuc7UaAk//lJpWu0F3gJYRVAdcAAA",
   "/images/freeband-2015.jpeg":
     "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQAgCdASoKAA4ABABoJZACdEf/gQbYtUAAAP7kYNnUImfZOSoDNcREcNCbWGXWpPSC1/OscshBkv2OVQSuuWlPmgJBpA8BgNVo6amra1TioCCGhogjejMRiRo6hLgA",
+  "/images/freeband-anos-2000.jpeg":
+    "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoOAA4ABABoJZQCdAEJ3hh606pYAP7xnhASRg31ykXRXKbl9u1IM9d2s6n6/Bp4/dg/f+KSuwYxaKhLwwYSb9Mmx4lFKeBMevKjJMn4yxl5onBl6Su5cu+FLEDg6Xi7sgAAAA==",
   "/images/freeband-anos-70.jpeg":
     "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoLAA4ABABoJQBOgBnzVr6/LLhAAP7Vl48rrpVNlwie0SlHu4UWiGQ0EmLQX/Q9IOHsKUJ5HY6NsP/WQYnFoQAA",
   "/images/freeband-anos-80.jpeg":
@@ -99,6 +101,8 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoKAA4ABABoJbACdAEQFVU2t58AAP7QaXE2kN1eCeBlnQc9WWrSk5g1IzgVe0woO7pPlLVkbb1ROY+G78J5piZqrIsfjzZ4fefCALwAAAA=",
   "/images/palco-country-led.jpeg":
     "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAQCdASoJAA4ABABoJbACdADcc+gAAP7c9X9RvKEV80IhWikqQIUhYpNoDvBAa3x01Or0kno0/DPh+s7Rrp6Q3NwB/IveFe99zvBkjquQFCUM3AAAAA==",
+  "/images/palco-frente-havai.jpeg":
+    "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoOAAgABABoJbACdADbUcVgAAD+0W5vtcbHvfyVB21LIMrUUJjVRyukzDfN13ps/3xMj0HdC15Y9UlDu10Ir7N7gAA=",
   "/images/palco-led-coracoes.jpeg":
     "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoJAA4ABABoJZACdAEfUgFgrolgAP7boP+5sDeeSLaCMBhWMP/wUlNxOBCuqwvVE8AEkO6y6By7HJtWGkjy19lmjOsHwo4AAAA=",
   "/images/reveillom-iacanga.jpeg":

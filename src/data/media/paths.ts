@@ -21,6 +21,9 @@ export const images = {
   palcoCountryLed: '/images/palco-country-led.jpeg',
   palcoAnos70: '/images/palco-anos-70.jpeg',
   palcoCabare: '/images/palco-cabare.jpeg',
+  // Baile do Havaí: the organisers stamped a sponsor strip across the bottom
+  // of the 2048×1365 original; it is cropped off the file (2048×1150).
+  palcoFrenteHavai: '/images/palco-frente-havai.jpeg',
   // Clube Náutico Araraquara, photographs by Jonas Matheus. The club stamped
   // its logo over the bottom-right corner and the credit down the right
   // margin; both are cropped off the files (1465×888 landscape, 955×1365
@@ -78,6 +81,7 @@ export const images = {
   anos70: '/images/freeband-anos-70.jpeg',
   anos80: '/images/freeband-anos-80.jpeg',
   antigas: '/images/freeband-antigas.jpeg',
+  anos2000: '/images/freeband-anos-2000.jpeg',
   // Promotional
   fb2015: '/images/freeband-2015.jpeg',
   cartazCosmopolitano: '/images/cartaz-cosmopolitano.jpeg',
