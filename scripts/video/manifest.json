@@ -1,0 +1,164 @@
+{
+  "budget": {
+    "h264": 10000000,
+    "av1": 5000000
+  },
+  "clips": [
+    {
+      "id": "vocal-em-primeiro-plano",
+      "title": "Vocal em primeiro plano",
+      "description": "A vocalista caminha até a frente do palco e canta em primeiro plano, com o letreiro do painel de LED desfocado ao fundo.",
+      "duration": 27.3,
+      "width": 1920,
+      "height": 1080,
+      "loudness": {
+        "integrated": -16.1,
+        "truePeak": -8.2
+      },
+      "sources": [
+        {
+          "file": "vocal-em-primeiro-plano.av1.mp4",
+          "codecs": "av01.0.08M.08, mp4a.40.2",
+          "bytes": 4501423
+        },
+        {
+          "file": "vocal-em-primeiro-plano.mp4",
+          "codecs": "avc1.640028, mp4a.40.2",
+          "bytes": 9765529
+        }
+      ],
+      "poster": {
+        "file": "vocal-em-primeiro-plano.jpg",
+        "bytes": 298043
+      },
+      "levels": {
+        "file": "vocal-em-primeiro-plano.levels.json",
+        "bytes": 3243,
+        "rate": 20
+      },
+      "cut": {
+        "master": "ok",
+        "in": 18.72,
+        "dur": 27.3,
+        "posterAt": 3.28
+      }
+    },
+    {
+      "id": "dueto-com-a-banda",
+      "title": "Dueto com a banda",
+      "description": "Os dois vocalistas cantam lado a lado, com baixo, bateria e teclado atrás deles e o painel de LED aceso.",
+      "duration": 23.4234,
+      "width": 1920,
+      "height": 1080,
+      "loudness": {
+        "integrated": -16,
+        "truePeak": -7
+      },
+      "sources": [
+        {
+          "file": "dueto-com-a-banda.av1.mp4",
+          "codecs": "av01.0.08M.08, mp4a.40.2",
+          "bytes": 4638044
+        },
+        {
+          "file": "dueto-com-a-banda.mp4",
+          "codecs": "avc1.640028, mp4a.40.2",
+          "bytes": 9493585
+        }
+      ],
+      "poster": {
+        "file": "dueto-com-a-banda.jpg",
+        "bytes": 150142
+      },
+      "levels": {
+        "file": "dueto-com-a-banda.levels.json",
+        "bytes": 2779,
+        "rate": 20
+      },
+      "cut": {
+        "master": "ok",
+        "in": 96.02,
+        "dur": 23.4,
+        "posterAt": 2.6
+      }
+    },
+    {
+      "id": "solo-de-guitarra",
+      "title": "Solo de guitarra",
+      "description": "Solo de guitarra: do palco inteiro, com uma guitarra desenhada no painel de LED, até o close nas mãos do guitarrista.",
+      "duration": 24.6246,
+      "width": 1920,
+      "height": 1080,
+      "loudness": {
+        "integrated": -16,
+        "truePeak": -7
+      },
+      "sources": [
+        {
+          "file": "solo-de-guitarra.av1.mp4",
+          "codecs": "av01.0.08M.08, mp4a.40.2",
+          "bytes": 4617495
+        },
+        {
+          "file": "solo-de-guitarra.mp4",
+          "codecs": "avc1.640028, mp4a.40.2",
+          "bytes": 9726751
+        }
+      ],
+      "poster": {
+        "file": "solo-de-guitarra.jpg",
+        "bytes": 149448
+      },
+      "levels": {
+        "file": "solo-de-guitarra.levels.json",
+        "bytes": 2918,
+        "rate": 20
+      },
+      "cut": {
+        "master": "top",
+        "in": 58.15,
+        "dur": 24.6,
+        "posterAt": 3.2
+      }
+    },
+    {
+      "id": "palco-entre-luzes-e-fumaca",
+      "title": "Palco entre luzes e fumaça",
+      "description": "O vocalista de bandana vermelha à frente da banda, entre fachos de luz, fumaça e os pontos coloridos do painel de LED.",
+      "duration": 20.4,
+      "width": 1920,
+      "height": 1080,
+      "loudness": {
+        "integrated": -16.1,
+        "truePeak": -7.2
+      },
+      "sources": [
+        {
+          "file": "palco-entre-luzes-e-fumaca.av1.mp4",
+          "codecs": "av01.0.08M.08, mp4a.40.2",
+          "bytes": 4821703
+        },
+        {
+          "file": "palco-entre-luzes-e-fumaca.mp4",
+          "codecs": "avc1.640028, mp4a.40.2",
+          "bytes": 8295345
+        }
+      ],
+      "poster": {
+        "file": "palco-entre-luzes-e-fumaca.jpg",
+        "bytes": 121724
+      },
+      "levels": {
+        "file": "palco-entre-luzes-e-fumaca.levels.json",
+        "bytes": 2419,
+        "rate": 20
+      },
+      "cut": {
+        "master": "top-1",
+        "in": 38.55,
+        "dur": 20.4,
+        "posterAt": 12.2
+      }
+    }
+  ]
+}

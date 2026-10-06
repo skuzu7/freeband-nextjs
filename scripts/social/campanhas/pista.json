@@ -1,0 +1,103 @@
+{
+  "title": "Quem vive o baile",
+  "signature": "Desde 1969",
+  "cards": [
+    {
+      "id": "01-carrossel-capa",
+      "layout": "cover",
+      "tag": "Manual não oficial do baile",
+      "head": ["QUEM É VOCÊ", "NO *BAILE?*"],
+      "sub": ["Todo grupo tem esses personagens.", "O seu também."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Arraste e encontre o seu papel",
+      "mark": "01 / 05"
+    },
+    {
+      "id": "02-carrossel-uma-horinha",
+      "tag": "O que promete ir embora cedo",
+      "head": ["“VOU FICAR", "SÓ UMA", "*HORINHA.”*"],
+      "sub": ["A banda começa.", "O plano acaba."],
+      "photo": "nauticoQuatroVozes",
+      "foot": "Já lembrou de alguém?",
+      "mark": "02 / 05"
+    },
+    {
+      "id": "03-carrossel-refrao",
+      "tag": "O vocalista extra",
+      "head": ["NÃO SABE", "O VERSO.", "*GRITA O REFRÃO.*"],
+      "sub": ["E ainda aponta o microfone imaginário", "para o resto da mesa."],
+      "photo": "nauticoVozFeminina",
+      "foot": "O talento é a confiança",
+      "mark": "03 / 05"
+    },
+    {
+      "id": "04-carrossel-passinho",
+      "tag": "O coreógrafo do grupo",
+      "head": ["TEM UM", "PASSINHO", "*PARA TUDO.*"],
+      "sub": ["Mudou o ritmo?", "Ele adapta. O passo é o mesmo."],
+      "photo": "nauticoBlocoCirco",
+      "foot": "Estilo próprio. Sempre.",
+      "mark": "04 / 05"
+    },
+    {
+      "id": "05-carrossel-grupo",
+      "layout": "list",
+      "tag": "Agora entrega o elenco",
+      "head": ["SEU GRUPO.", "*QUATRO*", "*PERSONAGENS.*"],
+      "sub": ["Quem vai embora cedo. Quem canta.", "Quem dança. Quem convence todos a ir."],
+      "items": ["Uma horinha", "Só o refrão", "Passinho", "Bora todo mundo"],
+      "foot": "Manda no grupo e distribui os papéis",
+      "mark": "05 / 05"
+    },
+    {
+      "id": "06-post-amanha",
+      "layout": "cover",
+      "tag": "A frase mais otimista da noite",
+      "head": ["“AMANHÃ", "EU *DESCANSO.*”"],
+      "sub": ["Hoje ainda tem refrão."],
+      "photo": "festa209",
+      "foot": "Envia para sua companhia de baile",
+      "mark": "Na pista"
+    },
+    {
+      "id": "07-post-primeiro-acorde",
+      "tag": "Tem música que faz isso",
+      "head": ["BASTA O", "*PRIMEIRO*", "*ACORDE.*"],
+      "sub": ["E você lembra da pessoa,", "do lugar e da noite inteira."],
+      "photo": "nauticoQuatroVozes",
+      "foot": "Qual música te leva de volta?",
+      "mark": "Memória musical"
+    },
+    {
+      "id": "08-post-convite",
+      "tag": "O convite está feito",
+      "head": ["ESSA NOITE", "MERECE", "*MÚSICA AO VIVO.*"],
+      "sub": ["Leve a Freeband para o seu evento.", "Consulte a disponibilidade pelo direct."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Envie a cidade e a data do evento",
+      "mark": "Vamos conversar"
+    },
+    {
+      "id": "09-story-enquete",
+      "format": "story",
+      "tag": "Antes do próximo baile",
+      "head": ["NA PRIMEIRA", "MÚSICA,", "*VOCÊ JÁ...*"],
+      "sub": ["A • Está na pista", "B • Está chamando o grupo"],
+      "photo": "nauticoBlocoCirco",
+      "sticker": "Adicione a enquete aqui no Instagram",
+      "foot": "Internacional Freeband • Ao vivo",
+      "mark": "Sua vez"
+    },
+    {
+      "id": "10-story-musica",
+      "format": "story",
+      "tag": "Abre o repertório da memória",
+      "head": ["QUAL MÚSICA", "FAZ VOCÊ", "*LEVANTAR?*"],
+      "sub": ["Aquela que não dá", "para ouvir sentado."],
+      "photo": "festa209",
+      "sticker": "Adicione a caixa de perguntas aqui",
+      "foot": "Internacional Freeband • Ao vivo",
+      "mark": "Conta pra gente"
+    }
+  ]
+}

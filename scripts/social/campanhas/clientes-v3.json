@@ -1,0 +1,100 @@
+{
+  "title": "Sua festa merece um show",
+  "signature": "Música ao vivo",
+  "cards": [
+    {
+      "id": "01-carrossel-sua-festa",
+      "tag": "Para quem está organizando um evento",
+      "head": ["SUA FESTA", "MERECE MAIS", "QUE *SOM*", "*DE FUNDO.*"],
+      "sub": ["Conheça a Internacional Freeband ao vivo."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Envie para quem está organizando com você.",
+      "mark": "Arraste →"
+    },
+    {
+      "id": "02-carrossel-vozes",
+      "tag": "Música que ocupa o palco",
+      "head": ["VOZES", "DE VERDADE.", "*AO VIVO.*"],
+      "sub": ["Presença, interpretação e encontro", "com quem está na pista."],
+      "photo": "nauticoQuatroVozes",
+      "foot": "É essa experiência que você procura?",
+      "mark": "02 / 05"
+    },
+    {
+      "id": "03-carrossel-performance",
+      "tag": "O show também acontece no olhar",
+      "head": ["NÃO É SÓ", "PARA OUVIR.", "*É PARA VER.*"],
+      "sub": ["Figurinos e performances", "fazem parte da apresentação."],
+      "photo": "nauticoBlocoCirco",
+      "foot": "Fotos reais da Freeband em apresentação.",
+      "mark": "03 / 05"
+    },
+    {
+      "id": "04-carrossel-palco",
+      "tag": "Antes de escolher a banda",
+      "head": ["VEJA O SHOW.", "*IMAGINE*", "*SEU EVENTO.*"],
+      "sub": ["Peça vídeos de apresentações e converse", "sobre o formato para a sua festa."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Estrutura e formato são definidos na proposta.",
+      "mark": "04 / 05"
+    },
+    {
+      "id": "05-carrossel-orcamento",
+      "tag": "Vamos falar da sua festa",
+      "head": ["SUA CIDADE.", "SUA DATA.", "*NOSSO*", "*PRÓXIMO PAPO.*"],
+      "sub": ["Envie EVENTO pelo direct", "e peça uma proposta para a sua ocasião."],
+      "photo": "festa209",
+      "foot": "Informe também o tipo de evento.",
+      "mark": "05 / 05"
+    },
+    {
+      "id": "06-post-decisao",
+      "tag": "Aos responsáveis pela festa",
+      "head": ["QUEM ESTÁ", "ESCOLHENDO", "*A BANDA?*"],
+      "sub": ["Manda este post para essa pessoa.", "A Freeband precisa entrar na conversa."],
+      "photo": "nauticoBlocoCirco",
+      "foot": "Orçamentos: envie EVENTO pelo direct.",
+      "mark": "Cidade + data"
+    },
+    {
+      "id": "07-post-proposta",
+      "tag": "Internacional Freeband • Desde 1969",
+      "head": ["A PRÓXIMA", "FESTA PODE", "*TER ESSE*", "*PALCO.*"],
+      "sub": ["Conheça os formatos disponíveis", "para o seu evento."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Consulte formato, estrutura e disponibilidade.",
+      "mark": "Peça uma proposta"
+    },
+    {
+      "id": "08-post-memoravel",
+      "tag": "O que você quer para a sua festa?",
+      "head": ["GENTE NA", "PISTA.", "*HISTÓRIAS*", "*NA VOLTA.*"],
+      "sub": ["Música ao vivo com a Internacional Freeband.", "Vamos conversar sobre o seu evento?"],
+      "photo": "festa209",
+      "foot": "Envie cidade + data + tipo de evento.",
+      "mark": "Direct: EVENTO"
+    },
+    {
+      "id": "09-story-orcamento",
+      "format": "story",
+      "tag": "Está organizando uma festa?",
+      "head": ["A BANDA", "DO SEU", "*EVENTO?*"],
+      "sub": ["Conheça a Freeband.", "Peça uma proposta pelo direct."],
+      "photo": "nauticoBandaTriangulo",
+      "sticker": "Área livre para informações do evento; responder ao story por direct.",
+      "foot": "Responda EVENTO + cidade + data.",
+      "mark": "Fale com a banda"
+    },
+    {
+      "id": "10-story-indicacao",
+      "format": "story",
+      "tag": "Quem está cuidando da música?",
+      "head": ["ENVIA PARA", "QUEM VAI", "*ORGANIZAR*", "*A FESTA.*"],
+      "sub": ["Uma indicação pode começar", "uma noite inteira de música."],
+      "photo": "nauticoBlocoCirco",
+      "sticker": "Área livre; opcionalmente inserir sticker nativo de perguntas: Qual cidade e data do seu evento?",
+      "foot": "Propostas pelo direct: EVENTO + cidade + data.",
+      "mark": "Freeband ao vivo"
+    }
+  ]
+}

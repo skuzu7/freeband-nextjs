@@ -1,0 +1,100 @@
+{
+  "title": "O show que resolve a festa",
+  "signature": "Música ao vivo",
+  "cards": [
+    {
+      "id": "01-carrossel-capa",
+      "tag": "Para quem organiza eventos",
+      "head": ["A ATRAÇÃO QUE", "SEGURA A PISTA", "*A NOITE INTEIRA.*"],
+      "sub": ["Internacional Freeband.", "Música ao vivo de verdade."],
+      "photo": "palcoAnos50",
+      "foot": "Arraste e conheça a banda.",
+      "mark": "Arraste →"
+    },
+    {
+      "id": "02-carrossel-banda",
+      "tag": "Banda completa no palco",
+      "head": ["NÃO É", "PLAYBACK.", "*É BANDA.*"],
+      "sub": ["Bateria, sopros, teclas e vozes", "tocando junto, na hora."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Foto real de apresentação.",
+      "mark": "02 / 05"
+    },
+    {
+      "id": "03-carrossel-vozes",
+      "tag": "Elenco de vozes",
+      "head": ["UM ELENCO", "INTEIRO", "*DE VOZES.*"],
+      "sub": ["Duetos e coros que", "enchem o palco."],
+      "photo": "nauticoQuatroVozes",
+      "foot": "Repertório para todas as idades.",
+      "mark": "03 / 05"
+    },
+    {
+      "id": "04-carrossel-festa",
+      "tag": "Entra no clima da festa",
+      "head": ["DO CLÁSSICO", "*À FANTASIA.*"],
+      "sub": ["Figurinos e blocos temáticos", "que vestem a sua festa."],
+      "photo": "palcoAnos70",
+      "foot": "Foto real: bloco anos 70.",
+      "mark": "04 / 05"
+    },
+    {
+      "id": "05-carrossel-proposta",
+      "tag": "Vamos falar da sua festa",
+      "head": ["CIDADE + DATA", "*= PROPOSTA.*"],
+      "sub": ["Envie EVENTO pelo direct", "e receba vídeos e orçamento."],
+      "photo": "vocalDouradoPalco",
+      "foot": "Informe também o tipo de evento.",
+      "mark": "05 / 05"
+    },
+    {
+      "id": "06-post-decisao",
+      "tag": "Aos responsáveis pela festa",
+      "head": ["QUEM VAI", "DECIDIR", "*A MÚSICA?*"],
+      "sub": ["Marca essa pessoa aqui.", "A Freeband entra na conversa."],
+      "photo": "festa209",
+      "foot": "Orçamentos pelo direct: EVENTO.",
+      "mark": "Marca eles"
+    },
+    {
+      "id": "07-post-imagina",
+      "tag": "Imagina na sua festa",
+      "head": ["ESSA ENERGIA", "*NA SUA PISTA.*"],
+      "sub": ["É o que a Freeband leva", "para cada evento."],
+      "photo": "nauticoBailarinaCirco",
+      "foot": "Envie EVENTO + cidade + data.",
+      "mark": "Peça uma proposta"
+    },
+    {
+      "id": "08-post-desde1969",
+      "tag": "Autoridade de palco",
+      "head": ["NO PALCO", "*DESDE 1969.*"],
+      "sub": ["Décadas de baile viraram ofício:", "ler a pista e não deixar ninguém parado."],
+      "photo": "anos70",
+      "foot": "Tradição que se contrata pelo direct.",
+      "mark": "Desde 1969"
+    },
+    {
+      "id": "09-story-cta",
+      "format": "story",
+      "tag": "Organizando festa?",
+      "head": ["A BANDA", "DO SEU EVENTO", "*JÁ EXISTE.*"],
+      "sub": ["Conheça a Freeband.", "Chama no direct."],
+      "photo": "palcoAnos70",
+      "sticker": "Área livre; resposta por direct com cidade + data + tipo de evento.",
+      "foot": "Responda EVENTO + cidade + data.",
+      "mark": "Chama no direct"
+    },
+    {
+      "id": "10-story-tbt",
+      "format": "story",
+      "tag": "Você conhece desde quando?",
+      "head": ["DOS ANOS 80", "*ATÉ HOJE.*"],
+      "sub": ["Quando você viu a Freeband", "pela primeira vez?"],
+      "photo": "anos80",
+      "sticker": "Caixa de perguntas nativa: Quando você viu a Freeband pela primeira vez?",
+      "foot": "As melhores respostas viram post.",
+      "mark": "Conta a sua"
+    }
+  ]
+}

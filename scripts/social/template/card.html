@@ -1,0 +1,62 @@
+<!--
+  One card. From the top: the wall of dots behind everything, the lock-up
+  ("INTERNACIONAL" over the acrylic mark) with the campaign's signature, the
+  tag, the headline and its support, then ONE of three bodies — a photograph
+  (whole, never cropped), or a numbered list over the mark lit in dots — the
+  space kept free for a native sticker on a story, and the footer.
+
+  {{name}} is text (escaped), {{{name}}} is markup built by build.mjs,
+  {{#name}}…{{/name}} is printed only when the card has that part.
+-->
+<section class="card card--{{format}} card--{{layout}}" id="{{id}}" data-format="{{format}}">
+  <div class="wall" aria-hidden="true">
+    <i class="wall__off"></i>
+    <i class="wall__lit wall__lit--far"></i>
+    <i class="wall__lit wall__lit--mid"></i>
+    <i class="wall__lit wall__lit--near"></i>
+  </div>
+
+  <header class="top">
+    <div class="lockup">
+      <span class="brand-line"><span>{{brandLine}}</span><i class="dot-line"></i></span>
+      {{{wordmark}}}
+    </div>
+    <p class="signature">{{signature}}</p>
+  </header>
+
+  <p class="tag">{{tag}}</p>
+
+  <div class="copy">
+    <h1 class="head">{{{head}}}</h1>
+    {{#sub}}
+    <p class="sub">{{{sub}}}</p>
+    {{/sub}}
+  </div>
+
+  {{#photo}}
+  <figure class="plate">
+    <img src="{{url}}" alt="{{alt}}" data-photo="{{key}}">
+  </figure>
+  {{/photo}}
+
+  {{#list}}
+  <ol class="items">
+    {{#items}}
+    <li>{{{number}}}<span>{{label}}</span></li>
+    {{/items}}
+  </ol>
+  <div class="dots">{{{dots}}}</div>
+  {{/list}}
+
+  {{#sticker}}
+  <div class="sticker" data-note="{{sticker}}"></div>
+  {{/sticker}}
+
+  <footer class="foot">
+    <i class="dot-line"></i>
+    <div class="foot__row">
+      <span class="foot__text">{{foot}}</span>
+      <span class="mark">{{{mark}}}</span>
+    </div>
+  </footer>
+</section>

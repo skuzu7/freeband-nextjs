@@ -1,0 +1,105 @@
+{
+  "title": "O baile entrega você",
+  "signature": "Música ao vivo",
+  "cards": [
+    {
+      "id": "01-carrossel-capa",
+      "layout": "cover",
+      "tag": "O baile entrega você",
+      "head": ["HOJE EU", "NÃO *DANÇO.*"],
+      "sub": ["Disse a pessoa que abriu a pista."],
+      "photo": "nauticoBlocoCirco",
+      "foot": "As frases que não sobrevivem ao baile",
+      "mark": "Arraste →"
+    },
+    {
+      "id": "02-carrossel-so-olhar",
+      "layout": "panel",
+      "tag": "Antes de a banda começar",
+      "head": ["“EU VIM", "SÓ *OLHAR.”*"],
+      "sub": ["Dez minutos depois:", "puxando alguém pela mão."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "A intenção era boa. A música, melhor.",
+      "mark": "02 / 05"
+    },
+    {
+      "id": "03-carrossel-nao-sei",
+      "layout": "panel",
+      "tag": "Até chegar aquela parte",
+      "head": ["“ESSA EU", "NÃO *SEI.”*"],
+      "sub": ["Chega o refrão.", "Sabe até a segunda voz."],
+      "photo": "nauticoVozFeminina",
+      "foot": "A memória volta no volume máximo.",
+      "mark": "03 / 05"
+    },
+    {
+      "id": "04-carrossel-sem-foto",
+      "layout": "panel",
+      "tag": "O registro da contradição",
+      "head": ["“NEM VOU", "TIRAR *FOTO.”*"],
+      "sub": ["No dia seguinte:", "“Manda as que eu apareço?”"],
+      "photo": "festa209",
+      "foot": "Tem sempre alguém com as provas.",
+      "mark": "04 / 05"
+    },
+    {
+      "id": "05-carrossel-entrega",
+      "layout": "list",
+      "tag": "Pode confessar",
+      "head": ["QUAL DESSAS", "É A *SUA?*"],
+      "sub": ["Não danço. Só olho. Não sei.", "Não tiro foto."],
+      "items": ["Não danço.", "Só olho.", "Não sei.", "Não tiro foto."],
+      "foot": "Manda no grupo. Eles sabem.",
+      "mark": "05 / 05"
+    },
+    {
+      "id": "06-post-nota-alta",
+      "tag": "Comunicado da pista",
+      "head": ["NÃO É", "GRITO.", "*É A NOTA*", "*ALTA.*"],
+      "sub": ["A afinação a gente conversa depois."],
+      "photo": "nauticoVozFeminina",
+      "foot": "Envia para a voz principal do seu grupo.",
+      "mark": "Ao vivo"
+    },
+    {
+      "id": "07-post-memoria",
+      "tag": "A memória tem repertório",
+      "head": ["VOCÊ LEMBRA", "DA MÚSICA.", "*E DE QUEM*", "*ESTAVA JUNTO.*"],
+      "sub": ["Qual canção tem uma pessoa guardada?"],
+      "photo": "nauticoQuatroVozes",
+      "foot": "Conta a música. A história vem junto.",
+      "mark": "Lembranças"
+    },
+    {
+      "id": "08-post-evento",
+      "tag": "Seu evento, ao vivo",
+      "head": ["A FESTA ACABA.", "*AS HISTÓRIAS*", "*FICAM.*"],
+      "sub": ["Leve a Internacional Freeband", "para o seu evento."],
+      "photo": "nauticoBandaTriangulo",
+      "foot": "Envie cidade + data pelo direct.",
+      "mark": "Consulte disponibilidade"
+    },
+    {
+      "id": "09-story-enquete",
+      "format": "story",
+      "tag": "Pesquisa nada científica",
+      "head": ["VOCÊ É", "DO TIME", "*“NÃO DANÇO”?*"],
+      "sub": ["Ou já entra procurando a pista?"],
+      "photo": "nauticoBlocoCirco",
+      "sticker": "Enquete: Você é do time “não danço”? | Sou, até tocar a minha / Já chego dançando",
+      "foot": "Responde aqui. A pista confirma depois.",
+      "mark": "Sua vez"
+    },
+    {
+      "id": "10-story-pergunta",
+      "format": "story",
+      "tag": "Vale abrir o repertório",
+      "head": ["QUAL MÚSICA", "DESMENTE", "O SEU", "*“NÃO DANÇO”?*"],
+      "sub": ["Aquela que faz você levantar na hora."],
+      "photo": "festa209",
+      "sticker": "Caixa de perguntas: Qual música te tira da cadeira?",
+      "foot": "Internacional Freeband • Música ao vivo",
+      "mark": "Conta a sua"
+    }
+  ]
+}

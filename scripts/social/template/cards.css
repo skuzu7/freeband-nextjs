@@ -1,0 +1,421 @@
+/* scripts/social/template/cards.css
+   The Instagram cards in the "Painel de LED" language: a night-blue ground
+   that is a wall of dots, one LED blue, red for the wordmark only, one
+   family (Outfit), photographs whole.
+
+   Every colour is a var(--color-*) written by build.mjs from
+   src/design/tokens.ts; nothing here names a colour by hand. Sizes are px on
+   purpose: a card is a fixed 1080 px canvas, not a responsive page.
+
+   Two formats  .card--feed   1080 × 1350 (4:5)
+                .card--story  1080 × 1920 (9:16), with Instagram's safe zones
+   Four layouts .card--photo  headline, then the photograph
+                .card--cover  the same, the photograph from edge to edge
+                .card--panel  the headline on a lit panel, then the photograph
+                .card--list   no photograph: a numbered list over the mark in dots
+
+   build.mjs sets two things per card after measuring it in the browser:
+   --head (the largest headline size that fits) and the --pool-* variables
+   (where the wall lights up: behind the photograph, or behind the dots). */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: var(--color-night-800);
+  color: var(--color-ink-50);
+  font-family: Outfit, sans-serif;
+  font-weight: 400;
+}
+
+.defs {
+  position: absolute;
+}
+
+/* ── The canvas ───────────────────────────────────────────────────────── */
+
+.card {
+  --pad-x: 64px;
+  --pitch: 15px; /* 1080, 1350 and 1920 are all whole numbers of dots */
+  --head-max: 116px;
+  --head: var(--head-max);
+  --plate-min: 430px;
+  /* Until build.mjs measures the card, the wall lights its centre. */
+  --pool-x: 50%;
+  --pool-y: 62%;
+  --pool-rx: 620px;
+  --pool-ry: 420px;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 1080px;
+  height: 1350px;
+  margin: 24px;
+  padding: 60px var(--pad-x) 52px;
+  background: var(--color-night-950);
+}
+
+/* Instagram draws its own header and reply bar over a story: nothing of ours
+   goes in the first 230 px or the last 240 px. */
+.card--story {
+  --head-max: 110px;
+  --plate-min: 360px;
+  height: 1920px;
+  padding-top: 230px;
+  padding-bottom: 240px;
+}
+
+.card--cover {
+  --head-max: 150px;
+}
+
+.card--panel {
+  --head-max: 120px;
+}
+
+.card--list {
+  --head-max: 128px;
+}
+
+/* ── The wall ─────────────────────────────────────────────────────────── */
+
+/* The site's own trick (src/styles/led.css): the wall is a mask. Each layer
+   is a flat fill seen only through a grid of round holes. The unlit layer has
+   the smallest holes; the three lit layers carry the same pool of light at
+   three reaches, through larger and larger holes — so a dot grows as it
+   brightens, the way the panel's dots do. */
+.wall,
+.wall > i {
+  position: absolute;
+  inset: 0;
+}
+
+.wall {
+  z-index: -1;
+}
+
+.wall > i {
+  mask-size: var(--pitch) var(--pitch);
+  mask-position: 0 0;
+}
+
+.wall__off {
+  background: var(--color-led-900);
+  mask-image: radial-gradient(circle, #000 1.5px, transparent 2px);
+}
+
+.wall__lit--far {
+  background: radial-gradient(
+    ellipse var(--pool-rx) var(--pool-ry) at var(--pool-x) var(--pool-y),
+    var(--color-led-700) 55%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle, #000 2.1px, transparent 2.7px);
+}
+
+.wall__lit--mid {
+  background: radial-gradient(
+    ellipse calc(var(--pool-rx) * 0.84) calc(var(--pool-ry) * 0.84) at var(--pool-x) var(--pool-y),
+    var(--color-led-500) 62%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle, #000 2.9px, transparent 3.5px);
+}
+
+.wall__lit--near {
+  background: radial-gradient(
+    ellipse calc(var(--pool-rx) * 0.68) calc(var(--pool-ry) * 0.68) at var(--pool-x) var(--pool-y),
+    var(--color-led-200) 45%,
+    var(--color-led-300) 70%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(circle, #000 3.7px, transparent 4.3px);
+}
+
+/* One row of the panel: the rule under the brand line and over the footer. */
+.dot-line {
+  display: block;
+  height: 4px;
+  background: radial-gradient(circle, var(--color-led-500) 1.4px, transparent 1.9px) left center / 10px 4px repeat-x;
+  opacity: 0.8;
+}
+
+/* ── The lock-up ──────────────────────────────────────────────────────── */
+
+.top {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 300px;
+}
+
+.brand-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-ink-300);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.brand-line .dot-line {
+  flex: 1;
+}
+
+/* The mark is geometry (src/design/wordmark.ts), never a font. Its box
+   carries a small margin for the extruded side, hence the negative offset. */
+.wordmark {
+  display: block;
+  width: 100%;
+  margin: -2px 0 0 -2px;
+  overflow: visible;
+}
+
+.signature {
+  padding-top: 1px;
+  color: var(--color-ink-300);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracking-label);
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── The copy ─────────────────────────────────────────────────────────── */
+
+.tag {
+  flex-shrink: 0;
+  margin: 46px 0 20px;
+  color: var(--color-led-300);
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.copy {
+  flex-shrink: 0;
+}
+
+/* Lines break where the campaign says so and nowhere else: a line that does
+   not fit is caught by the build, never wrapped behind the author's back. */
+.head {
+  font-size: var(--head);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: var(--tracking-display);
+  white-space: nowrap;
+}
+
+.head em {
+  color: var(--color-led-300);
+  font-style: normal;
+}
+
+.sub {
+  margin-top: 24px;
+  color: var(--color-ink-300);
+  font-size: 32px;
+  line-height: 1.24;
+}
+
+/* The headline on a lit panel: LED blue ground, night ink. */
+.card--panel .tag {
+  margin-bottom: 0;
+}
+
+.card--panel .copy {
+  margin: 26px -8px 0;
+  padding: 30px 34px 28px;
+  background: var(--color-led-300);
+  color: var(--color-night-950);
+}
+
+.card--panel .head em {
+  color: inherit;
+}
+
+.card--panel .sub {
+  color: var(--color-night-800);
+}
+
+/* ── The photograph ───────────────────────────────────────────────────── */
+
+/* The plate takes whatever height the copy leaves and the photograph is
+   fitted inside it by its own ratio: no object-fit, no fixed box, nothing
+   that could crop. build.mjs fails if the rendered ratio drifts from the
+   file's. */
+.plate {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--plate-min);
+  margin-top: 28px;
+}
+
+.plate img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
+.card--cover .plate {
+  margin-inline: calc(-1 * var(--pad-x));
+}
+
+/* On a story the plate has a height of its own; the free space goes to the
+   sticker zone and above the footer. */
+.card--story .plate {
+  flex: 1 1 480px;
+  max-height: 640px;
+}
+
+/* A portrait needs height to be seen at all: build.mjs marks the card and
+   the headline gives up a little more room. */
+.card--feed.card--portrait {
+  --plate-min: 560px;
+}
+
+/* ── The list ─────────────────────────────────────────────────────────── */
+
+.items {
+  display: grid;
+  flex-shrink: 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 32px;
+  margin-top: 40px;
+  padding: 0;
+  list-style: none;
+}
+
+.items li {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+  background: radial-gradient(circle, var(--color-led-500) 1.4px, transparent 1.9px) left top / 10px 4px repeat-x;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+/* Numbers in the 5×7 matrix (src/lib/led/matrix.ts). */
+.led-number {
+  display: block;
+  width: auto;
+  height: 48px;
+  align-self: flex-start;
+}
+
+.led-number__off {
+  stroke: var(--color-led-900);
+  opacity: 0.5;
+}
+
+.led-number__on {
+  stroke: var(--color-led-200);
+}
+
+/* The mark lit in dots (src/lib/led/glyphs.ts) fills what the list leaves.
+   Its dots are finer than the wall's, so the wall is switched off behind it:
+   two grids of different pitch on top of each other would only make noise. */
+.dots {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-height: 196px;
+  margin: 28px calc(-1 * var(--pad-x)) 0;
+  padding: 0 var(--pad-x);
+  background: var(--color-night-950);
+}
+
+.card--list .wall__lit {
+  display: none;
+}
+
+.dot-wordmark {
+  display: block;
+  width: 100%;
+  color: var(--color-led-200);
+  filter: drop-shadow(0 0 10px var(--color-led-500));
+}
+
+/* ── Story extras ─────────────────────────────────────────────────────── */
+
+/* Kept empty on purpose: the poll or question box is added in Instagram. */
+.sticker {
+  flex: 0 0 210px;
+  margin-top: 34px;
+}
+
+/* ── The footer ───────────────────────────────────────────────────────── */
+
+.foot {
+  flex-shrink: 0;
+  margin-top: 28px;
+}
+
+.card--story .foot {
+  margin-top: auto;
+}
+
+.foot__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 22px;
+  font-size: 23px;
+  line-height: 1.2;
+}
+
+.mark {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-led-300);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mark .led-number {
+  height: 34px;
+}
+
+/* ── Printing the editable document ───────────────────────────────────── */
+
+@media print {
+  body {
+    background: none;
+  }
+
+  .card {
+    margin: 0;
+    break-after: page;
+  }
+}
