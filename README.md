@@ -6,7 +6,8 @@
 
 Site institucional e gerador interno de propostas da [Internacional Freeband](https://freeband.com.br) (Jaú/Trabiju, desde 1969).
 
-- Landing pública em `/`
+- Site público: `/`, `/palco`, `/arquivo`, `/historia`
+- Cada fotografia tem endereço próprio (`/palco/foto/<id>`, `/arquivo/cartaz/<id>`, `/historia/foto/<id>`); dentro do site ela abre num visor sobre a página
 - Portfólio em PDF em `/portfolio`
 - Login de produção em `/admin`
 - Gerador de orçamento em `/orcamento` (protegido por sessão)
@@ -26,15 +27,23 @@ Scripts:
 - `npm run dev` — servidor local
 - `npm run build` / `npm start` — build e runtime de produção
 - `npm run lint` — ESLint sem warnings
-- `npm run typecheck` — TypeScript
+- `npm run typecheck` — TypeScript; depois de criar ou remover uma rota, `npx next typegen` atualiza os tipos gerados
 - `npm test` / `npm run test:watch` — Vitest
-- `npm run tokens` — **obrigatório** depois de editar `src/design/tokens.ts`; regenera `src/app/tokens.css` (um teste falha se estiver desatualizado)
-- `npm run blur` — **obrigatório** depois de adicionar ou reencodar qualquer imagem; regenera `src/data/blur.ts` (um teste falha sem a entrada)
+- `npm run tokens` — **obrigatório** depois de editar `src/design/tokens.ts`; regenera `src/styles/tokens.css` (um teste falha se estiver desatualizado)
+- `npm run blur` — **obrigatório** depois de adicionar ou reencodar qualquer imagem ou pôster de vídeo; regenera `src/data/blur.ts` (um teste falha sem a entrada)
 - `npm run optimize:images` — recomprime JPEGs grandes em `public/images` (e pede o `npm run blur` em seguida)
-- `npm run smoke` — Puppeteer em todas as rotas, a 1440 e 390: falha em erro de console, overflow horizontal ou foto cortada; precisa de um servidor no ar (`BASE_URL`, `ORCAMENTO_TOKEN`)
-- `npm run smoke:motion` — o mesmo com `prefers-reduced-motion: reduce`: nada pode se mover
+- `npm run smoke` — Puppeteer em todas as rotas, a 1440 e 390, contra `next start`: status, console, overflow, foto cortada, alvos de toque, página sem JavaScript, axe-core, visor de fotos, player, cartões de compartilhamento, rota protegida e PDF; precisa de um servidor no ar (`BASE_URL`, `ORCAMENTO_TOKEN`)
+- `npm run smoke:motion` — o mesmo com `prefers-reduced-motion: reduce`: nada pode se mover, nenhum vídeo toca, a parede WebGL fica desligada
+- `npm run perf` — orçamento de performance contra `next start` com a CPU 4× mais lenta: JS por rota, LCP, CLS, tarefas longas, canvases e mídia pedida sem interação (`PERF_TIMING=report` só relata os tempos)
+- `npm run social -- <campanha>` (ou `--todas`) — renderiza os cartões de `scripts/social/campanhas/<campanha>.json`
+- `node scripts/video/analyze.mjs` / `node scripts/video/encode.mjs` — análise dos masters e codificação dos clipes com som (os cortes ficam em `scripts/video/clips.mjs`)
+- `node scripts/import-archive.mjs` — traz as fotos de papel do álbum da banda para `public/images`
 
-O CI (`.github/workflows/ci.yml`) roda auditoria de dependências, testes, lint, typecheck, build e os dois smokes em cada PR e push na `main`.
+Os três últimos leem e escrevem fora do repositório (masters, fotos recebidas e saídas ficam na pasta de trabalho que contém este projeto); sem ela, só o site, os testes e os smokes rodam.
+
+O CI (`.github/workflows/ci.yml`) roda auditoria de dependências, testes, lint, typecheck, build, os dois smokes e o orçamento de performance em cada PR e push na `main`.
+
+O guia de engenharia (rotas, tokens, parede de LED, regra das placas, vídeo, PDFs) é o [`CLAUDE.md`](CLAUDE.md).
 
 ## Variáveis de ambiente
 

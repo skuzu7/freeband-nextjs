@@ -81,6 +81,15 @@ jobs:
         env:
           BASE_URL: http://localhost:3000
 
+      # What a page is allowed to cost. The byte and layout budgets are exact;
+      # the timings (LCP, long tasks) were calibrated on a developer machine, so
+      # on a shared runner they are reported, not enforced.
+      - name: Performance budget
+        run: npm run perf
+        env:
+          BASE_URL: http://localhost:3000
+          PERF_TIMING: report
+
       # A smoke failure caused by the server, not the page, is only visible here.
       - name: Server log
         if: failure()

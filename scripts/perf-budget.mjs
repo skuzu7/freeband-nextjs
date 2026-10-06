@@ -14,6 +14,9 @@
 //
 //   BASE_URL              server to hit (default http://localhost:3000)
 //   PUPPETEER_BROWSER_URL attach to a running Chrome instead of launching one
+//   PERF_TIMING=report    print LCP and long tasks over budget without failing
+//                         (a shared CI runner is slower than the machine the
+//                         timings were calibrated on; bytes and layout still fail)
 //   PERF_JSON             write the measurements to this file as JSON
 import puppeteer from 'puppeteer';
 import { writeFileSync } from 'node:fs';
@@ -61,6 +64,8 @@ const SILENT_MEDIA = [/\/video\/hero-loop\.mp4$/];
 
 const failures = [];
 const results = [];
+/** A timing over budget: a failure here, a note where timings are only reported. */
+const timing = (line) => (process.env.PERF_TIMING === 'report' ? console.log(`   note: ${line}`) : failures.push(line));
 
 async function measure(browser, route) {
   const page = await browser.newPage();
@@ -141,9 +146,9 @@ async function measure(browser, route) {
 
   const budget = budgetFor(route);
   if (jsBytes > budget.jsBytes) failures.push(`${route}: ${row.jsKB} KB of JavaScript (budget ${budget.jsBytes / 1000} KB)`);
-  if (perf.lcp > budget.lcpMs) failures.push(`${route}: LCP at ${row.lcpMs} ms (budget ${budget.lcpMs} ms)`);
+  if (perf.lcp > budget.lcpMs) timing(`${route}: LCP at ${row.lcpMs} ms (budget ${budget.lcpMs} ms)`);
   if (perf.cls > budget.cls) failures.push(`${route}: CLS ${row.cls} (budget ${budget.cls})`);
-  if (perf.longest > budget.longTaskMs) failures.push(`${route}: a ${row.longestTaskMs} ms task after load (budget ${budget.longTaskMs} ms)`);
+  if (perf.longest > budget.longTaskMs) timing(`${route}: a ${row.longestTaskMs} ms task after load (budget ${budget.longTaskMs} ms)`);
   if (perf.canvases > (route === '/' ? 1 : 0)) failures.push(`${route}: ${perf.canvases} canvas element(s)`);
   for (const path of unasked) failures.push(`${route}: fetched ${path} before any interaction`);
   if (route === '/' && posterBytes > BUDGET.posterBytes) failures.push(`/: the fold's poster weighs ${row.posterKB} KB (budget ${BUDGET.posterBytes / 1000} KB)`);
