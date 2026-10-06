@@ -6,6 +6,30 @@ import { describe, expect, it } from 'vitest';
 import { LedNumber } from '../LedNumber';
 import { LedSign } from '../LedSign';
 import { LedWordmark } from '../LedWordmark';
+import { Wordmark } from '../Wordmark';
+import { WORDMARK } from '@/design/wordmark';
+
+describe('Wordmark', () => {
+  // A gradient in objectBoundingBox units is ignored for a shape whose box has
+  // no width or height, and every stem and crossbar of the mark is one: the
+  // acrylic face went unpainted on all the straight strokes.
+  it('paints the acrylic with one gradient in user space, spanning the whole mark', () => {
+    const { container } = render(<Wordmark acrylic />);
+    const gradient = container.querySelector('linearGradient')!;
+    expect(gradient).toHaveAttribute('gradientUnits', 'userSpaceOnUse');
+    const { y, height } = WORDMARK.viewBox;
+    expect(Number(gradient.getAttribute('y1'))).toBe(y);
+    expect(Number(gradient.getAttribute('y2'))).toBe(y + height);
+    expect(gradient.getAttribute('x1')).toBe(gradient.getAttribute('x2'));
+    for (const attr of ['x1', 'y1', 'x2', 'y2']) expect(gradient.getAttribute(attr)).not.toContain('%');
+  });
+
+  it('paints in currentColor, with no gradient, when it is not the acrylic', () => {
+    const { container } = render(<Wordmark />);
+    expect(container.querySelector('linearGradient')).toBeNull();
+    expect(container.querySelector('g')).toHaveAttribute('stroke', 'currentColor');
+  });
+});
 
 describe('LedWordmark', () => {
   it('is one image named after the band, with both drawings in the markup', () => {

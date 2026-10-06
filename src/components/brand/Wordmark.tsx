@@ -55,10 +55,23 @@ export function Wordmark({ className = '', title, acrylic = false, glow = false 
     >
       {title && <title>{title}</title>}
       {/* The acrylic's colours are the red ramp of the tokens, read as CSS
-          variables: a presentation attribute cannot hold var(), a style can. */}
+          variables: a presentation attribute cannot hold var(), a style can.
+
+          One ramp for the whole sign, in user space. A gradient measured
+          against each shape's own bounding box (the default) is dropped for a
+          shape whose box has no width or no height — which is every straight
+          stroke of the mark: the stems, the crossbars. They were left unpainted
+          and showed only the dark extrusion underneath. */}
       {acrylic && (
         <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id={gradId}
+            gradientUnits="userSpaceOnUse"
+            x1={0}
+            y1={WORDMARK.viewBox.y}
+            x2={0}
+            y2={WORDMARK.viewBox.y + WORDMARK.viewBox.height}
+          >
             <stop offset="0%" style={{ stopColor: 'var(--color-red-400)' }} />
             <stop offset="25%" style={{ stopColor: 'var(--color-red-500)' }} />
             <stop offset="70%" style={{ stopColor: 'var(--color-red-600)' }} />

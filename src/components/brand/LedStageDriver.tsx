@@ -75,13 +75,12 @@ export function LedStageDriver() {
     };
   }, [reduced]);
 
-  // The first render is the page arriving, not a change of route.
-  const arrived = useRef(false);
+  // Only a change of route sweeps the wall: not the page arriving, not an
+  // effect running twice, not the motion preference settling after hydration.
+  const lastPath = useRef(pathname);
   useEffect(() => {
-    if (!arrived.current) {
-      arrived.current = true;
-      return;
-    }
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
     const band = sweepRef.current;
     if (!band || reduced) return;
     // Restart the keyframes: drop the flag, force a style flush, set it again.
