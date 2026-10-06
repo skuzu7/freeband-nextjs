@@ -18,42 +18,45 @@ export function Data() {
             <WhatsAppCta size="lg">{data.whatsappCta}</WhatsAppCta>
           </div>
         </div>
-        <dl className="rise rise-late grid gap-6">
-          <div>
-            <dt className="label-caps text-ink-low">{data.phoneLabel}</dt>
-            <dd className="mt-1">
-              <a href={telHref} className="transition-quick text-2xl font-semibold text-ink hover:text-led-text">
-                {contact.phone}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt className="label-caps text-ink-low">{data.emailLabel}</dt>
-            <dd className="mt-1">
-              <a href={`mailto:${contact.email}`} className="transition-quick break-all text-ink hover:text-led-text">
-                {contact.email}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt className="label-caps text-ink-low">{data.instagramLabel}</dt>
-            <dd className="mt-1">
-              <a
-                href={contact.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-quick text-ink hover:text-led-text"
-              >
-                {contact.instagram}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt className="label-caps text-ink-low">{data.addressLabel}</dt>
-            <dd className="mt-1 text-ink-muted">{contact.addressFull}</dd>
-          </div>
+        <div className="rise rise-late grid gap-6">
+          {/* A <dl> holds only its groups: the note under it sits beside it. */}
+          <dl className="grid gap-6">
+            <div>
+              <dt className="label-caps text-ink-low">{data.phoneLabel}</dt>
+              <dd className="mt-1">
+                <a href={telHref} className="transition-quick tap inline-flex items-center text-2xl font-semibold text-ink hover:text-led-text">
+                  {contact.phone}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="label-caps text-ink-low">{data.emailLabel}</dt>
+              <dd className="mt-1">
+                <a href={`mailto:${contact.email}`} className="transition-quick tap inline-flex items-center break-all text-ink hover:text-led-text">
+                  {contact.email}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="label-caps text-ink-low">{data.instagramLabel}</dt>
+              <dd className="mt-1">
+                <a
+                  href={contact.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-quick tap inline-flex items-center text-ink hover:text-led-text"
+                >
+                  {contact.instagram}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="label-caps text-ink-low">{data.addressLabel}</dt>
+              <dd className="mt-1 text-ink-muted">{contact.addressFull}</dd>
+            </div>
+          </dl>
           <p className="text-2xs text-ink-low">{data.meta}</p>
-        </dl>
+        </div>
       </Container>
     </Section>
   );

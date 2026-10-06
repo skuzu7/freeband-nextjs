@@ -1,74 +1,90 @@
 // src/components/pdf/portfolio/Cover.tsx
-// Page 1. Night ground, the wordmark in red, the full stage under the moving-
-// head show shown whole, the year in dots.
+// Page 1, on night. The top of the page is the backdrop: a wall of LED dots,
+// bled to the edges, lighting the name, and the red acrylic in front of it.
+// Under it the band in front of that same wall, whole, and the year in dots.
 import { Page, Text, View } from '@react-pdf/renderer';
 import { bandInfo } from '@/data/band';
+import { contact } from '@/data/contact';
 import { portfolio } from '@/data/copy/portfolio';
+import { LedWallPdf, wallPitch, wallSize } from '../LedWallPdf';
 import { DotLinePdf, LedNumberPdf, PhotoPdf } from '../motifs';
-import { A4, CONTENT_WIDTH, PDF_FONT, pdfColors, pdfStyles } from '../theme';
-import { WordmarkPdf } from '../WordmarkPdf';
+import { A4, CONTENT_WIDTH, pdfGround, pdfStyles, pdfTones, pdfType } from '../theme';
+import type { WallPad } from '../wall';
 import { pdfPhotos } from './images';
 
 const c = portfolio.pdf.cover;
+const t = pdfTones.night;
+const type = pdfType.night;
 
-// The brand line sits in a fixed column (the word is 90pt wide at this size
-// and tracking), so the rule beside it is computed, not measured by hand:
-// column + gap + rule is the content width. Column and gap make 17 pitches of
-// the rule, so its dots fall where the inner pages' rules put theirs.
-const BRAND_COLUMN = 92;
-const BRAND_GAP = 10;
+/** Where the mark's box starts, from the top of the page. */
+const MARK_TOP = 116;
+/** Where the photograph starts: clear of the wall's fading tail. */
+const PHOTO_TOP = 312;
+
+// The wall is laid out in whole dots around a mark as wide as the content
+// column: enough columns either side to pass the page's edges, enough rows
+// above to pass its top, and a tail below that fades into the night.
+const pitch = wallPitch(CONTENT_WIDTH);
+const side = Math.ceil(A4.margin / pitch);
+const PAD: WallPad = { left: side, right: side, top: Math.ceil(MARK_TOP / pitch) + 1, bottom: 22 };
+const FADE = { bottom: 14 };
+const wall = wallSize(CONTENT_WIDTH, PAD);
+
+const caps = { fontSize: 7.5, letterSpacing: 1.6, textTransform: 'uppercase' } as const;
 
 export function Cover() {
   return (
-    <Page
-      size="A4"
-      style={{
-        backgroundColor: pdfColors.night,
-        color: pdfColors.inkOnNight,
-        fontFamily: PDF_FONT,
-        paddingTop: 56,
-        paddingBottom: 44,
-        paddingHorizontal: A4.margin,
-      }}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: BRAND_GAP }}>
-        <View style={{ width: BRAND_COLUMN }}>
-          <Text style={{ fontSize: 8, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
-            {c.brandLine}
-          </Text>
-        </View>
-        <DotLinePdf width={CONTENT_WIDTH - BRAND_COLUMN - BRAND_GAP} color={pdfColors.ledDim} />
-      </View>
-      <View style={{ marginTop: 10 }}>
-        <WordmarkPdf width={CONTENT_WIDTH} />
+    <Page size="A4" style={{ ...pdfStyles.page, backgroundColor: pdfGround.night, color: t.ink, paddingTop: 0, paddingBottom: 0 }}>
+      {/* The wall, placed so the mark lands on the content column. */}
+      <View style={{ position: 'absolute', left: A4.margin - wall.markLeft, top: MARK_TOP - wall.markTop }}>
+        <LedWallPdf width={CONTENT_WIDTH} pad={PAD} fade={FADE} />
       </View>
 
-      <View style={{ marginTop: 36 }}>
-        <PhotoPdf frame={pdfPhotos.hero} width={CONTENT_WIDTH} />
+      <View style={{ marginTop: 40, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ ...caps, fontWeight: 600, color: t.ledText }}>{c.badge}</Text>
+        <Text style={{ ...caps, color: t.inkMuted }}>{c.since(bandInfo.founded)}</Text>
       </View>
 
-      <View style={{ marginTop: 28, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <View style={{ maxWidth: 300 }}>
-          <Text style={{ fontSize: 22, fontWeight: 600, letterSpacing: -0.5, lineHeight: 1.1 }}>{c.kicker}</Text>
-          <Text style={{ marginTop: 8, fontSize: 10, color: pdfColors.inkOnNightMuted, lineHeight: 1.45 }}>
-            {bandInfo.taglineLong}
-          </Text>
+      {/* The brand line sits on the wall, above the f, as it does on the backdrop. */}
+      <View style={{ position: 'absolute', left: A4.margin, top: MARK_TOP - 21 }}>
+        <Text style={{ fontSize: 8.5, fontWeight: 600, letterSpacing: 2.4, textTransform: 'uppercase', color: t.ink }}>
+          {c.brandLine}
+        </Text>
+      </View>
+
+      <View style={{ position: 'absolute', left: A4.margin, top: PHOTO_TOP }}>
+        <PhotoPdf frame={pdfPhotos.capa} width={CONTENT_WIDTH} />
+        <Text style={{ ...type.caption, marginTop: 5 }}>{c.photoCredit}</Text>
+      </View>
+
+      <View
+        style={{
+          position: 'absolute',
+          left: A4.margin,
+          right: A4.margin,
+          bottom: 92,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+        }}
+      >
+        <View style={{ maxWidth: 340 }}>
+          <Text style={{ fontSize: 26, fontWeight: 600, letterSpacing: -0.7, lineHeight: 1.1 }}>{c.kicker}</Text>
+          <Text style={{ marginTop: 8, fontSize: 10, color: t.inkMuted, lineHeight: 1.45 }}>{bandInfo.taglineLong}</Text>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <LedNumberPdf value={String(bandInfo.founded)} height={30} />
-          <Text style={{ marginTop: 6, fontSize: 7, letterSpacing: 1.6, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
-            {c.numberLabel}
-          </Text>
+          <LedNumberPdf value={String(bandInfo.founded)} height={34} color={t.led} dimColor={t.ledDim} />
+          <Text style={{ ...type.caption, marginTop: 7 }}>{c.numberLabel}</Text>
         </View>
       </View>
 
-      <View style={{ ...pdfStyles.footer, bottom: 40, borderTopColor: pdfColors.nightRaise, paddingTop: 10 }}>
-        <Text style={{ fontSize: 7.5, fontWeight: 600, letterSpacing: 1.6, textTransform: 'uppercase', color: pdfColors.ledBright }}>
-          {c.badge}
-        </Text>
-        <Text style={{ fontSize: 7.5, letterSpacing: 1.6, textTransform: 'uppercase', color: pdfColors.inkOnNightMuted }}>
-          {c.since(bandInfo.founded)}
-        </Text>
+      {/* Where the inner pages sign with the mark and count, the cover says where to find the band. */}
+      <View style={{ ...pdfStyles.footer, bottom: 40, flexDirection: 'column', alignItems: 'stretch' }}>
+        <DotLinePdf width={CONTENT_WIDTH} color={t.ledDim} />
+        <View style={{ marginTop: 9, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ ...caps, color: t.inkMuted }}>{contact.website}</Text>
+          <Text style={{ ...caps, color: t.inkMuted }}>{contact.phone}</Text>
+        </View>
       </View>
     </Page>
   );

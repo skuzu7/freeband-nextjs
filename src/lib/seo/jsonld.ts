@@ -5,6 +5,9 @@
 // page already makes in text — nothing is stated for search engines only.
 import { bandInfo, releaseShort } from '@/data/band';
 import { contact } from '@/data/contact';
+import type { GallerySet } from '@/data/media/gallery';
+import type { VideoClip } from '@/data/media/videos';
+import { hrefFor } from '@/lib/gallery/sets';
 
 const SITE = contact.siteUrl;
 const BAND_ID = `${SITE}/#banda`;
@@ -88,6 +91,11 @@ export interface GalleryImage {
   path?: string;
 }
 
+/** A gallery set as the list of photographs `imageGallery` takes, each with its own page. */
+export function galleryImages(set: GallerySet): GalleryImage[] {
+  return set.items.map((item) => ({ src: item.src, alt: item.alt, caption: item.caption, path: hrefFor(set, item.id) }));
+}
+
 /** A page that is a set of photographs. */
 export function imageGallery(page: { name: string; description: string; path: string; images: GalleryImage[] }) {
   return {
@@ -107,18 +115,6 @@ export function imageGallery(page: { name: string; description: string; path: st
   };
 }
 
-export interface VideoClip {
-  title: string;
-  description: string;
-  /** Path of the file a browser can play everywhere (H.264). */
-  src: string;
-  poster: string;
-  /** Seconds. */
-  duration: number;
-  /** ISO date the clip went up. */
-  uploaded: string;
-}
-
 /** Seconds as an ISO 8601 duration, e.g. 83.4 → "PT1M23S". */
 export function isoDuration(seconds: number): string {
   const total = Math.max(0, Math.round(seconds));
@@ -127,13 +123,14 @@ export function isoDuration(seconds: number): string {
   return `PT${m ? `${m}M` : ''}${s || !m ? `${s}S` : ''}`;
 }
 
-export function videoObject(clip: VideoClip) {
+/** A clip of src/data/media/videos.ts. The file named is the last source: the one every browser plays. */
+export function videoObject(clip: Pick<VideoClip, 'title' | 'description' | 'sources' | 'poster' | 'duration' | 'uploaded'>) {
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
     name: clip.title,
     description: clip.description,
-    contentUrl: absolute(clip.src),
+    contentUrl: absolute(clip.sources[clip.sources.length - 1].src),
     thumbnailUrl: absolute(clip.poster),
     duration: isoDuration(clip.duration),
     uploadDate: clip.uploaded,

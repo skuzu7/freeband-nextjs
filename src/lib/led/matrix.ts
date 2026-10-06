@@ -4,8 +4,14 @@
 // and the PDF draw the same layout.
 
 // 5 columns × 7 rows, top to bottom. 1 = lit.
+//
+// The zero is an open oval, with no slash through it. A slash tells a zero
+// from the letter O, and this matrix has no letters; what it cost was the
+// zero itself: set small (a year on the timeline of the PDF, the date on a
+// proposal) the diagonal closed the counter and "2000" read as "2888". Zero
+// and eight now differ where it shows — the middle row, open or shut.
 const MATRIX: Record<string, string[]> = {
-  '0': ['01110', '10001', '10011', '10101', '11001', '10001', '01110'],
+  '0': ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
   '1': ['00100', '01100', '00100', '00100', '00100', '00100', '01110'],
   '2': ['01110', '10001', '00001', '00010', '00100', '01000', '11111'],
   '3': ['11111', '00010', '00100', '00010', '00001', '10001', '01110'],

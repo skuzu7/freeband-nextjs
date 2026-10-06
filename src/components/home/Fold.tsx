@@ -13,6 +13,7 @@ import { LedWordmark } from '@/components/brand/LedWordmark';
 import { WhatsAppCta } from '@/components/site/WhatsAppCta';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
+import { Icon } from '@/components/ui/Icon';
 import { Label } from '@/components/ui/Label';
 import { HeroLoop } from './HeroLoop';
 
@@ -69,6 +70,10 @@ export function Fold({ yearsActive }: FoldProps) {
             </WhatsAppCta>
             <Button variant="secondary" size="lg" href="/palco" className="w-full sm:w-auto">
               {fold.ctaSecondary}
+            </Button>
+            <Button variant="ghost" size="lg" href="/palco#show" className="w-full gap-3 px-0 sm:w-auto">
+              <Icon name="play" className="size-4 text-led" />
+              {fold.ctaWatch}
             </Button>
           </div>
         </div>

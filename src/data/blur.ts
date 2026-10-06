@@ -3,6 +3,26 @@
 // Tiny base64 previews keyed by public URL; Photo applies them as next/image
 // blur placeholders automatically.
 export const blurMap: Record<string, string> = {
+  "/images/arquivo-bateria-e-metais.jpeg":
+    "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAACQAQCdASoOAAkABABoJZQAAY4lUAAA/jQsPCpa8rDZ1KFsUmkUUud0wMOJpM1BRcUrkCW9JwdlcnoQWXm9zm62AUAAAA==",
+  "/images/arquivo-cartaz-de-branco.jpeg":
+    "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoMAA4ABABoJZACdADSKpmAAP02lCqwBcTiXc6uhisLRT9V6YQR0/Y6QCqliAO7gsHA9uSuxjmgxg8bsga28g9hkAA=",
+  "/images/arquivo-formacao-de-branco.jpeg":
+    "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACQAQCdASoOAAkABABoJQBOgBIwW/AA/tJj/yM/xSKJTa3xZHn/cKssdI41Jv17bscBeqHqD9aexycvFo9oAA==",
+  "/images/arquivo-grupo-de-vermelho.jpeg":
+    "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoOAAkABABoJagCdADjVYakTZAA/l9M9zGEqrd0cpaLXBufpP0XTy6HBJtJqEbQ7Wfm+u+pkvZ6qAVEtP5yRjOIhLFwiAAA",
+  "/images/arquivo-guitarra-e-teclado.jpeg":
+    "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoIAA4ABABoJagCdADz22rOeADfdpBUL7L5F/BsEuf9IB/eDCmoe1+hnEqU22G/YClfwRhrcfoe5oAA",
+  "/images/arquivo-guitarrista-fev-85.jpeg":
+    "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAABQAgCdASoKAA4ABABoJagCdAEf/+I3riZOygAA/j/Ue+ettCmH+rVS/88CWuBDjQD1tabgpDNIpiino2LhNU8CSts7sAAA",
+  "/images/arquivo-palco-cortina-vermelha.jpeg":
+    "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoOAAsABABoJYgC7AEREdOsN4O94AD+bEzHVl1IdxjAeiDNwEC0g9a0hwzd3oF6vFKlO2C1nPZ8LnAst0QyCc3uiRlQYey1GkAAAA==",
+  "/images/arquivo-palco-de-branco.jpeg":
+    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoOAAgABABoJYgCdAEKbqM68kwAAPjHSkbMP5YNn/Yhtw7XKvBH07qhSQ5YiLO9lGtJk2Nfb3qPRT3kAAA=",
+  "/images/arquivo-palco-e-mesa-de-som.jpeg":
+    "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoOAAgABABoJZwC7ADCQQLIAADb+RJJKARq5/uewOljwPDsVwru0cIvBwV+8OBP0JsO/9/3Nri6LAAA",
+  "/images/arquivo-vozes-fev-85.jpeg":
+    "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoOAAkABABoJbACdADPh87BHuAAzUfrDuc7V+nEy/o53fifenC7s0gInru3byP7/JLhbCU6gCrh5a5Ctaq2rDzskq1GEAAA",
   "/images/baile-tabatinga.jpeg":
     "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAQCdASoOAAoABABoJbACdAEU2rvdpIAA/uiiiRFqsLY5xBrg+Bvs3BO/4vl2VyG0PB/Aw9p5zPAsVFMlNX8Sfzsyk72YKO/plBFJdZoJgR51fR3iTeE9h/oOZ7/yas1PQAAA",
   "/images/barra-bonita.jpeg":
@@ -23,10 +43,6 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAwAgCdASoOAAkABABoJbACdADiavpZeNTKAAD+2ajbJYz1ndGzhqH9JxQRjb/Msp6EkU6bXauIPQsNcnJA9C4uiRu7FKwVf8cehcYtnM4IpCa6/e/ADKqwGmdmJJ8jEpAAAA==",
   "/images/festa-55.jpeg":
     "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoOAAkABABoJZAC7AEPWR3ewYwAAP64PmzGFt6T1fP/3N1nJw7TtcIUdoLc/GTKtrSKD3fQAD+PUXtORpvy4GkSjyQZIAAA",
-  "/images/festa-70.jpeg":
-    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoOAAkABABoJbACdAEWue7AmGKAAM4+n2H+EaN351fZ3FVwqv6ogoqShLZGSoJ7uCtJf5uXWx+xiic0VWQ+Hy4+sNSjB4YAAAA=",
-  "/images/festa-82.jpeg":
-    "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoOAAkABABoJZACdAEQ5VmKRXNAAP6G8dUalvKsHLIaV7uTI6WDkUtoRt8eCyke5EDp5bFXaMKYxtcwiFzAAA==",
   "/images/figurino-anos-50.jpeg":
     "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoLAA4ABABoJQBdgCK13SsZ0DqH6gD+7FbV3gvOiTr4+G+tn+B7XJfo2Pu+8jbBaFEgRZt/R/3sSxDePXuNIuFks298fMgwUu+oAA==",
   "/images/figurino-country.jpeg":
@@ -47,14 +63,8 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwAgCdASoOAA4ABABoJbACdAYw7vNsN+cIgAD+wkFnrUcdFqgIXIbkZCrklEvv249DTagVQcKIlhFAPbNH8tTj8g+4cyyNOIw67c3c4eUOKoDjadhuHDsDcR0w/gmNO7eVdZtXcEt78701LjpACHZHa4fKtiTRAAA=",
   "/images/freeband-social.jpeg":
     "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoOAA4ABABoJbACdH8AGBttvwpwAAD+yHOkowJ+ptmFQnKAfonF2pTR0cSpvnUVGHw1GehrlT9Jmh2Eg7o+h5k6zyWOgaES+/nB9rtsavevMTi4Qot2wIdJg3CIAAAA",
-  "/images/img-0437.jpeg":
-    "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoOAAkABABoJZACdH8AF9H+u1c4AP7qSuzw95R8y46M5o8DeBg+Xm0pGuKx9rkzGpVQ1vSMnZ+ThOjHT0VDploASnkdkCHEAAA=",
-  "/images/img-0679.jpeg":
-    "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoOAAkABABoJbACdADdlkpgPaEgAP7w+265zFvyxUJwLvtJ+KiVBSBcBep9vD32E40WlWIUgfHRO5WoVWSQnwNCY2Lv/JubTUeM0Jmr34NkAAAA",
   "/images/img-0690.jpeg":
     "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoOAAkABABoJbACdACzCP+LYgAA/vKzD5qmOY3f0qiTbz9hwstwdPs9Q48c7mPRShdcQRCfaD5eN0qFb14+SGkUjVkNx0tDoB+cuG87GlAAAA==",
-  "/images/img-0867.jpeg":
-    "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAACwAQCdASoOAAkABABoJbACdACD+j2AAP5490nXqS3nJG8pBZdx3hOTHayiTDAfeFnufrIdNYzZ9r1D8QSiRvSxSNXonZTZko5q9HWBcExEFa2/GBAHh6duaw4AAA==",
   "/images/joao.jpeg":
     "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoOAAsABABoJbACdAELXQYgmoAA/un45kNANOhIhbS2yymcyjjaf+blCl5x1E2cVVUuDEqRuFcZF3J9iAebalkv9pSiv7CrQBahn8G9YAAAAA==",
   "/images/nautico-araraquara.jpeg":
@@ -119,14 +129,14 @@ export const blurMap: Record<string, string> = {
     "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoNAA4ABABoJZgC7ADbaSHZRAAA/uzZbbFmPworPGQrxBHBRq2TrUjs2kxfkCy//fqbKE4ZR3jQQXFthIx3nQ83NImfFdT1r7jQukAA",
   "/images/vocal-rock-pb.jpeg":
     "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAQCdASoOAAkABABoJaQAAqEqLgsgAPa+1B2wkxfX7CPR8lDedXm+DPCD/32qmY03IDfYPbdniSpBGB8lGzplRpt+gRHG3p4jAAAA",
+  "/video/dueto-com-a-banda.jpg":
+    "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoOAAgABABoJZAAAn/UVoGIAAD+3abMVn0Ir6XL+D/e+WuGy73XWVzGbIbhw968Shf9tlguQAA=",
   "/video/hero-loop.jpg":
     "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoOAAgABABoJQAAXaXL/gVxgAD+4Z33E+ImXldTmV4msmFT4hlFFvvxr+CDGpSk40m6e4l+shtYwAAA",
-  "/video/reel-dueto.jpg":
-    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADQAQCdASoOAAgABABoJaAC7ADHS6WXwAD+40s9uh2Gcy3CSPf97JgEdOtXRKc+ZEBrRKzi23ohI6J4Bv3rlLxgAAA=",
-  "/video/reel-guitarra.jpg":
-    "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoOAAgABABoJbACdAD7uEzJuAD9Og6MUiW5EuOzdN9ASdN0q3u5FiTesLid6vdWG+XH+x0NUjNBLWh8TmsAAA==",
-  "/video/reel-vocal-fem.jpg":
-    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoOAAgABABoJYwCdH8AEejS5qAA/t1s0b5UpZoVU1nc50PZ/nbVhNdZCyK28n++JZRElSAkD5Sbo9OYAAA=",
-  "/video/reel-vocal-rock.jpg":
-    "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoOAAgABABoJbACdAD7dL3QaAAA/W9E98ewmCBkJMDJ+d4k4YZNf0HG7KKvV4Gvo83WBblbAAA=",
+  "/video/palco-entre-luzes-e-fumaca.jpg":
+    "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoOAAgABABoJZQAAjeNkksgAP7hc0vkG3cOFZ8Kfon79+q+Zf4w1TX1ILvIoz8bVvvMdAgA",
+  "/video/solo-de-guitarra.jpg":
+    "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoOAAgABABoJaACdAEXpaD5t4AA/tBwy3k6XA8ysNpqevnGmx1w2283bmBbyHSxxwE4AvjppTLLDj8HeGNG1YWwYCr0QWAA",
+  "/video/vocal-em-primeiro-plano.jpg":
+    "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoOAAgABABoJYgCdADjcJo/BsAA/sFKlJptzU+ARrXPmNcGZ/P0F7F8579kGDhEujbYOxBlGs/W4QAA",
 };

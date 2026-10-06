@@ -1,10 +1,47 @@
 // src/components/pdf/WordmarkPdf.tsx
-// The wordmark drawn with react-pdf's Svg primitives from the same GLYPHS the
-// site uses, so the mark in a PDF is the mark on the backdrop: vector, red,
-// 19-unit strokes with butt caps.
-import { Circle, G, Path, Svg } from '@react-pdf/renderer';
-import { GLYPHS, WORDMARK } from '@/design/wordmark';
-import { pdfColors } from './theme';
+// The wordmark drawn with react-pdf's Svg primitives from the same geometry
+// the site uses (src/design/wordmark.ts), so the mark in a PDF is the mark on
+// the backdrop: vector, red, 19-unit strokes with butt caps. Never a font.
+import { G, Path, Svg } from '@react-pdf/renderer';
+import { WORDMARK, WORDMARK_VIEWBOX, wordmarkPaths } from '@/design/wordmark';
+import { pdfLed } from './theme';
+
+// Module scope: the eight glyphs as absolute path data, bowls included.
+const GLYPH_PATHS = wordmarkPaths();
+
+/** Depth of the acrylic, in wordmark units: the offset of the extruded side (the site's own). */
+const SIDE = { dx: 1.5, dy: 2.5 } as const;
+
+interface WordmarkStrokesProps {
+  color: string;
+  dx?: number;
+  dy?: number;
+}
+
+/** The mark's strokes in wordmark units, for any <Svg> that already has them as its viewBox. */
+export function WordmarkStrokes({ color, dx = 0, dy = 0 }: WordmarkStrokesProps) {
+  return (
+    <G fill="none" stroke={color} strokeWidth={WORDMARK.stroke} strokeLinecap="butt">
+      {GLYPH_PATHS.map((glyph) => (
+        <G key={glyph.x} transform={`translate(${glyph.x + dx}, ${dy})`}>
+          {glyph.d.map((d) => (
+            <Path key={d} d={d} />
+          ))}
+        </G>
+      ))}
+    </G>
+  );
+}
+
+/** The acrylic as the stage shows it: the extruded side, then the face. */
+export function WordmarkAcrylic() {
+  return (
+    <>
+      <WordmarkStrokes color={pdfLed.acrylicSide} dx={SIDE.dx} dy={SIDE.dy} />
+      <WordmarkStrokes color={pdfLed.acrylic} />
+    </>
+  );
+}
 
 interface WordmarkPdfProps {
   /** Rendered width in points; the height follows the mark's own ratio. */
@@ -12,29 +49,11 @@ interface WordmarkPdfProps {
   color?: string;
 }
 
-const { viewBox } = WORDMARK;
-const VIEWBOX = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
-
-export function WordmarkPdf({ width, color = pdfColors.red }: WordmarkPdfProps) {
-  const height = (width * viewBox.height) / viewBox.width;
+export function WordmarkPdf({ width, color = pdfLed.acrylic }: WordmarkPdfProps) {
+  const { viewBox } = WORDMARK;
   return (
-    <Svg viewBox={VIEWBOX} width={width} height={height}>
-      <G
-        fill="none"
-        stroke={color}
-        strokeWidth={WORDMARK.stroke}
-        strokeLinecap="butt"
-        transform={`translate(${WORDMARK.overhang}, 0)`}
-      >
-        {GLYPHS.map((glyph, i) => (
-          <G key={i} transform={`translate(${glyph.x}, 0)`}>
-            {glyph.circle && <Circle cx={WORDMARK.bowl.cx} cy={WORDMARK.bowl.cy} r={WORDMARK.bowl.r} />}
-            {glyph.d.map((d, j) => (
-              <Path key={j} d={d} />
-            ))}
-          </G>
-        ))}
-      </G>
+    <Svg viewBox={WORDMARK_VIEWBOX} width={width} height={(width * viewBox.height) / viewBox.width}>
+      <WordmarkStrokes color={color} />
     </Svg>
   );
 }

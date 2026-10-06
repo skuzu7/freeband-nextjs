@@ -36,6 +36,10 @@ export function Blocos() {
           a horizontal scroll-snap row with LED controls. */}
       <ul
         id={ROW_ID}
+        // The row scrolls sideways from 48rem: it takes focus so the arrow
+        // keys can scroll it, and is named by the block's heading.
+        tabIndex={0}
+        aria-labelledby="blocos-title"
         className="snap-row mt-10 items-start md:mt-14"
         style={{ '--snap-gap': '1.5rem', '--bloco-h': 'min(32rem, 100vw)' } as CSSProperties}
       >

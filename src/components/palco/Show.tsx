@@ -1,32 +1,28 @@
 // src/components/palco/Show.tsx
-// The four reels with their single pause control. Silent clips from the
-// band's own camera; nothing here is stock.
+// The four clips, with sound: live cuts from the band's own camera, nothing
+// stock. Each one plays in its own player and only when its visitor asks;
+// the title and what it shows are printed under it.
 import { palco } from '@/data/copy/palco';
-import { reels } from '@/data/media/reels';
+import { videos } from '@/data/media/videos';
 import { Container } from '@/components/ui/Container';
-import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
-import { ReelGroup } from '@/components/media/ReelGroup';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { ClipList } from '@/components/media/player/ClipList';
 
 export function Show() {
   return (
+    // "show" is the address the old site's #video anchor is sent to
+    // (src/components/site/LegacyAnchors.tsx).
     <Section id="show" labelledBy="show-title" className="border-t border-line">
       <Container>
-        <header className="max-w-[60ch]">
-          <Label dot>{palco.video.label}</Label>
-          <h2 id="show-title" className="mt-4 text-4xl font-semibold tracking-display text-ink">
-            {palco.video.headline}
-          </h2>
-          <p className="mt-5 text-lg text-ink-muted">{palco.video.lead}</p>
-        </header>
-        <ReelGroup
-          className="mt-8"
-          reels={reels}
-          columns={4}
-          pauseLabel={palco.video.pauseLabel}
-          playLabel={palco.video.playLabel}
+        <SectionHeader
+          id="show-title"
+          label={palco.video.label}
+          headline={palco.video.headline}
+          lead={palco.video.lead}
         />
-        <p className="mt-4 text-sm text-ink-low">{palco.video.footnote}</p>
+        <ClipList clips={videos} columns={2} className="mt-10" />
+        <p className="mt-8 text-sm text-ink-low">{palco.video.footnote}</p>
       </Container>
     </Section>
   );

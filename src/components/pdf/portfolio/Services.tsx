@@ -1,21 +1,51 @@
 // src/components/pdf/portfolio/Services.tsx
-// Page 6. The two packages side by side, the formats, what is included, and
-// two photographs of the rig mounted.
+// Page 6, on paper. The two packages side by side — the one most asked for is
+// the lit one, a night panel; the other stays on paper — then the formats,
+// what is included, and a photograph of the rig mounted.
 import { Text, View } from '@react-pdf/renderer';
 import { portfolio } from '@/data/copy/portfolio';
-import { includedFeatures, servicePackages, services } from '@/data/packages';
-import { PlateRowPdf } from '../motifs';
-import { pdfColors, pdfStyles } from '../theme';
-import { PdfPage } from './chrome';
+import { includedFeatures, servicePackages, services, type ServicePackage } from '@/data/packages';
+import { DotLinePdf, PhotoPdf } from '../motifs';
+import { CONTENT_WIDTH, pdfTones, pdfType } from '../theme';
+import { Bullet, PdfPage } from './chrome';
 import { pdfPhotos } from './images';
 
 const c = portfolio.pdf.services;
+const paper = pdfTones.paper;
+const type = pdfType.paper;
 
-function Bullet({ text, small = false }: { text: string; small?: boolean }) {
+const PACKAGE_GAP = 10;
+const PACKAGE_PAD = 16;
+const PACKAGE_WIDTH = (CONTENT_WIDTH - PACKAGE_GAP * (servicePackages.length - 1)) / servicePackages.length;
+const SIDE_WIDTH = 200;
+
+function Package({ pkg }: { pkg: ServicePackage }) {
+  const tone = pkg.highlighted ? 'night' : 'paper';
+  const t = pdfTones[tone];
+  const kind = pdfType[tone];
   return (
-    <View style={{ flexDirection: 'row', gap: 6, alignItems: 'flex-start' }}>
-      <View style={{ width: 3, height: 3, borderRadius: 1.5, backgroundColor: pdfColors.led, marginTop: small ? 3.5 : 4.5 }} />
-      <Text style={{ fontSize: small ? 8 : 9, color: small ? pdfColors.inkMuted : pdfColors.ink, flex: 1 }}>{text}</Text>
+    <View
+      style={{
+        width: PACKAGE_WIDTH,
+        padding: PACKAGE_PAD,
+        backgroundColor: pkg.highlighted ? t.surface : t.raise,
+        borderWidth: 0.75,
+        borderColor: pkg.highlighted ? t.surface : t.line,
+      }}
+    >
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={kind.label}>{pkg.name}</Text>
+        {pkg.highlighted && <Text style={{ ...kind.caption, color: t.ink }}>{c.highlightBadge}</Text>}
+      </View>
+      <View style={{ marginTop: 8 }}>
+        <DotLinePdf width={PACKAGE_WIDTH - PACKAGE_PAD * 2} color={pkg.highlighted ? t.led : t.ledDim} />
+      </View>
+      <Text style={{ ...kind.body, marginTop: 9, marginBottom: 10 }}>{pkg.description}</Text>
+      <View style={{ gap: 4 }}>
+        {pkg.features.map((f) => (
+          <Bullet key={f} text={f} tone={tone} />
+        ))}
+      </View>
     </View>
   );
 }
@@ -23,55 +53,36 @@ function Bullet({ text, small = false }: { text: string; small?: boolean }) {
 export function Services() {
   return (
     <PdfPage n={6} label={c.title} title={c.headline} lead={c.lead}>
-      <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View style={{ flexDirection: 'row', gap: PACKAGE_GAP }}>
         {servicePackages.map((pkg) => (
-          <View
-            key={pkg.id}
-            style={{
-              ...pdfStyles.card,
-              flex: 1,
-              padding: 14,
-              borderColor: pkg.highlighted ? pdfColors.led : pdfColors.line,
-              borderWidth: pkg.highlighted ? 1.25 : 0.75,
-            }}
-          >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={pdfStyles.label}>{pkg.name}</Text>
-              {pkg.highlighted && <Text style={{ ...pdfStyles.caption, color: pdfColors.led }}>{c.highlightBadge}</Text>}
-            </View>
-            <Text style={{ ...pdfStyles.body, marginTop: 6, marginBottom: 10 }}>{pkg.description}</Text>
-            <View style={{ gap: 4 }}>
-              {pkg.features.map((f) => (
-                <Bullet key={f} text={f} />
-              ))}
-            </View>
-          </View>
+          <Package key={pkg.id} pkg={pkg} />
         ))}
       </View>
 
-      <View style={{ marginTop: 14, flexDirection: 'row', gap: 24 }}>
-        <View style={{ width: 200 }}>
-          <Text style={pdfStyles.label}>{c.formatsLabel}</Text>
-          <View style={{ marginTop: 8, gap: 6 }}>
+      <View style={{ marginTop: 20, flexDirection: 'row', gap: 24 }}>
+        <View style={{ width: SIDE_WIDTH }}>
+          <Text style={type.label}>{c.formatsLabel}</Text>
+          <View style={{ marginTop: 8, gap: 7 }}>
             {services.map((s) => (
               <View key={s.title}>
-                <Text style={{ fontSize: 10, fontWeight: 600, color: pdfColors.ink }}>{s.title}</Text>
-                <Text style={{ fontSize: 8, color: pdfColors.inkMuted }}>{s.description}</Text>
+                <Text style={{ fontSize: 10, fontWeight: 600, color: paper.ink }}>{s.title}</Text>
+                <Text style={{ fontSize: 8, lineHeight: 1.4, color: paper.inkMuted }}>{s.description}</Text>
               </View>
             ))}
           </View>
           {/* The rig, mounted — under the formats, where the column has room. */}
-          <View style={{ marginTop: 16 }}>
-            <Text style={{ ...pdfStyles.label, marginBottom: 6 }}>{c.rigLabel}</Text>
-            <PlateRowPdf frames={[pdfPhotos.estruturaBoate, pdfPhotos.estruturaLuz]} width={200} />
+          <View style={{ marginTop: 18 }}>
+            <Text style={{ ...type.label, marginBottom: 7 }}>{c.rigLabel}</Text>
+            <PhotoPdf frame={pdfPhotos.estruturaBoate} width={SIDE_WIDTH} />
           </View>
         </View>
+
         <View style={{ flex: 1 }}>
-          <Text style={pdfStyles.label}>{c.includedLabel}</Text>
-          <View style={{ marginTop: 8, gap: 7 }}>
+          <Text style={type.label}>{c.includedLabel}</Text>
+          <View style={{ marginTop: 8, gap: 8 }}>
             {includedFeatures.map((group) => (
               <View key={group.title}>
-                <Text style={{ fontSize: 9, fontWeight: 600, color: pdfColors.ink }}>
+                <Text style={{ fontSize: 9.5, fontWeight: 600, color: paper.ink }}>
                   {group.title}
                   {'optional' in group && group.optional ? ` · ${c.optionalNote}` : ''}
                 </Text>
@@ -85,7 +96,6 @@ export function Services() {
           </View>
         </View>
       </View>
-
     </PdfPage>
   );
 }

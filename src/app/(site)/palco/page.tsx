@@ -1,4 +1,4 @@
-// "/palco" — the full gallery: three acts, wardrobe, rig, the four reels.
+// "/palco" — the full gallery: three acts, wardrobe, rig, and the four clips with sound.
 import type { Metadata } from 'next';
 import { bandLineup } from '@/data/band';
 import { palco } from '@/data/copy/palco';
@@ -8,7 +8,13 @@ import { Atos } from '@/components/palco/Atos';
 import { Figurinos } from '@/components/palco/Figurinos';
 import { Estrutura } from '@/components/palco/Estrutura';
 import { Show } from '@/components/palco/Show';
-import { socialMetadata } from '@/app/shared-metadata';
+import { socialMetadata } from '@/lib/seo/metadata';
+import { breadcrumbs, galleryImages, imageGallery, videoObject } from '@/lib/seo/jsonld';
+import { site } from '@/data/copy/site';
+import { gallery } from '@/data/media/gallery';
+import { videos } from '@/data/media/videos';
+import { JsonLd } from '@/components/site/JsonLd';
+import { RouteTransition } from '@/components/site/RouteTransition';
 
 export const metadata: Metadata = {
   title: palco.seo.title,
@@ -17,9 +23,21 @@ export const metadata: Metadata = {
   ...socialMetadata({ ...palco.seo, path: '/palco' }),
 };
 
+// What the page is, for search: where it sits, the photographs it holds (each
+// with its own address) and the clips it plays.
+const structured = [
+  breadcrumbs([
+    { name: site.nav.homeLink, path: '/' },
+    { name: palco.seo.title, path: '/palco' },
+  ]),
+  imageGallery({ name: palco.seo.title, description: palco.seo.description, path: '/palco', images: galleryImages(gallery.palco) }),
+  ...videos.map(videoObject),
+];
+
 export default function PalcoPage() {
   return (
-    <>
+    <RouteTransition>
+      <JsonLd data={structured} />
       <PageHeader id="palco-title" label={palco.label} headline={palco.headline} lead={palco.lead}>
         <div className="mt-10 border-t border-line pt-6">
           <Label>{palco.lineupLabel}</Label>
@@ -40,6 +58,6 @@ export default function PalcoPage() {
       <Figurinos />
       <Estrutura />
       <Show />
-    </>
+    </RouteTransition>
   );
 }

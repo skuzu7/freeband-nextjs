@@ -1,11 +1,11 @@
 // src/components/home/Prova.tsx
-// Block 4 — proof: three reels, four flyers, and the names the band has
+// Block 4 — proof: three clips with sound, four flyers, and the names the band has
 // shared a stage with running across a LED sign. Each part links to the page
 // that holds the rest.
 import { artists } from '@/data/band';
 import { prova } from '@/data/copy/home';
 import { posters } from '@/data/media/posters';
-import { reels } from '@/data/media/reels';
+import { videos } from '@/data/media/videos';
 import { LedSign } from '@/components/brand/LedSign';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
@@ -13,10 +13,11 @@ import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { PlateRow } from '@/components/media/PlateRow';
-import { ReelGroup } from '@/components/media/ReelGroup';
+import { ClipList } from '@/components/media/player/ClipList';
 
 export function Prova() {
-  const homeReels = reels.slice(0, 3);
+  // Three of the four clips; /palco has them all.
+  const homeClips = videos.slice(0, 3);
   // The flyers flagged for the home in posters.ts: the ones with enough
   // resolution to run at this size.
   const homePosters = posters
@@ -28,13 +29,8 @@ export function Prova() {
       <Container className="flex flex-col gap-20">
         <div>
           <SectionHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
-          <ReelGroup
-            className="rise mt-8"
-            reels={homeReels}
-            pauseLabel={prova.pauseLabel}
-            playLabel={prova.playLabel}
-          />
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+          <ClipList clips={homeClips} columns={3} className="rise mt-8" />
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
             <p className="text-sm text-ink-low">{prova.videoFootnote}</p>
             <Button variant="ghost" href="/palco" className="px-0">
               {prova.palcoCta} →

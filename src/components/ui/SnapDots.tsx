@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { prefersReducedMotion } from '@/hooks/useReducedMotion';
+import { Icon } from './Icon';
 
 interface SnapDotsProps {
   /** id of the `.snap-row` element. */
@@ -92,11 +93,9 @@ function StepButton({ label, disabled, onClick, dir }: { label: string; disabled
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="transition-quick flex size-10 items-center justify-center rounded-sm border border-line text-ink hover:border-line-strong hover:text-led-text disabled:cursor-default disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
+      className="transition-quick tap flex items-center justify-center rounded-sm border border-line text-ink hover:border-line-strong hover:text-led-text disabled:cursor-default disabled:opacity-30 disabled:hover:border-line disabled:hover:text-ink"
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d={dir < 0 ? 'M10 3 5 8l5 5' : 'M6 3l5 5-5 5'} />
-      </svg>
+      <Icon name={dir < 0 ? 'chevron-left' : 'chevron-right'} className="size-4" />
     </button>
   );
 }

@@ -6,7 +6,7 @@
 // src/data/blur.ts. Photographs are never cropped by their boxes, so a wrong
 // aspect is a visible layout bug — this is the test that catches it.
 import { describe, it, expect } from 'vitest';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -14,13 +14,13 @@ import { images, ratioOf } from '@/data/media/paths';
 import { stageFrames, retratoPaete, STAGE_CATEGORIES } from '@/data/media/frames';
 import { figurinos } from '@/data/media/figurinos';
 import { estrutura } from '@/data/media/estrutura';
-import { reels } from '@/data/media/reels';
+import { videos } from '@/data/media/videos';
 import { posters, POSTER_CATEGORIES } from '@/data/media/posters';
 import { heroMedia } from '@/data/media/hero';
-import { timeline } from '@/data/band';
+import { eraPhotos, timeline } from '@/data/band';
 import { blocos } from '@/data/copy/home';
 import { blurMap } from '@/data/blur';
-import { pdfPhotoList } from '@/components/pdf/portfolio/images';
+import { pdfGalleryRows, pdfPhotoList } from '@/components/pdf/portfolio/images';
 
 const PUBLIC = path.resolve(__dirname, '../../../public');
 const toDisk = (url: string) => path.join(PUBLIC, url.replace(/^\//, ''));
@@ -54,14 +54,93 @@ describe('files', () => {
     }
   });
 
-  it('every reel and its poster exist and carry alt + caption', () => {
-    expect(reels.length).toBeGreaterThanOrEqual(4);
-    for (const reel of reels) {
-      expect(existsSync(toDisk(reel.src)), `${reel.src} missing`).toBe(true);
-      expect(existsSync(toDisk(reel.poster)), `${reel.poster} missing`).toBe(true);
-      expect(reel.alt).toBeTruthy();
-      expect(reel.caption).toBeTruthy();
+  // The clips with sound (src/data/media/videos.ts). Bytes, per clip and for
+  // the folder: a visitor on a phone pays for every one of them.
+  const VIDEO_BUDGET = { h264: 10_000_000, av1: 5_000_000, folder: 60_000_000 };
+
+  it('videos — four clips, AV1 first and H.264 after it, each file inside its budget', () => {
+    expect(videos.length).toBe(4);
+    expect(new Set(videos.map((clip) => clip.id)).size).toBe(videos.length);
+    for (const clip of videos) {
+      expect(clip.title, clip.id).toBeTruthy();
+      expect(clip.description, clip.id).toBeTruthy();
+      expect(clip.uploaded, clip.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      // A browser plays the first source it can decode, so the order is the
+      // preference; the full type lets it decide without fetching anything.
+      expect(clip.sources.length, clip.id).toBe(2);
+      const [av1, h264] = clip.sources;
+      expect(av1.type, clip.id).toMatch(/^video\/mp4; codecs="av01\.[^"]+, mp4a\.[^"]+"$/);
+      expect(h264.type, clip.id).toMatch(/^video\/mp4; codecs="avc1\.[^"]+, mp4a\.[^"]+"$/);
+      for (const source of clip.sources) expect(existsSync(toDisk(source.src)), `${source.src} missing`).toBe(true);
+      expect(statSync(toDisk(av1.src)).size, `${av1.src} over the AV1 budget`).toBeLessThanOrEqual(VIDEO_BUDGET.av1);
+      expect(statSync(toDisk(h264.src)).size, `${h264.src} over the H.264 budget`).toBeLessThanOrEqual(
+        VIDEO_BUDGET.h264,
+      );
     }
+  });
+
+  it('videos — titles, descriptions, durations and codecs are the ones the encoder wrote down', async () => {
+    interface ManifestClip {
+      id: string;
+      title: string;
+      description: string;
+      duration: number;
+      width: number;
+      height: number;
+      sources: { file: string; codecs: string }[];
+      poster: { file: string };
+      levels: { file: string };
+    }
+    const manifest = JSON.parse(
+      await readFile(path.resolve(__dirname, '../../../scripts/video/manifest.json'), 'utf8'),
+    ) as { clips: ManifestClip[] };
+    expect(videos.map((clip) => clip.id)).toEqual(manifest.clips.map((clip) => clip.id));
+    for (const clip of videos) {
+      const encoded = manifest.clips.find((c) => c.id === clip.id)!;
+      expect(clip.title, clip.id).toBe(encoded.title);
+      expect(clip.description, clip.id).toBe(encoded.description);
+      expect(clip.duration, clip.id).toBeCloseTo(encoded.duration, 3);
+      expect(clip.aspect, clip.id).toBe(`${encoded.width}/${encoded.height}`);
+      expect(clip.sources, clip.id).toEqual(
+        encoded.sources.map((s) => ({ src: `/video/${s.file}`, type: `video/mp4; codecs="${s.codecs}"` })),
+      );
+      expect(clip.poster, clip.id).toBe(`/video/${encoded.poster.file}`);
+      expect(clip.levels, clip.id).toBe(`/video/${encoded.levels.file}`);
+    }
+  });
+
+  it('videos — every poster is a 16:9 frame at the size it declares, with its description', async () => {
+    for (const clip of videos) {
+      expect(existsSync(toDisk(clip.poster)), `${clip.poster} missing`).toBe(true);
+      expect(clip.alt, clip.id).toBeTruthy();
+      const r = await expectAspect(clip.poster, clip.aspect, clip.id);
+      expect(`${r.width}/${r.height}`, clip.id).toBe(clip.aspect);
+      expect(Math.abs(r.ratio - 16 / 9), `${clip.id} is not 16:9`).toBeLessThan(0.01);
+    }
+  });
+
+  it('videos — every envelope has a rate and one level in 0..1 for each step of the clip', async () => {
+    for (const clip of videos) {
+      expect(existsSync(toDisk(clip.levels)), `${clip.levels} missing`).toBe(true);
+      const envelope = JSON.parse(await readFile(toDisk(clip.levels), 'utf8')) as { rate: unknown; levels: unknown };
+      expect(typeof envelope.rate, clip.id).toBe('number');
+      expect(envelope.rate as number, clip.id).toBeGreaterThan(0);
+      expect(Array.isArray(envelope.levels), clip.id).toBe(true);
+      const levels = envelope.levels as unknown[];
+      expect(levels.length, clip.id).toBeGreaterThan(0);
+      const outside = levels.filter((v) => typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 1);
+      expect(outside, `${clip.id}: levels outside 0..1`).toEqual([]);
+      // The envelope runs as long as the clip does.
+      expect(Math.abs(levels.length / (envelope.rate as number) - clip.duration), clip.id).toBeLessThan(0.5);
+    }
+  });
+
+  it('videos — public/video stays inside its budget, the retired reels aside', () => {
+    const dir = toDisk('/video');
+    const total = readdirSync(dir)
+      .filter((name) => !name.startsWith('reel-'))
+      .reduce((sum, name) => sum + statSync(path.join(dir, name)).size, 0);
+    expect(total).toBeLessThanOrEqual(VIDEO_BUDGET.folder);
   });
 
   it('the hero loop and its poster exist', async () => {
@@ -91,7 +170,7 @@ describe('aspect ratios and resolution', () => {
   it('timeline — five eras, each with its own whole photograph', async () => {
     expect(timeline.length).toBe(5);
     for (const era of timeline) {
-      for (const image of era.extra ? [era.image, era.extra] : [era.image]) {
+      for (const image of eraPhotos(era)) {
         const r = await expectAspect(image.src, image.aspect, era.year);
         expect(r.longEdge, `${era.year} photo below floor`).toBeGreaterThanOrEqual(FRAME_MIN_LONG_EDGE);
         expect(image.alt).toBeTruthy();
@@ -148,6 +227,13 @@ describe('aspect ratios and resolution', () => {
   it('portfolio PDF — every frame declares its real aspect, so plate rows print it whole', async () => {
     expect(pdfPhotoList.length).toBeGreaterThan(0);
     for (const frame of pdfPhotoList) await expectAspect(frame.src, frame.aspect, `pdf ${frame.src}`);
+    // The gallery page prints stage photography at half a page: the old
+    // site's 600×400 thumbnails are not to come back to it.
+    expect(pdfGalleryRows.length).toBeGreaterThan(0);
+    for (const frame of pdfGalleryRows.flat()) {
+      const r = await real(frame.src);
+      expect(r.longEdge, `pdf gallery ${frame.src} below gallery floor`).toBeGreaterThanOrEqual(GALLERY_MIN_LONG_EDGE);
+    }
   });
 
   it('blocos temáticos — one big photo each, gallery floor', async () => {
@@ -190,9 +276,9 @@ describe('blur placeholders', () => {
       ...stageFrames.map((f) => f.src),
       ...figurinos.map((f) => f.src),
       ...estrutura.map((f) => f.src),
-      ...timeline.flatMap((e) => (e.extra ? [e.image.src, e.extra.src] : [e.image.src])),
+      ...timeline.flatMap((e) => eraPhotos(e).map((photo) => photo.src)),
       ...posters.map((p) => p.src),
-      ...reels.map((r) => r.poster),
+      ...videos.map((clip) => clip.poster),
       ...blocos.items.flatMap((b) => [b.photo.src, b.figurino?.src].filter((s): s is string => !!s)),
       retratoPaete.src,
       heroMedia.poster,

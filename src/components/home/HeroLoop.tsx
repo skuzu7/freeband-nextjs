@@ -34,6 +34,23 @@ const INTRO_MS = 1800;
 /** Backing-store scale cap: the shader is cheap, a 3× phone screen is not. */
 const MAX_DPR = 1.5;
 
+/**
+ * Runs `task` once the page is idle; returns the way to call it off. Safari
+ * still has no requestIdleCallback, so a short timer stands in.
+ */
+function whenIdle(task: () => void, timeout: number, fallbackMs: number): () => void {
+  const idle = window as Window & {
+    requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+  if (idle.requestIdleCallback && idle.cancelIdleCallback) {
+    const id = idle.requestIdleCallback(task, { timeout });
+    return () => idle.cancelIdleCallback?.(id);
+  }
+  const id = window.setTimeout(task, fallbackMs);
+  return () => window.clearTimeout(id);
+}
+
 function savesData(): boolean {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   return connection?.saveData === true;
@@ -66,17 +83,7 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       el.setAttribute('src', video);
       el.play().catch(() => {});
     };
-    // Safari still has no requestIdleCallback; a short timer stands in.
-    const idle = window as Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-    if (idle.requestIdleCallback && idle.cancelIdleCallback) {
-      const id = idle.requestIdleCallback(attach, { timeout: 4000 });
-      return () => idle.cancelIdleCallback?.(id);
-    }
-    const id = window.setTimeout(attach, 1500);
-    return () => window.clearTimeout(id);
+    return whenIdle(attach, 4000, 1500);
   }, [reduced, video]);
 
   // The pause control: the loop stays attached and resumes where it stopped.
@@ -87,122 +94,141 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
     else el.play().catch(() => {});
   }, [paused]);
 
-  // The wall.
+  // The wall. It starts once the page is idle, as the loop does: creating a
+  // WebGL context and compiling its shader is real work on a slow phone (up to
+  // ~290 ms measured with the CPU slowed four times), and none of it should
+  // land on hydration or on a first tap.
   useEffect(() => {
     const box = boxRef.current;
     const canvas = canvasRef.current;
     if (reduced || !box || !canvas || savesData()) return;
-    const wall = createLedWall(canvas, PALETTE);
-    if (!wall) return;
 
-    const poster = box.querySelector<HTMLImageElement>('img[data-backdrop]');
-    const fold = box.parentElement ?? box;
-    let frameId = 0;
-    let inView = true;
-    let dead = false;
-    let hasPoster = false;
-    let startedAt = 0;
-    let height = 1;
-    let pointerX = 0;
-    let pointerY = 0;
-    let pointerOn = 0;
-    let pointerGoal = 0;
+    const start = (): (() => void) | undefined => {
+      const wall = createLedWall(canvas, PALETTE);
+      if (!wall) return undefined;
 
-    const measure = () => {
-      const { width, height: h } = box.getBoundingClientRect();
-      height = Math.max(1, h);
-      wall.resize(width, h, Math.min(window.devicePixelRatio || 1, MAX_DPR));
-    };
+      const poster = box.querySelector<HTMLImageElement>('img[data-backdrop]');
+      const fold = box.parentElement ?? box;
+      let frameId = 0;
+      let inView = true;
+      let dead = false;
+      let hasPoster = false;
+      let startedAt = 0;
+      let height = 1;
+      let pointerX = 0;
+      let pointerY = 0;
+      let pointerOn = 0;
+      let pointerGoal = 0;
 
-    // A frame of the loop when it is running, the poster until then.
-    const feed = (): boolean => {
-      const loop = videoRef.current;
-      try {
-        if (loop && loop.readyState >= 2 && loop.videoWidth && !(loop.paused && hasPoster && startedAt)) {
-          wall.upload(loop, loop.videoWidth, loop.videoHeight);
-          return true;
+      const measure = () => {
+        const { width, height: h } = box.getBoundingClientRect();
+        height = Math.max(1, h);
+        wall.resize(width, h, Math.min(window.devicePixelRatio || 1, MAX_DPR));
+      };
+
+      // A frame of the loop when it is running, the poster until then.
+      const feed = (): boolean => {
+        const loop = videoRef.current;
+        try {
+          if (loop && loop.readyState >= 2 && loop.videoWidth && !(loop.paused && hasPoster && startedAt)) {
+            wall.upload(loop, loop.videoWidth, loop.videoHeight);
+            return true;
+          }
+          if (!hasPoster && poster?.complete && poster.naturalWidth) {
+            wall.upload(poster, poster.naturalWidth, poster.naturalHeight);
+            hasPoster = true;
+          }
+        } catch {
+          // A source the GPU will not take (a tainted image, say): give the
+          // fold back to the layers underneath.
+          dead = true;
+          delete canvas.dataset.live;
+          return false;
         }
-        if (!hasPoster && poster?.complete && poster.naturalWidth) {
-          wall.upload(poster, poster.naturalWidth, poster.naturalHeight);
-          hasPoster = true;
+        return hasPoster;
+      };
+
+      const draw = (now: number) => {
+        frameId = 0;
+        if (dead) return;
+        if (feed()) {
+          if (!startedAt) startedAt = now;
+          const t = Math.min(1, (now - startedAt) / INTRO_MS);
+          // Ease-out: the picture arrives fast and settles, like a LED coming on.
+          const intro = 1 - (1 - t) ** 3;
+          pointerOn += (pointerGoal - pointerOn) * 0.12;
+          wall.draw({
+            resolve: intro * resolveForScroll(window.scrollY / height),
+            pointerX,
+            pointerY,
+            pointerOn,
+            level: getLevel(),
+          });
+          canvas.dataset.live = '';
         }
-      } catch {
-        // A source the GPU will not take (a tainted image, say): give the
-        // fold back to the layers underneath.
+        if (inView && !document.hidden) frameId = requestAnimationFrame(draw);
+      };
+      const wake = () => {
+        if (!frameId && !dead && inView && !document.hidden) frameId = requestAnimationFrame(draw);
+      };
+
+      const onMove = (event: PointerEvent) => {
+        if (event.pointerType !== 'mouse') return;
+        const rect = canvas.getBoundingClientRect();
+        pointerX = event.clientX - rect.left;
+        pointerY = event.clientY - rect.top;
+        pointerGoal = 1;
+      };
+      const onLeave = () => {
+        pointerGoal = 0;
+      };
+      const onLost = (event: Event) => {
+        event.preventDefault();
         dead = true;
         delete canvas.dataset.live;
-        return false;
-      }
-      return hasPoster;
-    };
+      };
 
-    const draw = (now: number) => {
-      frameId = 0;
-      if (dead) return;
-      if (feed()) {
-        if (!startedAt) startedAt = now;
-        const t = Math.min(1, (now - startedAt) / INTRO_MS);
-        // Ease-out: the picture arrives fast and settles, like a LED coming on.
-        const intro = 1 - (1 - t) ** 3;
-        pointerOn += (pointerGoal - pointerOn) * 0.12;
-        wall.draw({
-          resolve: intro * resolveForScroll(window.scrollY / height),
-          pointerX,
-          pointerY,
-          pointerOn,
-          level: getLevel(),
-        });
-        canvas.dataset.live = '';
-      }
-      if (inView && !document.hidden) frameId = requestAnimationFrame(draw);
-    };
-    const wake = () => {
-      if (!frameId && !dead && inView && !document.hidden) frameId = requestAnimationFrame(draw);
-    };
-
-    const onMove = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') return;
-      const rect = canvas.getBoundingClientRect();
-      pointerX = event.clientX - rect.left;
-      pointerY = event.clientY - rect.top;
-      pointerGoal = 1;
-    };
-    const onLeave = () => {
-      pointerGoal = 0;
-    };
-    const onLost = (event: Event) => {
-      event.preventDefault();
-      dead = true;
-      delete canvas.dataset.live;
-    };
-
-    const sizes = new ResizeObserver(measure);
-    sizes.observe(box);
-    const views = new IntersectionObserver((entries) => {
-      inView = entries.some((entry) => entry.isIntersecting);
+      const sizes = new ResizeObserver(measure);
+      sizes.observe(box);
+      const views = new IntersectionObserver((entries) => {
+        inView = entries.some((entry) => entry.isIntersecting);
+        wake();
+      });
+      views.observe(box);
+      measure();
+      fold.addEventListener('pointermove', onMove, { passive: true });
+      fold.addEventListener('pointerleave', onLeave);
+      canvas.addEventListener('webglcontextlost', onLost);
+      document.addEventListener('visibilitychange', wake);
+      poster?.addEventListener('load', wake);
       wake();
-    });
-    views.observe(box);
-    measure();
-    fold.addEventListener('pointermove', onMove, { passive: true });
-    fold.addEventListener('pointerleave', onLeave);
-    canvas.addEventListener('webglcontextlost', onLost);
-    document.addEventListener('visibilitychange', wake);
-    poster?.addEventListener('load', wake);
-    wake();
 
+      return () => {
+        dead = true;
+        cancelAnimationFrame(frameId);
+        sizes.disconnect();
+        views.disconnect();
+        fold.removeEventListener('pointermove', onMove);
+        fold.removeEventListener('pointerleave', onLeave);
+        canvas.removeEventListener('webglcontextlost', onLost);
+        document.removeEventListener('visibilitychange', wake);
+        poster?.removeEventListener('load', wake);
+        delete canvas.dataset.live;
+        wall.dispose();
+      };
+    };
+
+    let stop: (() => void) | undefined;
+    const callOff = whenIdle(
+      () => {
+        stop = start();
+      },
+      2000,
+      300,
+    );
     return () => {
-      dead = true;
-      cancelAnimationFrame(frameId);
-      sizes.disconnect();
-      views.disconnect();
-      fold.removeEventListener('pointermove', onMove);
-      fold.removeEventListener('pointerleave', onLeave);
-      canvas.removeEventListener('webglcontextlost', onLost);
-      document.removeEventListener('visibilitychange', wake);
-      poster?.removeEventListener('load', wake);
-      delete canvas.dataset.live;
-      wall.dispose();
+      callOff();
+      stop?.();
     };
   }, [reduced]);
 

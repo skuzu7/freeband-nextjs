@@ -1,7 +1,7 @@
 // src/data/media/frames.ts
 // The live-show photography, curated as a programme in three acts. Order here
 // IS the reading order on /palco. Nothing below ~900px on the long edge gets
-// in — the old site's 600×400 thumbnails live only in the PDF.
+// in, here or in the portfolio PDF.
 import { images, type CaptionedPhoto, type Photo } from './paths';
 
 export const STAGE_CATEGORIES = ['vocais', 'blocos', 'efeitos'] as const;

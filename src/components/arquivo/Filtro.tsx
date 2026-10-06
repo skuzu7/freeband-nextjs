@@ -22,7 +22,7 @@ export function Filtro({ value, counts, onChange }: FiltroProps) {
             aria-pressed={active}
             onClick={() => onChange(f.key)}
             className={cn(
-              'label-caps transition-quick inline-flex items-center gap-2 border px-3.5 py-2.5',
+              'label-caps transition-quick tap inline-flex items-center gap-2 border px-3.5 py-2.5',
               active
                 ? 'border-led bg-surface-raise text-ink'
                 : 'border-line text-ink-muted hover:border-line-strong hover:text-ink',

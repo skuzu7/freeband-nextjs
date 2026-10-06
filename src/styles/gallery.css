@@ -1,4 +1,314 @@
 /* src/styles/gallery.css — the photo viewer: the lightbox over a page and the
    page of a single photograph. Everything goes inside @layer components. */
 @layer components {
+  /* ---------- a photograph that opens itself ---------- */
+
+  /* The thumbnail on a gallery page (PhotoLink). The box is the photograph's
+     own, so the link adds no shape of its own — only the invitation. */
+  .photo-link {
+    display: block;
+    cursor: zoom-in;
+    transition: opacity var(--dur-quick) var(--ease-light);
+  }
+  .photo-link:hover {
+    opacity: 0.9;
+  }
+  /* Back from the lightbox, the photograph comes on again in its box: going
+     back in history is rendered at once, with no journey to play in reverse. */
+  .photo-returned {
+    animation: photo-return var(--dur-slide) var(--ease-light) both;
+  }
+
+  /* The acts of /palco as a row of anchors above the first one. */
+  .act-index {
+    display: grid;
+    gap: 0.75rem 2.5rem;
+  }
+  @media (width >= 48rem) {
+    .act-index {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* ---------- the lightbox ---------- */
+
+  /* The dialog over the page. `--lightbox-dim` runs 0 → 1 while a finger
+     drags the photograph down to close (ViewerGestures writes it): the ground
+     thins and the page shows through as the photograph lets go. */
+  .lightbox {
+    --lightbox-dim: 0;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    isolation: isolate;
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    overscroll-behavior: contain;
+    outline: none;
+    background-color: color-mix(in oklab, var(--color-surface) calc((1 - var(--lightbox-dim)) * 96%), transparent);
+    backdrop-filter: blur(6px);
+    animation: lightbox-on var(--dur-quick) var(--ease-light) both;
+  }
+  /* The page behind stops scrolling while the lightbox is open; keeping the
+     scrollbar's gutter keeps it from jumping sideways when that happens. */
+  html:has(.lightbox) {
+    scrollbar-gutter: stable;
+  }
+  .lightbox .viewer > :not(.viewer-stage) {
+    opacity: calc(1 - var(--lightbox-dim));
+  }
+
+  /* ---------- the viewer ---------- */
+
+  /* A bar, the stage, the caption. The stage takes whatever height is left
+     and the photograph is fitted whole inside it, so nothing ever sits on top
+     of the picture — on a phone a flyer's own text stays legible.
+
+     Phone first: the caption has the whole width and the steps sit under it,
+     by the thumb. From 40rem caption and steps share one bar. */
+  .viewer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: 4rem minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'count tools close'
+      'stage stage stage'
+      'caption caption caption'
+      'steps steps steps';
+    column-gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding-inline: var(--pad-inline);
+  }
+  .lightbox .viewer {
+    height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* On its own page the way out is a worded link, so it takes the left of the
+     bar and the counter moves down beside the steps. One screen tall under
+     the header: the photograph is the page. */
+  .viewer[data-mode='page'] {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'close tools'
+      'stage stage'
+      'count steps'
+      'caption caption';
+    max-width: var(--container-site);
+    height: calc(100svh - var(--nav-h));
+    min-height: 30rem;
+    margin-inline: auto;
+  }
+  @media (width >= 40rem) {
+    .viewer {
+      grid-template-rows: 4rem minmax(0, 1fr) auto;
+      grid-template-areas:
+        'count tools close'
+        'stage stage stage'
+        'caption steps steps';
+    }
+    .viewer[data-mode='page'] {
+      grid-template-rows: 4rem minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        'close tools'
+        'stage stage'
+        'count steps'
+        'caption steps';
+    }
+  }
+
+  .viewer-count {
+    grid-area: count;
+    align-self: center;
+    margin: 0;
+  }
+  .viewer-tools {
+    grid-area: tools;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  /* What the share control has to say ("link copied"): a small panel hung
+     under the tools for a moment, so the bar never changes width. */
+  .viewer-notice {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 1;
+    width: max-content;
+    max-width: min(20rem, calc(100vw - 2 * var(--pad-inline)));
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface-high);
+    color: var(--color-ink);
+    pointer-events: none;
+  }
+  .viewer-notice:empty {
+    display: none;
+  }
+  .viewer-close {
+    grid-area: close;
+    align-self: center;
+  }
+  .viewer-back {
+    grid-area: close;
+    align-self: center;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-ink-muted);
+    transition: color var(--dur-quick) var(--ease-light);
+  }
+  .viewer-back:hover {
+    color: var(--color-ink);
+  }
+  .viewer-caption {
+    grid-area: caption;
+    min-width: 0;
+    padding-block: 1rem 0.75rem;
+  }
+  /* On the right edge, under the close control. */
+  .viewer-steps {
+    grid-area: steps;
+    align-self: center;
+    justify-self: end;
+    display: flex;
+    gap: 0.5rem;
+    padding-bottom: 1.25rem;
+  }
+  .viewer[data-mode='page'] .viewer-steps {
+    padding-block: 0.75rem 0;
+  }
+  .viewer[data-mode='page'] .viewer-caption {
+    padding-block: 0.5rem 1.25rem;
+  }
+  @media (width >= 40rem) {
+    .viewer-caption {
+      padding-block: 1.25rem;
+    }
+    .viewer-steps,
+    .viewer[data-mode='page'] .viewer-steps {
+      padding-block: 0;
+    }
+    .viewer[data-mode='page'] .viewer-count {
+      padding-top: 1.25rem;
+    }
+  }
+
+  /* Every round control of the viewer: one thumb wide, lit on hover. */
+  .viewer-control {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background-color: color-mix(in oklab, var(--color-surface), transparent 30%);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      color var(--dur-quick) var(--ease-light),
+      border-color var(--dur-quick) var(--ease-light),
+      opacity var(--dur-quick) var(--ease-light);
+  }
+  .viewer-control:hover {
+    border-color: var(--color-led);
+    color: var(--color-led-text);
+  }
+  .viewer-control[aria-disabled='true'] {
+    border-color: var(--color-line);
+    color: var(--color-ink-low);
+    cursor: default;
+  }
+
+  /* ---------- the stage ---------- */
+
+  /* Where the photograph is fitted and where the gestures land. In the
+     lightbox every touch belongs to the viewer; on the photograph's own page
+     a vertical drag still scrolls the page until the picture is zoomed. */
+  .viewer-stage {
+    grid-area: stage;
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: clip;
+    container-type: size;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .viewer[data-mode='page'] .viewer-stage:not([data-zoomed]) {
+    touch-action: pan-y;
+  }
+  .viewer-stage[data-zoomed] {
+    cursor: grab;
+  }
+  .viewer-stage[data-zoomed]:active {
+    cursor: grabbing;
+  }
+
+  /* The photograph: whole inside the stage both ways and never larger than
+     the file's own pixels (--viewer-natural), so a 400×300 flyer is shown at
+     400×300. The transform is written by ViewerGestures, frame by frame; it
+     eases only when no finger is holding it. */
+  .viewer-photo {
+    width: min(100%, var(--viewer-natural), calc((100dvh - 11rem) * var(--viewer-ratio)));
+    transform-origin: center;
+    transition:
+      transform var(--dur-quick) var(--ease-slide),
+      opacity var(--dur-quick) var(--ease-light);
+  }
+  @supports (width: 1cqh) {
+    .viewer-photo {
+      width: min(100cqw, var(--viewer-natural), calc(100cqh * var(--viewer-ratio)));
+    }
+  }
+  .viewer-photo[data-dragging] {
+    transition: none;
+  }
+  .viewer-photo[data-leaving] {
+    opacity: 0;
+  }
+
+  /* ---------- one photograph replacing another ---------- */
+
+  /* A step carries its direction: the photograph arriving comes in as a
+     panel from the side it was asked from (ViewerGestures sets data-enter).
+     `translate`, not `transform`: that one belongs to the gestures. */
+  .viewer-photo[data-enter] {
+    animation: viewer-enter var(--dur-slide) var(--ease-slide) both;
+  }
+  .viewer-photo[data-enter='photo-next'] {
+    --viewer-enter: 3rem;
+  }
+  .viewer-photo[data-enter='photo-prev'] {
+    --viewer-enter: -3rem;
+  }
+
+  @keyframes lightbox-on {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes photo-return {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes viewer-enter {
+    from {
+      opacity: 0;
+      translate: var(--viewer-enter) 0;
+    }
+  }
 }

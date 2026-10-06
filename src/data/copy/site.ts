@@ -1,6 +1,6 @@
 // src/data/copy/site.ts
 // Strings shared by every page: SEO defaults, navigation, footer.
-import { bandInfo, releaseShort } from '../band';
+import { bandInfo, bandLineup, releaseShort } from '../band';
 import { contact } from '../contact';
 
 export const site = {
@@ -12,6 +12,12 @@ export const site = {
     description: releaseShort,
     ogTitle: 'Internacional Freeband — Banda de Baile e Show',
     ogDescription: releaseShort,
+    // The home's share card (src/app/(site)/opengraph-image.tsx). The name is
+    // already drawn on it, so the title is what the band is; the alt text says
+    // what the picture shows to whoever cannot see it.
+    cardTitle: `Banda de baile e show desde ${bandInfo.founded}`,
+    cardLine: `${bandLineup.total} no palco. Som, luz, palco e logística são nossos.`,
+    cardAlt: `${bandInfo.name}: o nome da banda em acrílico vermelho diante de um painel de LED azul. Banda de baile e show desde ${bandInfo.founded}.`,
   },
 
   nav: {

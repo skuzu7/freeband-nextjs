@@ -2,11 +2,15 @@
 // /portfolio — the public download page — and every string printed inside the
 // portfolio PDF itself.
 import { bandInfo, bandKicker, lineupLabel } from '../band';
+import type { StageCategory } from '../media/frames';
+import { palco } from './palco';
 
 export const portfolio = {
   seo: {
     title: 'Portfólio',
     description: 'Baixe o portfólio da Internacional Freeband em PDF: história, galeria, serviços e contato.',
+    // The line under the title on the share card (opengraph-image.tsx).
+    cardLine: 'História, galeria, serviços e contato em um PDF.',
   },
   label: 'Portfólio & Serviços',
   headline: 'Portfólio Digital',
@@ -32,6 +36,9 @@ export const portfolio = {
       badge: 'Portfólio & Serviços',
       since: (year: number) => `Desde ${year} · ${bandInfo.foundedCity}`,
       numberLabel: 'fundação em Jaú/SP',
+      // The cover photograph is one of the Clube Náutico frames, whose credit
+      // was cropped off the file (see src/data/media/paths.ts).
+      photoCredit: 'Foto: Jonas Matheus · Clube Náutico Araraquara',
     },
     about: {
       title: 'Quem somos',
@@ -42,6 +49,10 @@ export const portfolio = {
     timeline: {
       title: 'A história',
       lead: 'De Jaú para mais de sete estados.',
+      // The first node of the axis is the founding chapter, as on /historia.
+      chapter: `Capítulo ${bandInfo.founded}`,
+      founderLabel: bandInfo.founderTitle,
+      founder: bandInfo.founder,
     },
     partners: {
       title: 'Palcos divididos',
@@ -53,6 +64,13 @@ export const portfolio = {
     gallery: {
       title: 'O palco',
       lead: 'Fotos de shows nossos — sem banco de imagens.',
+      // One plate row per act of /palco, under the act's own name there.
+      acts: Object.fromEntries(
+        palco.acts.map((act) => [act.key, `${palco.actWord} ${act.numeral} · ${act.title}`]),
+      ) as Record<StageCategory, string>,
+      // Two of the document's photographs are Clube Náutico frames, whose
+      // credit was cropped off the files: the anos 50 block here, and the cover.
+      photoCredit: 'Bloco anos 50 (Ato II) e foto da capa: Jonas Matheus, no Clube Náutico Araraquara.',
     },
     services: {
       title: 'O que chega no caminhão',

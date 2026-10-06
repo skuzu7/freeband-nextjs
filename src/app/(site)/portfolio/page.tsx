@@ -7,7 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { PageHeader } from '@/components/site/PageHeader';
 import { PortfolioDownload } from '@/components/pdf/portfolio/PortfolioDownload';
-import { socialMetadata } from '@/app/shared-metadata';
+import { socialMetadata } from '@/lib/seo/metadata';
+import { breadcrumbs } from '@/lib/seo/jsonld';
+import { site } from '@/data/copy/site';
+import { JsonLd } from '@/components/site/JsonLd';
+import { RouteTransition } from '@/components/site/RouteTransition';
 
 export const metadata: Metadata = {
   title: portfolio.seo.title,
@@ -16,9 +20,15 @@ export const metadata: Metadata = {
   ...socialMetadata({ ...portfolio.seo, path: '/portfolio' }),
 };
 
+const trail = breadcrumbs([
+  { name: site.nav.homeLink, path: '/' },
+  { name: portfolio.seo.title, path: '/portfolio' },
+]);
+
 export default function PortfolioPage() {
   return (
-    <>
+    <RouteTransition>
+      <JsonLd data={trail} />
       <PageHeader id="portfolio-title" label={portfolio.label} headline={portfolio.headline} lead={portfolio.lead} />
       <Container className="flex flex-wrap items-center gap-4 pb-[var(--section-gap)]">
         <PortfolioDownload />
@@ -26,6 +36,6 @@ export default function PortfolioPage() {
           {portfolio.back}
         </Button>
       </Container>
-    </>
+    </RouteTransition>
   );
 }

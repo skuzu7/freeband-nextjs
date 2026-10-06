@@ -8,6 +8,8 @@ export const POSTER_CATEGORIES = ['municipal', 'clube', 'reveillon'] as const;
 export type PosterCategory = (typeof POSTER_CATEGORIES)[number];
 
 export interface Poster extends Photo {
+  /** Slug of the file name: the flyer's address in the archive. */
+  id: string;
   /** Town, as printed on the flyer. */
   town: string;
   /** Event name, as printed. */
@@ -25,6 +27,7 @@ export interface Poster extends Photo {
 
 export const posters: Poster[] = [
   {
+    id: 'barra-bonita',
     src: images.barraBonita,
     alt: 'Cartaz do Réveillon 2020 da Estância Turística de Barra Bonita',
     town: 'Barra Bonita',
@@ -36,6 +39,7 @@ export const posters: Poster[] = [
     aspect: '700/417',
   },
   {
+    id: 'reveillom-paranapanema',
     src: images.reveillomParanapanema,
     alt: 'Cartaz do Réveillon 2017 na Praça da Matriz de Paranapanema',
     town: 'Paranapanema',
@@ -48,6 +52,7 @@ export const posters: Poster[] = [
     aspect: '2048/1152',
   },
   {
+    id: 'reveillom-itatinga',
     src: images.reveillomItatinga,
     alt: 'Cartaz da Festa Virada de Ano 2023 de Itatinga',
     town: 'Itatinga',
@@ -59,6 +64,7 @@ export const posters: Poster[] = [
     aspect: '400/300',
   },
   {
+    id: 'freeband-jau',
     src: images.freebandJau,
     alt: 'Cartaz do show da Internacional Freeband no Palco do Salão Social do Caiçara Clube Jaú',
     town: 'Jaú',
@@ -70,6 +76,7 @@ export const posters: Poster[] = [
     aspect: '1072/1076',
   },
   {
+    id: 'freeband-social',
     src: images.freebandSocial,
     alt: 'Cartaz do Baile do Havaí da Internacional Freeband no Clube de Campo Céu Azul',
     town: 'Céu Azul',
@@ -81,6 +88,7 @@ export const posters: Poster[] = [
     aspect: '1080/1080',
   },
   {
+    id: 'reveillom-iacanga',
     src: images.reveillomIacanga,
     alt: 'Cartaz da virada de 2026 na Praia das Palmeiras',
     town: 'Iacanga',
@@ -91,6 +99,7 @@ export const posters: Poster[] = [
     aspect: '400/300',
   },
   {
+    id: 'nautico-araraquara',
     src: images.nauticoAraraquara,
     alt: 'Cartaz do Arraiá do Náutico com aviso de mesas esgotadas',
     town: 'Araraquara',
@@ -101,6 +110,7 @@ export const posters: Poster[] = [
     aspect: '400/300',
   },
   {
+    id: 'cartaz-cosmopolitano',
     src: images.cartazCosmopolitano,
     alt: 'Cartaz do Baile do Havaí no Cosmopolitano FC',
     town: 'Cosmópolis',
@@ -111,6 +121,7 @@ export const posters: Poster[] = [
     aspect: '400/300',
   },
   {
+    id: 'baile-tabatinga',
     src: images.baileTabatinga,
     alt: 'Cartaz do Baile do Havaí em Tabatinga',
     town: 'Tabatinga',

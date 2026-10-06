@@ -17,6 +17,8 @@ export const fold = {
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
+  // Straight to the clips on /palco: the loop behind the fold is silent.
+  ctaWatch: 'Assistir com som',
   // Credential strip directly under the fold — the numbers a buyer weighs.
   proof: [{ value: String(bandInfo.founded), label: 'fundada em Jaú/SP' }, ...credentials],
 };
@@ -123,9 +125,8 @@ export const prova = {
   headline: 'E é assim que\nele se move.',
   videoLead:
     'Trechos de gravações oficiais ao vivo, sem overdubs ou playback — a vibração real dos 11 integrantes, do painel de LED e da iluminação cênica.',
-  pauseLabel: 'Pausar os vídeos',
-  playLabel: 'Reproduzir os vídeos',
-  videoFootnote: 'Cortes da filmagem oficial, em câmera. O material completo vai por WhatsApp.',
+  // The player's own labels live in ./player.ts.
+  videoFootnote: 'Cortes da filmagem oficial, em câmera e com som. O material completo vai por WhatsApp.',
   arquivoLabel: 'O arquivo',
   arquivoLead:
     'Grandes réveillons públicos, bailes de clubes tradicionais e eventos corporativos. Mais de cinco décadas registrando momentos inesquecíveis.',

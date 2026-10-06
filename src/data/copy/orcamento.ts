@@ -82,6 +82,8 @@ export const orcamento = {
     para: 'Proposta para',
     tipoEvento: 'Tipo de Evento',
     data: 'Data',
+    // Above the date on the dot matrix, beside the client's name.
+    dataEvento: 'Data do evento',
     local: 'Local',
     horario: 'Horário',
     horarioJoin: 'às',

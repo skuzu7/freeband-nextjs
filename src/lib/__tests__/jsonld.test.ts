@@ -4,7 +4,19 @@
 import { describe, expect, it } from 'vitest';
 import { bandInfo } from '@/data/band';
 import { contact } from '@/data/contact';
-import { absolute, breadcrumbs, imageGallery, isoDuration, musicGroup, serialise, videoObject, webSite } from '../seo/jsonld';
+import { gallery } from '@/data/media/gallery';
+import { videos } from '@/data/media/videos';
+import {
+  absolute,
+  breadcrumbs,
+  galleryImages,
+  imageGallery,
+  isoDuration,
+  musicGroup,
+  serialise,
+  videoObject,
+  webSite,
+} from '../seo/jsonld';
 
 describe('absolute', () => {
   it('prefixes a path with the site and leaves a URL alone', () => {
@@ -79,6 +91,14 @@ describe('imageGallery', () => {
     expect(gallery.image[1]).not.toHaveProperty('caption');
     expect(gallery.image[1]).not.toHaveProperty('url');
   });
+
+  it('lists a whole gallery set, each photograph with the address of its own page', () => {
+    const images = galleryImages(gallery.palco);
+    expect(images).toHaveLength(gallery.palco.items.length);
+    const first = gallery.palco.items[0];
+    expect(images[0]).toEqual({ src: first.src, alt: first.alt, caption: first.caption, path: `/palco/foto/${first.id}` });
+    expect(galleryImages(gallery.arquivo)[0].path).toMatch(/^\/arquivo\/cartaz\//);
+  });
 });
 
 describe('videoObject', () => {
@@ -86,7 +106,10 @@ describe('videoObject', () => {
     const clip = videoObject({
       title: 'Solo',
       description: 'Guitarra',
-      src: '/video/solo.mp4',
+      sources: [
+        { src: '/video/solo.av1.mp4', type: 'video/mp4; codecs="av01.0.08M.08"' },
+        { src: '/video/solo.mp4', type: 'video/mp4; codecs="avc1.640028"' },
+      ],
       poster: '/video/solo.jpg',
       duration: 83.4,
       uploaded: '2026-10-06',
@@ -94,6 +117,15 @@ describe('videoObject', () => {
     expect(clip.duration).toBe('PT1M23S');
     expect(clip.contentUrl).toBe(`${contact.siteUrl}/video/solo.mp4`);
     expect(clip.thumbnailUrl).toBe(`${contact.siteUrl}/video/solo.jpg`);
+  });
+
+  it('describes every clip the site plays, naming the file every browser can open', () => {
+    for (const video of videos) {
+      const object = videoObject(video);
+      expect(object.name).toBe(video.title);
+      expect(object.contentUrl).toBe(`${contact.siteUrl}/video/${video.id}.mp4`);
+      expect(object.duration).toMatch(/^PT\d+S$/);
+    }
   });
 
   it('writes whole minutes, bare seconds and zero', () => {

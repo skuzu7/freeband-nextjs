@@ -1,4 +1,253 @@
 /* src/styles/player.css — the video player with sound. Everything goes inside
    @layer components. */
 @layer components {
+  /* ---------- the box ---------- */
+
+  /* The picture in a box of the clip's own aspect, the bar under it: nothing
+     ever sits on the picture but the cue to play. `--player-ratio` (width
+     over height) is written inline by Player. */
+  .player {
+    --player-seek-h: 2rem;
+    --player-bar-h: calc(var(--player-seek-h) + var(--tap-min));
+    --player-thumb: 0.875rem;
+    position: relative;
+    container: player / inline-size;
+  }
+  .player-stage {
+    position: relative;
+  }
+  /* Over the poster, in the same box. The two share one aspect, so `contain`
+     has nothing to letterbox and nothing is cropped. */
+  .player-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity var(--dur-quick) var(--ease-light);
+  }
+  /* Once the script is in charge the picture is the play button, and until
+     the video has a frame of its own (`data-started`) the photograph
+     underneath is its poster. Before that (and with no script at all) the
+     video shows its own poster and the browser's controls. */
+  .player[data-ready] .player-video {
+    cursor: pointer;
+  }
+  .player[data-ready]:not([data-started]) .player-video {
+    opacity: 0;
+  }
+  /* A clip that failed gives the box back to the poster. */
+  .player[data-state='error'] .player-video {
+    display: none;
+  }
+
+  /* ---------- the cue ---------- */
+
+  /* The one thing drawn over the picture: an invitation to play while the
+     clip is stopped, three dots while it is on its way. Decorative — the
+     click lands on the video under it, the name is on the bar's button. */
+  .player-cue {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin: auto;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background-color: color-mix(in oklab, var(--color-surface), transparent 30%);
+    color: var(--color-ink);
+    pointer-events: none;
+    transition:
+      opacity var(--dur-quick) var(--ease-light),
+      color var(--dur-quick) var(--ease-light),
+      border-color var(--dur-quick) var(--ease-light);
+  }
+  .player-cue > * {
+    grid-area: 1 / 1;
+  }
+  .player-stage:hover .player-cue {
+    border-color: var(--color-led);
+    color: var(--color-led-text);
+  }
+  .player[data-state='playing']:not([data-waiting]) .player-cue {
+    opacity: 0;
+  }
+  .player-cue-wait {
+    display: none;
+    gap: 0.3rem;
+  }
+  .player[data-waiting] .player-cue-play {
+    display: none;
+  }
+  .player[data-waiting] .player-cue-wait {
+    display: flex;
+  }
+  /* Each dot comes on like a LED and rests lit: with the animation switched
+     off (reduced motion) the three are simply there. */
+  .player-cue-wait i {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-led);
+    animation: player-wait var(--dur-light) var(--ease-light) infinite alternate;
+  }
+  .player-cue-wait i:nth-child(2) {
+    animation-delay: 150ms;
+  }
+  .player-cue-wait i:nth-child(3) {
+    animation-delay: 300ms;
+  }
+
+  /* ---------- the bar ---------- */
+
+  /* Two rows: the timeline across the whole width, the buttons under it. The
+     height is fixed and held from the first paint, so the controls arriving
+     after hydration move nothing on the page. */
+  .player-bar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: var(--player-bar-h);
+    padding-inline: 0.5rem;
+    background-color: var(--color-surface-raise);
+  }
+  /* No script, no bar: the browser's own controls are inside the picture. */
+  @media (scripting: none) {
+    .player-bar {
+      display: none;
+    }
+  }
+
+  /* ---------- the two ranges ---------- */
+
+  /* A native range does the work — keyboard, pointer, screen reader — with a
+     transparent track; the wrapper draws the track as one row of the panel,
+     lit up to `--p` (0..1, written inline). The lit part ends at the centre
+     of the thumb, which travels between half its width from either end. */
+  .player-track {
+    --p: 0;
+    --track-y: 50%;
+    position: relative;
+    display: block;
+    flex: none;
+    height: var(--tap-min);
+  }
+  .player-track::before,
+  .player-track::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--track-y) - 2px);
+    left: calc(var(--player-thumb) / 2);
+    height: 4px;
+    background-size: var(--dot-pitch) 4px;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+  .player-track::before {
+    right: calc(var(--player-thumb) / 2);
+    background-image: radial-gradient(circle, var(--color-line-strong) 1.1px, transparent 1.5px);
+  }
+  .player-track::after {
+    width: calc((100% - var(--player-thumb)) * var(--p));
+    background-image: radial-gradient(circle, var(--color-led) 1.5px, transparent 1.9px);
+  }
+  /* The input is one thumb tall whatever the row it sits in. */
+  .player-range {
+    position: absolute;
+    inset: auto 0 0;
+    width: 100%;
+    height: var(--tap-min);
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    /* A sideways drag moves the thumb; an up-and-down one still scrolls the page. */
+    touch-action: pan-y;
+  }
+  .player-range::-webkit-slider-runnable-track {
+    background: transparent;
+  }
+  .player-range::-webkit-slider-thumb {
+    appearance: none;
+    width: var(--player-thumb);
+    height: var(--player-thumb);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-led-hot);
+  }
+  .player-range::-moz-range-track {
+    height: 4px;
+    background: transparent;
+  }
+  .player-range::-moz-range-thumb {
+    width: var(--player-thumb);
+    height: var(--player-thumb);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-led-hot);
+  }
+  /* The focus ring goes round the thumb, not round a box that reaches up
+     into the picture. */
+  .player-range:focus-visible {
+    outline: none;
+  }
+  .player-range:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--color-led-text);
+    outline-offset: 3px;
+  }
+  .player-range:focus-visible::-moz-range-thumb {
+    outline: 2px solid var(--color-led-text);
+    outline-offset: 3px;
+  }
+
+  /* The timeline: a row of its own, shorter than a thumb. The input keeps its
+     full height by reaching up over the foot of the picture, so the row of
+     dots sits close under the picture and the buttons close under the dots. */
+  .player-seek {
+    --track-y: calc(var(--player-seek-h) - var(--tap-min) / 2);
+    z-index: 1;
+    flex: 1 0 100%;
+    height: var(--player-seek-h);
+  }
+  .player-volume {
+    width: 4.5rem;
+    margin-inline-end: 0.25rem;
+  }
+  /* A narrow player keeps mute and gives the slider's room to the clock; the
+     arrow keys still set the volume. */
+  @container player (width < 22rem) {
+    .player-volume {
+      display: none;
+    }
+  }
+
+  /* ---------- full screen ---------- */
+
+  /* The container takes the screen: the picture as large as fits at its own
+     aspect, the bar along the bottom. `[data-fullscreen]` covers the engines
+     that only know the prefixed pseudo-class. */
+  .player:is(:fullscreen, [data-fullscreen]) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-surface);
+  }
+  .player:is(:fullscreen, [data-fullscreen]) .player-stage {
+    width: min(100%, calc((100vh - var(--player-bar-h)) * var(--player-ratio)));
+    margin: auto;
+  }
+  .player:is(:fullscreen, [data-fullscreen]) .player-bar {
+    flex: none;
+  }
+
+  @keyframes player-wait {
+    from {
+      opacity: 0.25;
+    }
+  }
 }

@@ -20,15 +20,15 @@ export function Footer() {
 
         <nav aria-label={site.footer.navHeading} className="flex flex-col gap-4">
           <Label>{site.footer.navHeading}</Label>
-          <ul className="flex flex-col gap-2.5">
+          <ul className="flex flex-col">
             <li>
-              <Link href="/" className="transition-quick text-ink-muted hover:text-ink">
+              <Link href="/" className="transition-quick tap inline-flex items-center text-ink-muted hover:text-ink">
                 {site.nav.homeLink}
               </Link>
             </li>
             {site.nav.links.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="transition-quick text-ink-muted hover:text-ink">
+                <Link href={link.href} className="transition-quick tap inline-flex items-center text-ink-muted hover:text-ink">
                   {link.label}
                 </Link>
               </li>
@@ -38,23 +38,23 @@ export function Footer() {
 
         <div className="flex flex-col gap-4">
           <Label>{site.footer.contactHeading}</Label>
-          <ul className="flex flex-col gap-2.5 text-ink-muted">
+          <ul className="flex flex-col text-ink-muted">
             <li>
-              <a href={telHref} className="transition-quick hover:text-ink">
+              <a href={telHref} className="transition-quick tap inline-flex items-center hover:text-ink">
                 {contact.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${contact.email}`} className="transition-quick break-all hover:text-ink">
+              <a href={`mailto:${contact.email}`} className="transition-quick tap inline-flex items-center break-all hover:text-ink">
                 {contact.email}
               </a>
             </li>
             <li>
-              <a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" className="transition-quick hover:text-ink">
+              <a href={contact.instagramUrl} target="_blank" rel="noopener noreferrer" className="transition-quick tap inline-flex items-center hover:text-ink">
                 {contact.instagram}
               </a>
             </li>
-            <li className="text-sm">{contact.addressFull}</li>
+            <li className="mt-2 text-sm">{contact.addressFull}</li>
           </ul>
         </div>
       </Container>

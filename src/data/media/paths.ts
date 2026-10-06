@@ -61,13 +61,6 @@ export const images = {
   festa209: '/images/festa-209.jpeg',
   festa308: '/images/festa-308.jpeg',
   img0690: '/images/img-0690.jpeg',
-  // 600×400 thumbnails from the band's old site. NEVER in the web galleries —
-  // they survive only because the portfolio PDF prints them small.
-  festa70: '/images/festa-70.jpeg',
-  festa82: '/images/festa-82.jpeg',
-  img0437: '/images/img-0437.jpeg',
-  img0679: '/images/img-0679.jpeg',
-  img0867: '/images/img-0867.jpeg',
   // People
   joao: '/images/joao.jpeg',
   // Venues & event posters
@@ -77,11 +70,23 @@ export const images = {
   freebandJau: '/images/freeband-jau.jpeg',
   freebandSocial: '/images/freeband-social.jpeg',
   // Historical — anos-70/80/antigas/2015 are re-encoded WHOLE from the
-  // originals in Desktop/Freeband/_originais.
+  // originals in the workspace's fontes/fotos/originais (outside this repo).
   anos70: '/images/freeband-anos-70.jpeg',
   anos80: '/images/freeband-anos-80.jpeg',
   antigas: '/images/freeband-antigas.jpeg',
   anos2000: '/images/freeband-anos-2000.jpeg',
+  // The band's own album: paper prints photographed as they are and brought
+  // in by scripts/import-archive.mjs (stood upright, trimmed to the print).
+  arquivoBateriaMetais: '/images/arquivo-bateria-e-metais.jpeg',
+  arquivoFormacaoBranco: '/images/arquivo-formacao-de-branco.jpeg',
+  arquivoCartazBranco: '/images/arquivo-cartaz-de-branco.jpeg',
+  arquivoGuitarraTeclado: '/images/arquivo-guitarra-e-teclado.jpeg',
+  arquivoPalcoBranco: '/images/arquivo-palco-de-branco.jpeg',
+  arquivoGuitarristaFev85: '/images/arquivo-guitarrista-fev-85.jpeg',
+  arquivoVozesFev85: '/images/arquivo-vozes-fev-85.jpeg',
+  arquivoGrupoVermelho: '/images/arquivo-grupo-de-vermelho.jpeg',
+  arquivoPalcoCortina: '/images/arquivo-palco-cortina-vermelha.jpeg',
+  arquivoPalcoMesaSom: '/images/arquivo-palco-e-mesa-de-som.jpeg',
   // Promotional
   fb2015: '/images/freeband-2015.jpeg',
   cartazCosmopolitano: '/images/cartaz-cosmopolitano.jpeg',

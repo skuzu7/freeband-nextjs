@@ -10,7 +10,7 @@ type Variant = 'primary' | 'secondary' | 'ghost';
 type Size = 'md' | 'lg';
 
 const base =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm font-medium uppercase tracking-wide transition-quick select-none disabled:cursor-not-allowed disabled:opacity-50';
+  'tap inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm font-medium uppercase tracking-wide transition-quick select-none disabled:cursor-not-allowed disabled:opacity-50';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-red text-on-red hover:bg-red-hot',

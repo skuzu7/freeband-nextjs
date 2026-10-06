@@ -40,3 +40,46 @@ export function levelAt(levels: readonly number[], rate: number, time: number): 
   const t = position - i;
   return levels[i] * (1 - t) + levels[i + 1] * t;
 }
+
+export interface StretchOptions {
+  /** The percentile that becomes 0 (0..1). */
+  low?: number;
+  /** The percentile that becomes 1 (0..1). */
+  high?: number;
+  /** Above 1 the quiet half is pushed down, so the peaks stand out. */
+  gamma?: number;
+}
+
+/** The value `p` of the way (0..1) through an ascending list, interpolated. */
+function percentile(sorted: readonly number[], p: number): number {
+  const position = (sorted.length - 1) * Math.min(1, Math.max(0, p));
+  const i = Math.floor(position);
+  const next = Math.min(sorted.length - 1, i + 1);
+  return sorted[i] + (sorted[next] - sorted[i]) * (position - i);
+}
+
+/**
+ * The envelope spread over the whole 0..1 the wall can show. A mastered clip
+ * is compressed: its RMS sits in a narrow band (roughly 0.4–0.9 for these
+ * cuts), and read as it is the wall would glow almost evenly from the first
+ * bar to the last. The `low` percentile becomes 0, the `high` one becomes 1,
+ * and `gamma` bends what lies between. Percentiles, not the minimum and the
+ * maximum: one silent sample at a cut or one crash must not set the scale.
+ *
+ * Returns a new list of the same length; a sample that is not a number reads
+ * as silence. An envelope with no range between the two percentiles has
+ * nothing to stretch and comes back as it is, clamped to 0..1.
+ */
+export function stretchLevels(
+  levels: readonly number[],
+  { low = 0.05, high = 0.95, gamma = 1.5 }: StretchOptions = {},
+): number[] {
+  const clean = levels.map((v) => (Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0));
+  if (!clean.length) return clean;
+  const sorted = [...clean].sort((a, b) => a - b);
+  const floor = percentile(sorted, Math.min(low, high));
+  const span = percentile(sorted, Math.max(low, high)) - floor;
+  if (span < 1e-6) return clean;
+  const bend = Number.isFinite(gamma) && gamma > 0 ? gamma : 1;
+  return clean.map((v) => Math.min(1, Math.max(0, (v - floor) / span)) ** bend);
+}
