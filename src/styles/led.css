@@ -196,7 +196,7 @@
      there; the lit one grows from the top as the list scrolls through. */
   .led-rail {
     position: absolute;
-    inset-block: 0;
+    inset-block: 0.5rem;
     left: 0;
     width: var(--dot-pitch);
     background-image: radial-gradient(circle, var(--color-led-dim) 1.2px, transparent 1.7px);
@@ -313,8 +313,9 @@
     }
     .led-rail::after {
       animation: led-rail linear both;
+      /* Over the whole time the rail is on screen: the lit end travels from
+         the foot of the viewport to its top, so it sits mid-screen mid-way. */
       animation-timeline: view();
-      animation-range: entry 20% exit 60%;
     }
   }
 }

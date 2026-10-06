@@ -54,7 +54,7 @@ export function Fold({ yearsActive }: FoldProps) {
           {fold.title}
         </h1>
         <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-3">
-          <BrandLine rule textClassName="font-semibold sm:text-sm" />
+          <BrandLine rule size="lg" />
           <LedWordmark label={fold.wordmarkLabel} />
         </div>
         <div className="grid gap-8 md:grid-cols-[1.25fr_1fr] md:items-end">

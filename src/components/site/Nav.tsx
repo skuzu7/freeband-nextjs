@@ -2,20 +2,27 @@
 
 // src/components/site/Nav.tsx
 // Sticky header: wordmark, the four routes, the red CTA. On small screens the
-// CTA stays in the header and the routes fold into a full-screen dialog with
-// focus kept inside; Escape closes it and hands focus back to the button that
-// opened it.
+// CTA stays in the header and the routes fold into a full-screen dialog: focus
+// is kept inside, the page behind is inert, Escape closes it and hands focus
+// back to the button that opened it.
+//
+// The header is named for view transitions, so it holds still while one route
+// replaces another, and the lit dot under the current route is a shared
+// element: it slides from the old link to the new one.
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { cycleFocus } from '@/lib/focusTrap';
-import { bandInfo } from '@/data/band';
 import { site } from '@/data/copy/site';
-import { Wordmark } from '@/components/brand/Wordmark';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useInertOutside } from '@/hooks/useInertOutside';
+import { BrandLine } from '@/components/brand/BrandLine';
 import { DotGrid } from '@/components/brand/DotGrid';
+import { Wordmark } from '@/components/brand/Wordmark';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
+import { Icon } from '@/components/ui/Icon';
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 /** The breakpoint at which the routes leave the dialog for the header (md). */
@@ -33,14 +40,18 @@ export function Nav() {
   const [openFor, setOpenFor] = useState<string | null>(null);
   const open = openFor !== null && openFor === (pathname ?? '');
   const setOpen = (next: boolean) => setOpenFor(next ? (pathname ?? '') : null);
+  const headerRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
 
+  useBodyScrollLock(open);
+  // The header stays live: its toggle is how a pointer closes the menu, and
+  // where focus returns.
+  useInertOutside(panelRef, open, [headerRef]);
+
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -62,7 +73,6 @@ export function Nav() {
     onWide();
     mq?.addEventListener('change', onWide);
     return () => {
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKeyDown);
       mq?.removeEventListener('change', onWide);
     };
@@ -72,19 +82,21 @@ export function Nav() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md">
-        <Container className="flex h-16 items-center justify-between gap-3 sm:gap-6">
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur-md"
+        style={{ viewTransitionName: 'site-header' }}
+      >
+        <Container className="flex h-[var(--nav-h)] items-center justify-between gap-3 sm:gap-6">
           <Link
             href="/"
             aria-label={site.nav.homeLabel}
-            className="group flex flex-col items-start gap-0.5 shrink-0 py-1 transition-quick hover:opacity-95"
+            className="group transition-quick tap flex shrink-0 flex-col items-start justify-center gap-1 hover:opacity-95"
           >
-            <span className="text-[9px] font-semibold tracking-[0.28em] uppercase text-ink-muted leading-none transition-quick group-hover:text-ink">
-              {bandInfo.brandLine}
-            </span>
+            <BrandLine size="sm" className="transition-quick group-hover:text-ink" />
             <Wordmark
               acrylic
-              className="h-5 sm:h-5.5 w-auto text-red transition-all duration-300 group-hover:drop-shadow-[0_0_10px_rgba(238,53,36,0.6)]"
+              className="h-5 w-auto text-red transition-[filter] duration-300 ease-light group-hover:drop-shadow-[0_0_10px_color-mix(in_oklab,var(--color-red),transparent_40%)] sm:h-5.5"
             />
           </Link>
 
@@ -95,13 +107,17 @@ export function Nav() {
                 href={link.href}
                 aria-current={link.active ? 'page' : undefined}
                 className={cn(
-                  'label-caps transition-quick relative py-2 text-ink-muted hover:text-ink',
+                  'label-caps transition-quick tap relative inline-flex items-center justify-center text-ink-muted hover:text-ink',
                   link.active && 'text-ink',
                 )}
               >
                 {link.label}
                 {link.active && (
-                  <span aria-hidden className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-pill bg-led" />
+                  <span
+                    aria-hidden
+                    className="absolute bottom-1.5 left-1/2 size-1 -translate-x-1/2 rounded-pill bg-led"
+                    style={{ viewTransitionName: 'nav-dot' }}
+                  />
                 )}
               </Link>
             ))}
@@ -113,29 +129,19 @@ export function Nav() {
           {/* Sized to fit a 320px screen: wordmark, CTA and menu button
               share 280px there, and the smoke test fails on overflow. */}
           <div className="flex shrink-0 items-center gap-1.5 md:hidden">
-            <Button href={site.nav.cta.href} className="min-h-11 px-3 py-2 text-xs min-[360px]:px-3.5">
+            <Button href={site.nav.cta.href} className="tap px-3 py-2 text-xs min-[360px]:px-3.5">
               {site.nav.cta.label}
             </Button>
             <button
               ref={triggerRef}
               type="button"
-              className="transition-quick -mr-2 flex size-11 items-center justify-center rounded-sm text-ink hover:text-led-text"
+              className="transition-quick tap -mr-2 flex items-center justify-center rounded-sm text-ink hover:text-led-text"
               aria-expanded={open}
               aria-controls={panelId}
               aria-label={open ? site.nav.menuClose : site.nav.menuOpen}
               onClick={() => setOpen(!open)}
             >
-              <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
-                {open ? (
-                  <path d="M6 6l12 12M18 6L6 18" />
-                ) : (
-                  <>
-                    <path d="M3 7h18" />
-                    <path d="M3 12h18" />
-                    <path d="M3 17h18" />
-                  </>
-                )}
-              </svg>
+              <Icon name={open ? 'close' : 'menu'} />
             </button>
           </div>
         </Container>
@@ -148,7 +154,7 @@ export function Nav() {
           role="dialog"
           aria-modal="true"
           aria-label={site.nav.menuLabel}
-          className="fixed inset-x-0 top-16 bottom-0 z-40 isolate flex flex-col overflow-y-auto bg-surface md:hidden"
+          className="sheet-in fixed inset-x-0 top-[var(--nav-h)] bottom-0 z-40 isolate flex flex-col overflow-y-auto bg-surface md:hidden"
         >
           <DotGrid fade />
           {/* The header's toggle sits outside the dialog, which aria-modal
@@ -160,12 +166,10 @@ export function Nav() {
                 setOpen(false);
                 triggerRef.current?.focus();
               }}
-              className="label-caps transition-quick inline-flex min-h-11 items-center gap-2 py-2 text-ink-muted hover:text-ink"
+              className="label-caps transition-quick tap inline-flex items-center gap-2 py-2 text-ink-muted hover:text-ink"
             >
               {site.nav.menuClose}
-              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
+              <Icon name="close" className="size-4" />
             </button>
           </div>
           <nav aria-label={site.nav.menuLandmark} className="flex flex-1 flex-col gap-2 px-[var(--pad-inline)] py-6">

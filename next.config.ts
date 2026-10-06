@@ -38,16 +38,33 @@ const contentSecurityPolicy = [
   ...(isDev ? [] : ['upgrade-insecure-requests']),
 ].join('; ');
 
+// Cache lifetimes for what sits in public/. None of these file names carries
+// a content hash, so nothing is marked immutable: a browser keeps a file for
+// its max-age, then goes on showing the copy it has while it checks for a new
+// one (stale-while-revalidate). Fonts never change in place; photographs and
+// clips are occasionally re-encoded under the same name.
+const DAY = 86400;
+const cacheFor = (maxAge: number, stale: number) => `public, max-age=${maxAge}, stale-while-revalidate=${stale}`;
+const staticCache = {
+  fonts: cacheFor(30 * DAY, 365 * DAY),
+  images: cacheFor(7 * DAY, 30 * DAY),
+  video: cacheFor(7 * DAY, 30 * DAY),
+};
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90],
+    // An optimised variant is derived from a file in public/images: it can
+    // live at least as long as its source is allowed to.
+    minimumCacheTTL: 31 * DAY,
   },
   turbopack: {
     // Pin the Turbopack workspace root to this project. A stray
-    // package-lock.json in C:\Users\anton confuses Turbopack's auto-detection
-    // and causes external module resolution to fail during production builds.
+    // package-lock.json in the user's home directory confuses Turbopack's
+    // auto-detection and causes external module resolution to fail during
+    // production builds.
     root: __dirname,
   },
   async headers() {
@@ -68,6 +85,9 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      { source: "/fonts/:path*", headers: [{ key: "Cache-Control", value: staticCache.fonts }] },
+      { source: "/images/:path*", headers: [{ key: "Cache-Control", value: staticCache.images }] },
+      { source: "/video/:path*", headers: [{ key: "Cache-Control", value: staticCache.video }] },
       {
         source: "/admin",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],

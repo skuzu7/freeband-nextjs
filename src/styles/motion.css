@@ -84,17 +84,30 @@
 
 /* ---------- view transitions ---------- */
 
-/* One route leaving and the next arriving: a quick dim out, then in on the
-   light curve. The header and the wall behind the page are named apart so
-   they hold still while the content changes. */
+/* One route leaving and the next arriving (RouteTransition, around each
+   page): the old one dims out quickly so it does not compete, the new one
+   comes in on the light curve once it has gone. The routes are peers, so
+   there is no direction to slide in. */
 ::view-transition {
   pointer-events: none;
 }
-::view-transition-old(root) {
+::view-transition-old(.route) {
   animation: route-out var(--dur-quick) var(--ease-light) both;
 }
-::view-transition-new(root) {
-  animation: route-in var(--dur-slide) var(--ease-light) both;
+::view-transition-new(.route) {
+  animation: route-in var(--dur-slide) var(--ease-light) var(--dur-quick) both;
+}
+/* The header is the fixed point: it does not move while the page under it
+   changes. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+/* The lit dot under the current route slides to the next one, as a panel. */
+::view-transition-group(nav-dot) {
+  animation-duration: var(--dur-slide);
+  animation-timing-function: var(--ease-slide);
+  z-index: 101;
 }
 /* A photograph travelling between the plate and the lightbox moves as a
    panel: geometry on the slide curve, both images cross-fading inside it. */
