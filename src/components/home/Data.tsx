@@ -1,12 +1,11 @@
 // src/components/home/Data.tsx
-// Block 5 — "Qual é a data?": the question coming on in dots, the WhatsApp
+// Block 5 — "Qual é a data?": the question resolving out of the dots, the WhatsApp
 // CTA and every way to reach the production. The footer follows.
 import { contact, telHref } from '@/data/contact';
 import { data } from '@/data/copy/home';
-import { LedText } from '@/components/brand/LedText';
 import { Container } from '@/components/ui/Container';
-import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { WhatsAppCta } from '@/components/site/WhatsAppCta';
 
 export function Data() {
@@ -14,11 +13,7 @@ export function Data() {
     <Section id="contato" labelledBy="contato-title" className="border-t border-line">
       <Container className="grid gap-12 md:grid-cols-[1.25fr_1fr] md:items-end">
         <div>
-          <Label dot>{data.label}</Label>
-          <div className="mt-4">
-            <LedText id="contato-title" text={data.headline} className="text-5xl font-semibold tracking-display text-ink" cols={140} />
-          </div>
-          <p className="rise mt-5 max-w-[52ch] text-lg text-ink-muted">{data.lead}</p>
+          <SectionHeader id="contato-title" label={data.label} headline={data.headline} lead={data.lead} size="page" />
           <div className="rise mt-8">
             <WhatsAppCta size="lg">{data.whatsappCta}</WhatsAppCta>
           </div>

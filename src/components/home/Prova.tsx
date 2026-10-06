@@ -6,14 +6,14 @@ import { artists } from '@/data/band';
 import { prova } from '@/data/copy/home';
 import { posters } from '@/data/media/posters';
 import { reels } from '@/data/media/reels';
-import { LedMarquee } from '@/components/brand/LedMarquee';
+import { LedSign } from '@/components/brand/LedSign';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { PlateRow } from '@/components/media/PlateRow';
 import { ReelGroup } from '@/components/media/ReelGroup';
-import { BlockHeader } from '@/components/home/BlockHeader';
 
 export function Prova() {
   const homeReels = reels.slice(0, 3);
@@ -27,7 +27,7 @@ export function Prova() {
     <Section id="prova" labelledBy="prova-title" className="border-t border-line">
       <Container className="flex flex-col gap-20">
         <div>
-          <BlockHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
+          <SectionHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
           <ReelGroup
             className="rise mt-8"
             reels={homeReels}
@@ -54,7 +54,7 @@ export function Prova() {
         <div className="rise">
           <Label>{prova.namesLabel}</Label>
           <p className="mt-4 max-w-[60ch] text-lg text-ink-muted">{prova.namesLead}</p>
-          <LedMarquee
+          <LedSign
             items={artists}
             label={prova.namesLabel}
             pauseLabel={prova.namesPause}

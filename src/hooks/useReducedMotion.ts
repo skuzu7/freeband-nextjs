@@ -1,4 +1,4 @@
-// src/lib/useReducedMotion.ts
+// src/hooks/useReducedMotion.ts
 // prefers-reduced-motion as a React value. useSyncExternalStore, so it is
 // false on the server and during hydration and flips without a setState in
 // an effect. Anything that moves checks this; CSS covers the rest.

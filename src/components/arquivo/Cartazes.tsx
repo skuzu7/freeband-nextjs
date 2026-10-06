@@ -9,7 +9,7 @@ import { arquivo, type FilterKey } from '@/data/copy/arquivo';
 import { posters, type Poster } from '@/data/media/posters';
 import { Label } from '@/components/ui/Label';
 import { Photo } from '@/components/media/Photo';
-import { plateLayout } from '@/components/media/PlateRow';
+import { plateLayout } from '@/lib/plates';
 import { Lightbox, type LightboxItem } from '@/components/media/Lightbox';
 import { Filtro } from './Filtro';
 
@@ -62,7 +62,7 @@ export function Cartazes() {
               {row.map((p, i) => {
                 const index = r * PER_ROW + i;
                 return (
-                  <li key={p.src} className="flex flex-col gap-3" style={layout.frameStyle[i]}>
+                  <li key={p.src} className="flex flex-col gap-3">
                     <button
                       type="button"
                       aria-label={`${arquivo.lightbox.open}: ${titleOf(p)}`}

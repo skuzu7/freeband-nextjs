@@ -33,7 +33,7 @@ export function Capitulo1969() {
           </dl>
         </div>
         <figure className="m-0 md:justify-self-end md:w-[min(100%,28rem)]">
-          <Photo photo={era.image} sizes="(min-width: 768px) 28rem, 100vw" quality={90} priority />
+          <Photo photo={era.image} sizes="(min-width: 768px) 28rem, 100vw" quality={90} preload />
           <figcaption className="label-caps mt-3 text-ink-low">{era.image.caption}</figcaption>
         </figure>
       </Container>

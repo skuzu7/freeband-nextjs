@@ -3,7 +3,7 @@
 // site uses, so the mark in a PDF is the mark on the backdrop: vector, red,
 // 19-unit strokes with butt caps.
 import { Circle, G, Path, Svg } from '@react-pdf/renderer';
-import { GLYPHS, WORDMARK } from '@/components/brand/Wordmark';
+import { GLYPHS, WORDMARK } from '@/design/wordmark';
 import { pdfColors } from './theme';
 
 interface WordmarkPdfProps {

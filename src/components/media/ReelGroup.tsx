@@ -6,7 +6,7 @@
 // paused; the button still lets them play.
 import { useState } from 'react';
 import { cn } from '@/lib/cn';
-import { useReducedMotion } from '@/lib/useReducedMotion';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { Reel as ReelData } from '@/data/media/reels';
 import { Reel } from './Reel';
 

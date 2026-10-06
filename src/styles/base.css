@@ -1,0 +1,44 @@
+/* src/styles/base.css — element defaults. */
+@layer base {
+  html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* An anchor lands below the sticky header, not under it. */
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+  }
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-led);
+    color: var(--color-night-950);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-led-text);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  /* Photographs are content: never let a UA default squash them. */
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}

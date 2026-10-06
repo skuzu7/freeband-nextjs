@@ -1,0 +1,320 @@
+/* src/styles/led.css — the LED wall.
+
+   One idea carries every motif here: the wall is a MASK. A grid of round
+   holes laid over anything turns it into dots, and taking the grid away
+   resolves it into the thing itself. So nothing below needs a canvas, a
+   script or a second copy of the content: the photograph, the heading and
+   the light are in the HTML, and the dots are only how they arrive.
+
+   Without scroll-driven animations the content is simply there. Under
+   prefers-reduced-motion nothing here animates (see motion.css). */
+
+@layer components {
+  /* ---------- the stage: the wall behind every page ---------- */
+
+  /* Fixed behind the site. Whatever light sits inside shows only through the
+     dot grid, so a soft gradient becomes a patch of lit LEDs. */
+  .led-stage {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: radial-gradient(circle, #000 0.9px, transparent 1.4px);
+    mask-size: var(--dot-pitch) var(--dot-pitch);
+    mask-position: center;
+  }
+  /* The panel switched off: every dot barely there. */
+  .led-stage-off {
+    position: absolute;
+    inset: 0;
+    background: var(--color-led-dim);
+    opacity: 0.4;
+  }
+  /* A pool of light that follows the pointer. Moved with `transform` only, by
+     LedStageDriver, so it never repaints: the compositor slides one layer
+     under the mask. Centred on its own top-left corner. */
+  .led-stage-pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44rem;
+    height: 44rem;
+    margin: -22rem 0 0 -22rem;
+    border-radius: var(--radius-pill);
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--color-led-hot), transparent 25%) 0%,
+      color-mix(in oklab, var(--color-led), transparent 55%) 30%,
+      transparent 68%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-slide) var(--ease-light);
+    will-change: transform, opacity;
+  }
+  .led-stage-pointer[data-on] {
+    opacity: 0.55;
+  }
+  /* The wall answering the music: a wash from the foot of the screen whose
+     strength is the level of whatever is playing. */
+  .led-stage-level {
+    position: absolute;
+    inset: 40% 0 0;
+    background: linear-gradient(to top, color-mix(in oklab, var(--color-led), transparent 30%), transparent);
+    opacity: 0;
+    will-change: opacity;
+  }
+  /* A band of light that crosses the wall once, on every change of route. */
+  .led-stage-sweep {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 38%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--color-led), transparent 45%) 50%,
+      transparent
+    );
+    transform: translate3d(-110%, 0, 0);
+  }
+  .led-stage-sweep[data-run] {
+    animation: led-sweep var(--dur-light) var(--ease-slide) both;
+  }
+
+  /* ---------- resolve: content arriving out of the dots ---------- */
+
+  /* A cover of the page's own colour, pierced by the dot grid, lies over the
+     element: what shows through the holes is the photograph (or the heading)
+     as a panel of dots. Scrolling it into view fades the cover and the thing
+     itself is there. The element needs `position: relative`. */
+  .led-resolve::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, transparent 1.3px, var(--color-surface) 2.1px);
+    background-size: var(--dot-pitch) var(--dot-pitch);
+    background-position: center;
+    opacity: 0;
+  }
+  /* Type is smaller than a photograph: a finer grid keeps it legible. */
+  .led-resolve-fine::after {
+    background-image: radial-gradient(circle, transparent 0.9px, var(--color-surface) 1.5px);
+    background-size: 4px 4px;
+  }
+
+  /* ---------- the wordmark on the fold ---------- */
+
+  /* Two drawings of the same geometry, stacked: the mark in dots (computed on
+     the server from the vector) and the mark in acrylic. The dots sweep on
+     left to right, then the acrylic takes over — the wall becoming the sign.
+     Both end states are the resting CSS, so with no animation at all the
+     acrylic mark is simply there. */
+  .led-wordmark {
+    display: grid;
+  }
+  .led-wordmark > * {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+  }
+  .led-wordmark-dots {
+    opacity: 0;
+  }
+  .led-wordmark-dots,
+  .led-wordmark-acrylic {
+    animation-duration: calc(var(--dur-light) * 2);
+    animation-timing-function: var(--ease-light);
+    animation-fill-mode: both;
+  }
+  .led-wordmark-dots {
+    animation-name: led-wordmark-dots;
+  }
+  .led-wordmark-acrylic {
+    animation-name: led-wordmark-acrylic;
+  }
+
+  /* ---------- numbers in the 5×7 matrix ---------- */
+
+  /* The lit dots of a LedNumber switch on in one sweep. `--led-delay` staggers
+     a row of numbers. */
+  .led-number-on {
+    animation: led-number-on var(--dur-light) var(--ease-light) var(--led-delay, 0ms) both;
+  }
+
+  /* ---------- the running sign ---------- */
+
+  /* The names of the artists pass behind a fixed dot grid, in LED blue: the
+     dots stay put and the text moves through them, as on a real sign. */
+  .led-sign {
+    position: relative;
+    isolation: isolate;
+    padding-block: 0.6em;
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-led);
+    text-shadow: 0 0 0.6em color-mix(in oklab, var(--color-led), transparent 55%);
+    background: color-mix(in oklab, var(--color-surface-raise), transparent 35%);
+    --ticker-gap: 2.5em;
+  }
+  .led-sign::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: radial-gradient(circle, transparent 1.1px, var(--color-surface) 1.8px);
+    background-size: 5px 5px;
+    background-position: center;
+  }
+  .led-sign .ticker-track {
+    animation-duration: 55s;
+  }
+  /* The sign switched off is a plain list: no dots over text that must be read. */
+  @media (prefers-reduced-motion: reduce) {
+    .led-sign {
+      padding-block: 0;
+      font-size: var(--text-lg);
+      font-weight: 500;
+      color: var(--color-ink-muted);
+      text-shadow: none;
+      text-transform: none;
+      letter-spacing: 0;
+      background: none;
+    }
+    .led-sign::after {
+      content: none;
+    }
+  }
+
+  /* ---------- the timeline rail on /historia ---------- */
+
+  /* A vertical row of dots down the left of the eras. The dim rail is always
+     there; the lit one grows from the top as the list scrolls through. */
+  .led-rail {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: var(--dot-pitch);
+    background-image: radial-gradient(circle, var(--color-led-dim) 1.2px, transparent 1.7px);
+    background-size: var(--dot-pitch) calc(var(--dot-pitch) * 2);
+  }
+  .led-rail::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--color-led) 1.2px, transparent 1.7px);
+    background-size: var(--dot-pitch) calc(var(--dot-pitch) * 2);
+    filter: drop-shadow(0 0 4px color-mix(in oklab, var(--color-led), transparent 40%));
+    clip-path: inset(0);
+  }
+
+  /* ---------- the WebGL wall on the fold ---------- */
+
+  /* Sits over the stage poster and loop and draws them itself, as dots or as
+     picture. Invisible until its first frame is on screen, so a browser
+     without WebGL2 shows the poster underneath, untouched. */
+  .led-wall {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--dur-slide) var(--ease-light);
+  }
+  .led-wall[data-live] {
+    opacity: 1;
+  }
+}
+
+@keyframes led-sweep {
+  from {
+    transform: translate3d(-110%, 0, 0);
+  }
+  to {
+    transform: translate3d(290%, 0, 0);
+  }
+}
+
+/* Dots: swept on over the first half, gone by the end. */
+@keyframes led-wordmark-dots {
+  0% {
+    opacity: 1;
+    clip-path: inset(0 100% 0 0);
+  }
+  45% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  60% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+}
+/* Acrylic: dark until the dots are all lit, then it comes on over them. */
+@keyframes led-wordmark-acrylic {
+  0%,
+  45% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes led-number-on {
+  from {
+    opacity: 0.15;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes led-resolve {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes led-rail {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .led-resolve::after {
+      animation: led-resolve linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+    /* A heading resolves a little later than the photograph beside it. */
+    .led-resolve-fine::after {
+      animation-range: entry 10% entry 70%;
+    }
+    .led-rail::after {
+      animation: led-rail linear both;
+      animation-timeline: view();
+      animation-range: entry 20% exit 60%;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 // @vitest-environment node
 //
-// src/app/tokens.css is generated from src/design/tokens.ts by
+// src/styles/tokens.css is generated from src/design/tokens.ts by
 // scripts/generate-tokens.mjs. This test fails the moment the two drift, the
 // same way the blur test polices blur.ts.
 import { describe, it, expect } from 'vitest';
@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { renderTokensCss, tokens, themes } from '../tokens';
 
-const CSS_PATH = path.resolve(__dirname, '../../app/tokens.css');
+const CSS_PATH = path.resolve(__dirname, '../../styles/tokens.css');
 
 describe('tokens.css', () => {
   it('is up to date with tokens.ts (run `npm run tokens`)', () => {

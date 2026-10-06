@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
 import { Section } from '@/components/ui/Section';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { PlateRow } from '@/components/media/PlateRow';
-import { BlockHeader } from '@/components/home/BlockHeader';
 
 function PackageCard({ pkg }: { pkg: ServicePackage }) {
   return (
@@ -60,7 +60,7 @@ export function Caminhao() {
   return (
     <Section id="caminhao" labelledBy="caminhao-title">
       <Container>
-        <BlockHeader id="caminhao-title" label={caminhao.label} headline={caminhao.headline} lead={caminhao.lead} />
+        <SectionHeader id="caminhao-title" label={caminhao.label} headline={caminhao.headline} lead={caminhao.lead} />
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
           {servicePackages.map((pkg) => (

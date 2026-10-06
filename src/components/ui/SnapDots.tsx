@@ -7,7 +7,7 @@
 // id so the row itself can stay a server component.
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { prefersReducedMotion } from '@/lib/useReducedMotion';
+import { prefersReducedMotion } from '@/hooks/useReducedMotion';
 
 interface SnapDotsProps {
   /** id of the `.snap-row` element. */

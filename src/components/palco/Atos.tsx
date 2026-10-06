@@ -29,7 +29,7 @@ export function Atos() {
             <PlateRow
               key={plate.map((f) => f.id).join()}
               frames={plate}
-              priority={a === 0 && p === 0}
+              preload={a === 0 && p === 0}
               quality={plate.length === 1 ? 90 : 75}
             />
           ))}

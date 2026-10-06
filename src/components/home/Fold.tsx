@@ -1,99 +1,24 @@
-'use client';
-
 // src/components/home/Fold.tsx
-// Block 1. The stage poster is the LCP; the loop attaches on idle and never
-// under reduced motion, and one control pauses it (WCAG 2.2.2). The wordmark
-// comes on as LED dots, then the sharp red acrylic appears over them — the
-// backdrop, as the audience sees it.
+// Block 1. Everything here is in the HTML the server sends: the stage poster
+// (the page's LCP), the wordmark lit in dots and then in red acrylic, the
+// pitch, the two ways in and the four numbers. HeroLoop is the one island:
+// it adds the loop, the pause control and the WebGL wall over the poster.
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/cn';
-import { useReducedMotion } from '@/lib/useReducedMotion';
-import { bandInfo } from '@/data/band';
+import { blurMap } from '@/data/blur';
 import { fold } from '@/data/copy/home';
 import { heroMedia } from '@/data/media/hero';
-import { blurMap } from '@/data/blur';
-import { LedPanel } from '@/components/brand/LedPanel';
+import { BrandLine } from '@/components/brand/BrandLine';
 import { LedNumber } from '@/components/brand/LedNumber';
-import { Wordmark, WORDMARK } from '@/components/brand/Wordmark';
+import { LedWordmark } from '@/components/brand/LedWordmark';
+import { WhatsAppCta } from '@/components/site/WhatsAppCta';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Label } from '@/components/ui/Label';
-import { WhatsAppCta } from '@/components/site/WhatsAppCta';
+import { HeroLoop } from './HeroLoop';
 
-const WORDMARK_ASPECT = WORDMARK.viewBox.width / WORDMARK.viewBox.height;
-
-interface BackdropProps {
-  paused: boolean;
-}
-
-function Backdrop({ paused }: BackdropProps) {
-  const reduced = useReducedMotion();
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (reduced) return;
-    const video = videoRef.current;
-    if (!video) return;
-    const attach = () => {
-      if (video.getAttribute('src')) return;
-      video.setAttribute('src', heroMedia.video);
-      video.play().catch(() => {});
-    };
-    // Safari still has no requestIdleCallback; a short timer stands in.
-    const idle = window as Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-    if (idle.requestIdleCallback && idle.cancelIdleCallback) {
-      const id = idle.requestIdleCallback(attach, { timeout: 4000 });
-      return () => idle.cancelIdleCallback?.(id);
-    }
-    const id = window.setTimeout(attach, 1500);
-    return () => window.clearTimeout(id);
-  }, [reduced]);
-
-  // The pause control: the loop stays attached and resumes where it stopped.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !video.getAttribute('src')) return;
-    if (paused) video.pause();
-    else video.play().catch(() => {});
-  }, [paused]);
-
-  return (
-    <div className="fold-backdrop absolute inset-0 -z-10 will-change-transform">
-      {/* The one photograph on the site that IS allowed to bleed: it is the
-          stage as backdrop, under a scrim, not a picture on display. The
-          `data-backdrop` flag exempts it from the smoke test's crop audit. */}
-      <Image
-        src={heroMedia.poster}
-        alt={heroMedia.alt}
-        fill
-        priority
-        sizes="100vw"
-        quality={75}
-        placeholder="blur"
-        blurDataURL={blurMap[heroMedia.poster]}
-        className="object-cover"
-        data-backdrop
-      />
-      {!reduced && (
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden
-          onPlaying={(e) => e.currentTarget.classList.add('is-playing')}
-          className="hero-video absolute inset-0 h-full w-full object-cover"
-        />
-      )}
-      <div aria-hidden className="hero-scrim absolute inset-0" />
-    </div>
-  );
-}
+/** The numbers switch on once the wordmark has, one after the other. */
+const PROOF_DELAY_MS = 1100;
+const PROOF_STEP_MS = 140;
 
 interface FoldProps {
   /** Years since the founding, counted on the server so the HTML and the hydrated tree agree. */
@@ -101,60 +26,36 @@ interface FoldProps {
 }
 
 export function Fold({ yearsActive }: FoldProps) {
-  const [lit, setLit] = useState(false);
-  const reduced = useReducedMotion();
-  const [paused, setPaused] = useState(false);
-
   return (
     <section
       aria-labelledby="fold-title"
       className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
     >
-      <Backdrop paused={paused} />
-      {/* Named after what a press does, so no aria-pressed: the two together
-          announce "play, pressed" over a loop that is stopped. */}
-      {!reduced && (
-        <button
-          type="button"
-          onClick={() => setPaused((p) => !p)}
-          className="label-caps transition-quick absolute top-20 right-[var(--pad-inline)] z-10 inline-flex min-h-11 items-center gap-2.5 py-2 text-ink-muted hover:text-ink"
-        >
-          <i aria-hidden className={cn('size-1.5 rounded-pill', paused ? 'bg-ink-low' : 'bg-led')} />
-          {paused ? fold.backdropPlay : fold.backdropPause}
-        </button>
-      )}
-      <Container className="relative z-10 flex flex-col gap-8 pb-10 pt-32 md:gap-10">
+      <HeroLoop video={heroMedia.video} pauseLabel={fold.backdropPause} playLabel={fold.backdropPlay}>
+        {/* The one photograph on the site that IS allowed to bleed: it is the
+            stage as backdrop, under a scrim, not a picture on display. The
+            `data-backdrop` flag exempts it from the smoke test's crop audit. */}
+        <Image
+          src={heroMedia.poster}
+          alt={heroMedia.alt}
+          fill
+          preload
+          sizes="100vw"
+          quality={75}
+          placeholder="blur"
+          blurDataURL={blurMap[heroMedia.poster]}
+          className="object-cover"
+          data-backdrop
+        />
+      </HeroLoop>
+      <Container className="relative z-10 flex flex-col gap-8 pt-32 pb-10 md:gap-10">
         <Label dot>{fold.badge}</Label>
         <h1 id="fold-title" className="sr-only">
           {fold.title}
         </h1>
         <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-3">
-          <div className="flex w-full items-center gap-4 text-ink-muted">
-            <span className="text-xs sm:text-sm font-semibold tracking-[0.32em] uppercase text-ink-muted">
-              {bandInfo.brandLine}
-            </span>
-            <span aria-hidden className="dot-line flex-1 opacity-50" />
-          </div>
-          <div role="img" aria-label={fold.wordmarkLabel} className="w-full">
-            <LedPanel
-              source={{ kind: 'wordmark' }}
-              aspect={WORDMARK_ASPECT}
-              cols={180}
-              onLit={() => setLit(true)}
-              dimDots={false}
-              fadeWhenLit
-              className="w-full"
-            >
-              <Wordmark
-                acrylic
-                glow
-                className={cn(
-                  'absolute inset-[3%] h-[94%] w-[94%] text-red transition-all duration-700 ease-light',
-                  lit ? 'opacity-100 scale-100' : 'opacity-0 scale-98',
-                )}
-              />
-            </LedPanel>
-          </div>
+          <BrandLine rule textClassName="font-semibold sm:text-sm" />
+          <LedWordmark label={fold.wordmarkLabel} />
         </div>
         <div className="grid gap-8 md:grid-cols-[1.25fr_1fr] md:items-end">
           <div>
@@ -174,9 +75,14 @@ export function Fold({ yearsActive }: FoldProps) {
       </Container>
       <Container className="relative z-10 border-t border-line py-6">
         <ul className="grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
-          {fold.proof.map((item) => (
+          {fold.proof.map((item, i) => (
             <li key={item.label}>
-              <LedNumber value={item.value} label={item.label} matrixClassName="h-7 md:h-8" on={lit} />
+              <LedNumber
+                value={item.value}
+                label={item.label}
+                matrixClassName="h-7 md:h-8"
+                delayMs={PROOF_DELAY_MS + i * PROOF_STEP_MS}
+              />
             </li>
           ))}
         </ul>

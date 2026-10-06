@@ -1,6 +1,6 @@
 // src/components/home/Blocos.tsx
 // Block 3 — the thematic blocks as panels on the wall: each photograph
-// resolves out of the dot matrix as it scrolls into view. The wardrobe shot
+// resolves out of the dots as it scrolls into view. The wardrobe shot
 // and the block's number sit beside the text, under the frame: nothing is
 // laid over a photograph. On small screens cards stack in a responsive grid so
 // every photograph stays whole and nothing is cut off horizontally; from md:
@@ -8,12 +8,11 @@
 import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
 import { ratioOf } from '@/data/media/paths';
-import { LedPhoto } from '@/components/brand/LedPhoto';
 import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { SnapDots } from '@/components/ui/SnapDots';
 import { Photo } from '@/components/media/Photo';
-import { BlockHeader } from '@/components/home/BlockHeader';
 
 const ROW_ID = 'blocos-row';
 
@@ -21,7 +20,7 @@ export function Blocos() {
   return (
     <Section id="blocos" labelledBy="blocos-title" className="overflow-hidden border-t border-line">
       <Container className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <BlockHeader id="blocos-title" label={blocos.label} headline={blocos.headline} lead={blocos.lead} />
+        <SectionHeader id="blocos-title" label={blocos.label} headline={blocos.headline} lead={blocos.lead} />
         <SnapDots
           rowId={ROW_ID}
           count={blocos.items.length}
@@ -43,10 +42,10 @@ export function Blocos() {
         {blocos.items.map((bloco, i) => (
           <li
             key={bloco.id}
-            className="rise flex w-full flex-col gap-5 md:w-auto"
+            className="rise flex flex-col gap-5"
             style={{ '--ratio': ratioOf(bloco.photo.aspect).toFixed(4) } as CSSProperties}
           >
-            <LedPhoto photo={bloco.photo} sizes="(min-width: 768px) 24rem, 92vw" cols={72} />
+            <Photo photo={bloco.photo} sizes="(min-width: 768px) 24rem, 92vw" led />
             <div className="flex items-start gap-4">
               <div className="min-w-0 flex-1">
                 <span aria-hidden className="label-caps text-led-text">

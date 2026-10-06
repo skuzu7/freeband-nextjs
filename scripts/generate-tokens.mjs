@@ -1,5 +1,5 @@
 // scripts/generate-tokens.mjs
-// Renders src/app/tokens.css from src/design/tokens.ts. The design tokens
+// Renders src/styles/tokens.css from src/design/tokens.ts. The design tokens
 // live in TypeScript so the PDF theme and the contrast test can import them;
 // Tailwind needs them as CSS. Run after any change to tokens.ts:
 //   npm run tokens
@@ -10,7 +10,7 @@ import { renderTokensCss } from '../src/design/tokens.ts';
 
 // Resolved from this file, so the script writes the same place from any cwd.
 const ROOT = path.resolve(import.meta.dirname, '..');
-const OUT = path.join(ROOT, 'src/app/tokens.css');
+const OUT = path.join(ROOT, 'src/styles/tokens.css');
 const next = renderTokensCss();
 const prev = existsSync(OUT) ? readFileSync(OUT, 'utf8').replace(/\r\n/g, '\n') : null;
 

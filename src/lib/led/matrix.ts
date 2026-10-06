@@ -52,3 +52,20 @@ export function ledDots(value: string): { width: number; rows: number; dots: Led
   });
   return { width, rows: ROWS, dots };
 }
+
+/**
+ * The same layout as two SVG paths — every cell, and the lit ones — each dot
+ * a zero-length segment (stroke it with round caps). Cell centres fall on
+ * integers: draw inside `<g transform="translate(0.5 0.5)">`.
+ */
+export function ledPath(value: string): { width: number; rows: number; all: string; lit: string } {
+  const { width, rows, dots } = ledDots(value);
+  let all = '';
+  let lit = '';
+  for (const d of dots) {
+    const dot = `M${d.x} ${d.y}h0`;
+    all += dot;
+    if (d.on) lit += dot;
+  }
+  return { width, rows, all, lit };
+}
