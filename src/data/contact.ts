@@ -28,3 +28,26 @@ export const telHref = `tel:${contact.phoneIntl.replace(/[^\d+]/g, '')}`;
 export function whatsappPackageLink(intro: string, packageName: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`${intro} ${packageName}`)}`;
 }
+
+export interface BriefingSelection {
+  format: string;
+  packageName: string;
+  date: string;
+  city: string;
+}
+
+export function buildBriefingMessage({ format, packageName, date, city }: BriefingSelection): string {
+  const parts = [
+    `Olá! Gostaria de solicitar uma proposta da Internacional Freeband.`,
+    `• Formato: ${format || 'A definir'}`,
+    `• Estrutura: ${packageName || 'Show Completo'}`,
+  ];
+  if (date.trim()) parts.push(`• Data prevista: ${date.trim()}`);
+  if (city.trim()) parts.push(`• Cidade/UF: ${city.trim()}`);
+  return parts.join('\n');
+}
+
+export function whatsappBriefingLink(selection: BriefingSelection): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildBriefingMessage(selection))}`;
+}
+

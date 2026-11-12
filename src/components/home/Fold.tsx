@@ -30,9 +30,15 @@ export function Fold({ yearsActive }: FoldProps) {
   return (
     <section
       aria-labelledby="fold-title"
-      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
+      className="relative isolate flex min-h-[calc(100svh-var(--nav-h))] flex-col justify-end overflow-hidden"
     >
-      <HeroLoop video={heroMedia.video} pauseLabel={fold.backdropPause} playLabel={fold.backdropPlay}>
+      <HeroLoop
+        video={heroMedia.video}
+        pauseLabel={fold.backdropPause}
+        playLabel={fold.backdropPlay}
+        stageModeLabel={fold.stageModeLabel}
+        stageModes={fold.stageModes}
+      >
         {/* The one photograph on the site that IS allowed to bleed: it is the
             stage as backdrop, under a scrim, not a picture on display. The
             `data-backdrop` flag exempts it from the smoke test's crop audit. */}
@@ -49,26 +55,51 @@ export function Fold({ yearsActive }: FoldProps) {
           data-backdrop
         />
       </HeroLoop>
-      <Container className="relative z-10 flex flex-col gap-8 pt-32 pb-10 md:gap-10">
-        <Label dot>{fold.badge}</Label>
+      <Container className="relative z-10 flex flex-col gap-6 pt-24 pb-6 md:gap-7">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <Label dot>{fold.badge}</Label>
+          <nav
+            aria-label="Capítulos da página"
+            className="hidden items-center gap-1 border border-line bg-surface/75 px-2 backdrop-blur-md lg:inline-flex"
+          >
+            {[
+              { href: '#caminhao', num: '01', label: 'Estrutura' },
+              { href: '#blocos', num: '02', label: 'Blocos' },
+              { href: '#prova', num: '03', label: 'Ao Vivo' },
+              { href: '#contato', num: '04', label: 'Briefing 30s' },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="label-caps transition-quick tap inline-flex items-center gap-1.5 px-2.5 text-2xs text-ink-muted hover:text-led-text"
+              >
+                <span className="text-led">{item.num}</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </nav>
+        </div>
         <h1 id="fold-title" className="sr-only">
           {fold.title}
         </h1>
-        <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-3">
+        <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-2.5">
           <BrandLine rule size="lg" />
           <LedWordmark label={fold.wordmarkLabel} />
         </div>
-        <div className="grid gap-8 md:grid-cols-[1.25fr_1fr] md:items-end">
+        <div className="grid gap-6 md:grid-cols-[1.15fr_1fr] md:items-end">
           <div>
-            <p className="text-3xl font-semibold tracking-tight text-ink">{fold.kicker(yearsActive)}</p>
-            <p className="mt-4 max-w-[52ch] text-lg text-ink-muted">{fold.lead}</p>
+            <p className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">{fold.kicker(yearsActive)}</p>
+            <p className="mt-3 max-w-[54ch] text-base text-ink-muted md:text-lg">{fold.lead}</p>
           </div>
           {/* Stacked and full-width on phones, side by side from 40rem. */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap md:justify-end">
             <WhatsAppCta size="lg" className="w-full sm:w-auto">
               {fold.ctaPrimary}
             </WhatsAppCta>
-            <Button variant="secondary" size="lg" href="/palco" className="w-full sm:w-auto">
+            <Button variant="secondary" size="lg" href="#contato" className="w-full border-led/50 bg-surface/75 backdrop-blur-sm sm:w-auto">
+              Briefing em 30s
+            </Button>
+            <Button variant="secondary" size="lg" href="/palco" className="w-full bg-surface/75 backdrop-blur-sm sm:w-auto">
               {fold.ctaSecondary}
             </Button>
             <Button variant="ghost" size="lg" href="/palco#show" className="w-full gap-3 px-0 sm:w-auto">
@@ -78,14 +109,18 @@ export function Fold({ yearsActive }: FoldProps) {
           </div>
         </div>
       </Container>
-      <Container className="relative z-10 border-t border-line py-6">
-        <ul className="grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-4">
+      <Container className="relative z-10 border-t border-line/80 py-4">
+        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {fold.proof.map((item, i) => (
-            <li key={item.label}>
+            <li
+              key={item.label}
+              className="transition-quick relative overflow-hidden border border-line bg-surface/80 p-3.5 backdrop-blur-md hover:border-led/60"
+            >
+              <span aria-hidden className="mb-2 block h-0.5 w-8 bg-led/80" />
               <LedNumber
                 value={item.value}
                 label={item.label}
-                matrixClassName="h-7 md:h-8"
+                matrixClassName="h-6 md:h-7"
                 delayMs={PROOF_DELAY_MS + i * PROOF_STEP_MS}
               />
             </li>

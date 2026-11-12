@@ -15,9 +15,16 @@
 // way: the canvas stays transparent and the poster or the loop shows through.
 // One control pauses the loop (WCAG 2.2.2).
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { cn } from '@/lib/cn';
 import { toHex } from '@/design/color';
 import { tokens } from '@/design/tokens';
-import { createLedWall, hexToRgb, resolveForScroll, type WallPalette } from '@/lib/led/wall';
+import {
+  createLedWall,
+  hexToRgb,
+  stageStateForScroll,
+  type StageViewMode,
+  type WallPalette,
+} from '@/lib/led/wall';
 import { getLevel } from '@/lib/media/level';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { PlayToggle } from '@/components/ui/PlayToggle';
@@ -27,12 +34,19 @@ const PALETTE: WallPalette = {
   led: hexToRgb(toHex(tokens.palette['led-500'])),
   hot: hexToRgb(toHex(tokens.palette['led-200'])),
   ground: hexToRgb(toHex(tokens.palette['night-950'])),
+  red: hexToRgb(toHex(tokens.palette['red-500'])),
 };
 
 /** How long the wall takes to resolve into the picture on arrival. */
 const INTRO_MS = 1800;
 /** Backing-store scale cap: the shader is cheap, a 3× phone screen is not. */
 const MAX_DPR = 1.5;
+
+const DEFAULT_STAGE_MODES: ReadonlyArray<{ id: StageViewMode; label: string }> = [
+  { id: 'auto', label: 'Auto 3D' },
+  { id: 'matrix', label: 'Matriz LED' },
+  { id: 'stage', label: 'Vídeo Puro' },
+];
 
 /**
  * Runs `task` once the page is idle; returns the way to call it off. Safari
@@ -61,16 +75,34 @@ interface HeroLoopProps {
   video: string;
   pauseLabel: string;
   playLabel: string;
+  stageModeLabel?: string;
+  stageModes?: ReadonlyArray<{ id: StageViewMode; label: string }>;
   /** The poster: a next/image marked `data-backdrop`, rendered by the server. */
   children: ReactNode;
 }
 
-export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopProps) {
+export function HeroLoop({
+  video,
+  pauseLabel,
+  playLabel,
+  stageModeLabel = 'Modo de projeção do painel LED',
+  stageModes = DEFAULT_STAGE_MODES,
+  children,
+}: HeroLoopProps) {
   const reduced = useReducedMotion();
   const [paused, setPaused] = useState(false);
+  const [viewMode, setViewMode] = useState<StageViewMode>('auto');
+  const viewModeRef = useRef<StageViewMode>('auto');
+  const wakeRef = useRef<(() => void) | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Sync interactive stage projection mode into the WebGL loop without re-creating the context.
+  useEffect(() => {
+    viewModeRef.current = viewMode;
+    wakeRef.current?.();
+  }, [viewMode]);
 
   // The loop attaches once the page is idle: the poster is the LCP and the
   // video must not compete with it.
@@ -107,9 +139,12 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       const wall = createLedWall(canvas, PALETTE);
       if (!wall) return undefined;
 
+      const { tier } = wall;
+      canvas.dataset.stageTier = tier;
+
       const poster = box.querySelector<HTMLImageElement>('img[data-backdrop]');
       const fold = box.parentElement ?? box;
-      let frameId = 0;
+      let cancelNextFrame: (() => void) | null = null;
       let inView = true;
       let dead = false;
       let hasPoster = false;
@@ -117,13 +152,22 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       let height = 1;
       let pointerX = 0;
       let pointerY = 0;
+      let smoothX = 0;
+      let smoothY = 0;
       let pointerOn = 0;
       let pointerGoal = 0;
 
       const measure = () => {
         const { width, height: h } = box.getBoundingClientRect();
         height = Math.max(1, h);
-        wall.resize(width, h, Math.min(window.devicePixelRatio || 1, MAX_DPR));
+        const dprCap = tier === 'A' ? MAX_DPR : 1;
+        wall.resize(width, h, Math.min(window.devicePixelRatio || 1, dprCap));
+        if (!smoothX && !smoothY) {
+          pointerX = width * 0.5;
+          pointerY = h * 0.5;
+          smoothX = pointerX;
+          smoothY = pointerY;
+        }
       };
 
       // A frame of the loop when it is running, the poster until then.
@@ -149,28 +193,46 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       };
 
       const draw = (now: number) => {
-        frameId = 0;
+        cancelNextFrame = null;
         if (dead) return;
         if (feed()) {
           if (!startedAt) startedAt = now;
+          const elapsedSec = (now - startedAt) / 1000;
           const t = Math.min(1, (now - startedAt) / INTRO_MS);
           // Ease-out: the picture arrives fast and settles, like a LED coming on.
           const intro = 1 - (1 - t) ** 3;
           pointerOn += (pointerGoal - pointerOn) * 0.12;
+          smoothX += (pointerX - smoothX) * 0.14;
+          smoothY += (pointerY - smoothY) * 0.14;
+
+          const stage = stageStateForScroll(window.scrollY / height, viewModeRef.current);
+          const effectiveResolve =
+            viewModeRef.current === 'stage' ? stage.resolve : intro * stage.resolve;
+
           wall.draw({
-            resolve: intro * resolveForScroll(window.scrollY / height),
-            pointerX,
-            pointerY,
+            resolve: effectiveResolve,
+            pointerX: smoothX,
+            pointerY: smoothY,
             pointerOn,
             level: getLevel(),
+            time: elapsedSec,
+            curvature: stage.curvature,
+            beamPower: stage.beamPower,
           });
           canvas.dataset.live = '';
+          canvas.dataset.stageState = stage.id;
         }
-        if (inView && !document.hidden) frameId = requestAnimationFrame(draw);
+        if (inView && !document.hidden) {
+          cancelNextFrame = wall.scheduleNextFrame(draw);
+        }
       };
+
       const wake = () => {
-        if (!frameId && !dead && inView && !document.hidden) frameId = requestAnimationFrame(draw);
+        if (!cancelNextFrame && !dead && inView && !document.hidden) {
+          cancelNextFrame = wall.scheduleNextFrame(draw);
+        }
       };
+      wakeRef.current = wake;
 
       const onMove = (event: PointerEvent) => {
         if (event.pointerType !== 'mouse') return;
@@ -178,6 +240,7 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
         pointerX = event.clientX - rect.left;
         pointerY = event.clientY - rect.top;
         pointerGoal = 1;
+        wake();
       };
       const onLeave = () => {
         pointerGoal = 0;
@@ -185,7 +248,14 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       const onLost = (event: Event) => {
         event.preventDefault();
         dead = true;
+        cancelNextFrame?.();
+        cancelNextFrame = null;
         delete canvas.dataset.live;
+      };
+      const onRestored = () => {
+        dead = false;
+        hasPoster = false;
+        wake();
       };
 
       const sizes = new ResizeObserver(measure);
@@ -199,18 +269,21 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
       fold.addEventListener('pointermove', onMove, { passive: true });
       fold.addEventListener('pointerleave', onLeave);
       canvas.addEventListener('webglcontextlost', onLost);
+      canvas.addEventListener('webglcontextrestored', onRestored);
       document.addEventListener('visibilitychange', wake);
       poster?.addEventListener('load', wake);
       wake();
 
       return () => {
         dead = true;
-        cancelAnimationFrame(frameId);
+        wakeRef.current = null;
+        cancelNextFrame?.();
         sizes.disconnect();
         views.disconnect();
         fold.removeEventListener('pointermove', onMove);
         fold.removeEventListener('pointerleave', onLeave);
         canvas.removeEventListener('webglcontextlost', onLost);
+        canvas.removeEventListener('webglcontextrestored', onRestored);
         document.removeEventListener('visibilitychange', wake);
         poster?.removeEventListener('load', wake);
         delete canvas.dataset.live;
@@ -250,17 +323,61 @@ export function HeroLoop({ video, pauseLabel, playLabel, children }: HeroLoopPro
             className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[1200ms] ease-light data-playing:opacity-100"
           />
         )}
-        {!reduced && <canvas ref={canvasRef} aria-hidden className="led-wall" />}
+        {!reduced && (
+          <canvas
+            ref={canvasRef}
+            aria-hidden
+            data-stage-mode={viewMode}
+            className="led-wall"
+          />
+        )}
         <div aria-hidden className="hero-scrim absolute inset-0" />
       </div>
       {!reduced && (
-        <PlayToggle
-          paused={paused}
-          onToggle={() => setPaused((p) => !p)}
-          pauseLabel={pauseLabel}
-          playLabel={playLabel}
-          className="absolute top-20 right-[var(--pad-inline)] z-10"
-        />
+        <div className="absolute inset-x-[var(--pad-inline)] top-4 z-10 flex flex-wrap items-center justify-between gap-2 sm:top-6">
+          <div className="hidden items-center gap-2 border border-led/35 bg-surface/80 px-3 py-2 backdrop-blur-md lg:inline-flex">
+            <span aria-hidden className="size-2 rounded-pill bg-led shadow-[0_0_8px_var(--color-led)]" />
+            <span className="label-caps text-2xs text-led-text">Palco 3D Volumétrico · Interativo</span>
+          </div>
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+            <div
+              role="group"
+              aria-label={stageModeLabel}
+              className="hidden items-center gap-1 border border-led/40 bg-surface/85 px-1.5 shadow-[0_0_24px_color-mix(in_oklab,var(--color-led),transparent_84%)] backdrop-blur-md sm:inline-flex"
+            >
+              {stageModes.map((mode) => {
+                const active = viewMode === mode.id;
+                return (
+                  <button
+                    key={mode.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setViewMode(mode.id)}
+                    className={cn(
+                      'label-caps transition-quick tap inline-flex items-center gap-1.5 px-2.5 text-2xs',
+                      active
+                        ? 'bg-led/15 text-led-text'
+                        : 'text-ink-muted hover:text-ink',
+                    )}
+                  >
+                    <i
+                      aria-hidden
+                      className={cn('size-1.5 rounded-pill', active ? 'bg-led shadow-[0_0_6px_var(--color-led)]' : 'bg-ink-low/50')}
+                    />
+                    {mode.label}
+                  </button>
+                );
+              })}
+            </div>
+            <PlayToggle
+              paused={paused}
+              onToggle={() => setPaused((p) => !p)}
+              pauseLabel={pauseLabel}
+              playLabel={playLabel}
+              className="border border-line bg-surface/85 px-3 text-ink backdrop-blur-md"
+            />
+          </div>
+        </div>
       )}
     </>
   );

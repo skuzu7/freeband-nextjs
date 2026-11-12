@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development' && !process.env.VITEST;
 // Vercel sets VERCEL_ENV at build time. Preview deployments inject the Vercel
 // Toolbar (comments, share, feedback) from vercel.live; a policy that allows
 // only 'self' blocks it and leaves a broken toolbar plus console errors on
@@ -34,8 +34,7 @@ const contentSecurityPolicy = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
-  ...(isDev ? [] : ['upgrade-insecure-requests']),
+  ...(isDev ? [] : ["frame-ancestors 'none'", 'upgrade-insecure-requests']),
 ].join('; ');
 
 // Cache lifetimes for what sits in public/. None of these file names carries
@@ -52,6 +51,7 @@ const staticCache = {
 };
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
@@ -77,7 +77,7 @@ const nextConfig: NextConfig = {
           // one-way registration for the whole domain, the owner's call.
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
+          ...(isDev ? [] : [{ key: "X-Frame-Options", value: "DENY" }]),
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",

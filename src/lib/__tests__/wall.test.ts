@@ -2,7 +2,14 @@
 // fails closed — no context, no wall, and the caller keeps the poster — and
 // the two pure helpers around it.
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createLedWall, hexToRgb, resolveForScroll, type WallPalette } from '../led/wall';
+import {
+  classifyPerformanceTier,
+  createLedWall,
+  hexToRgb,
+  resolveForScroll,
+  stageStateForScroll,
+  type WallPalette,
+} from '../led/wall';
 
 const PALETTE: WallPalette = { dim: [0, 0, 0.2], led: [0, 0.5, 1], hot: [0.8, 0.9, 1], ground: [0, 0, 0] };
 
@@ -52,3 +59,31 @@ describe('resolveForScroll', () => {
     }
   });
 });
+
+describe('classifyPerformanceTier', () => {
+  it('assigns Tier D without WebGL2 and Tier C for software rasterizers', () => {
+    expect(classifyPerformanceTier({ hasWebGL2: false, isSoftware: false })).toBe('D');
+    expect(classifyPerformanceTier({ hasWebGL2: true, isSoftware: true, cores: 8, memoryGb: 16 })).toBe('C');
+  });
+
+  it('assigns Tier B for mobile or modest hardware and Tier A for desktop GPUs', () => {
+    expect(classifyPerformanceTier({ hasWebGL2: true, isSoftware: false, cores: 8, memoryGb: 8, isMobileViewport: true })).toBe('B');
+    expect(classifyPerformanceTier({ hasWebGL2: true, isSoftware: false, cores: 2, memoryGb: 4, isMobileViewport: false })).toBe('B');
+    expect(classifyPerformanceTier({ hasWebGL2: true, isSoftware: false, cores: 8, memoryGb: 8, isMobileViewport: false })).toBe('A');
+  });
+});
+
+describe('stageStateForScroll', () => {
+  it('walks through S0 to S5 as scroll progresses and respects view mode overrides', () => {
+    expect(stageStateForScroll(0).id).toBe('S0');
+    expect(stageStateForScroll(0.15).id).toBe('S1');
+    expect(stageStateForScroll(0.3).id).toBe('S2');
+    expect(stageStateForScroll(0.5).id).toBe('S3');
+    expect(stageStateForScroll(0.7).id).toBe('S4');
+    expect(stageStateForScroll(0.9).id).toBe('S5');
+
+    expect(stageStateForScroll(0, 'matrix').resolve).toBeLessThan(0.2);
+    expect(stageStateForScroll(0.9, 'stage').resolve).toBeGreaterThan(0.9);
+  });
+});
+

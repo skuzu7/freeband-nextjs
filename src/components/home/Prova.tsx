@@ -28,18 +28,26 @@ export function Prova() {
     <Section id="prova" labelledBy="prova-title" className="border-t border-line">
       <Container className="flex flex-col gap-20">
         <div>
-          <SectionHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeader id="prova-title" label={prova.label} headline={prova.headline} lead={prova.videoLead} />
+            <div className="border border-led/35 bg-surface-raise/80 px-3.5 py-2 backdrop-blur-sm">
+              <span className="label-caps text-2xs text-led-text">Áudio ao vivo · Reativo ao Painel LED</span>
+            </div>
+          </div>
           <ClipList clips={homeClips} columns={3} className="rise mt-8" />
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
             <p className="text-sm text-ink-low">{prova.videoFootnote}</p>
-            <Button variant="ghost" href="/palco" className="px-0">
+            <Button variant="secondary" href="/palco">
               {prova.palcoCta} →
             </Button>
           </div>
         </div>
 
-        <div className="rise">
-          <Label>{prova.arquivoLabel}</Label>
+        <div className="rise border border-line bg-surface-raise/50 p-6 md:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Label dot>{prova.arquivoLabel}</Label>
+            <span className="label-caps text-2xs text-ink-low">Registro Histórico Verificado</span>
+          </div>
           <p className="mt-4 max-w-[60ch] text-lg text-ink-muted">{prova.arquivoLead}</p>
           <PlateRow frames={homePosters} className="mt-8" led />
           <Button variant="secondary" href="/arquivo" className="mt-8">
@@ -47,8 +55,11 @@ export function Prova() {
           </Button>
         </div>
 
-        <div className="rise">
-          <Label>{prova.namesLabel}</Label>
+        <div className="rise border border-line bg-surface/85 p-6 backdrop-blur-sm md:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Label dot>{prova.namesLabel}</Label>
+            <span className="label-caps text-2xs text-led-text">15 Consagrados da Música</span>
+          </div>
           <p className="mt-4 max-w-[60ch] text-lg text-ink-muted">{prova.namesLead}</p>
           <LedSign
             items={artists}

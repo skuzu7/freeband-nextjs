@@ -46,16 +46,20 @@ export function Blocos() {
         {blocos.items.map((bloco, i) => (
           <li
             key={bloco.id}
-            className="rise flex flex-col gap-5"
+            className="rise flex flex-col gap-4"
             style={{ '--ratio': ratioOf(bloco.photo.aspect).toFixed(4) } as CSSProperties}
           >
             <Photo photo={bloco.photo} sizes="(min-width: 768px) 24rem, 92vw" led />
-            <div className="flex items-start gap-4">
+            <div className="transition-quick flex items-start gap-4 border border-line bg-surface-raise/75 p-4 backdrop-blur-sm hover:border-led/60">
               <div className="min-w-0 flex-1">
-                <span aria-hidden className="label-caps text-led-text">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 className="mt-1 text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
+                <div className="flex items-center gap-2">
+                  <span aria-hidden className="label-caps text-led-text">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span aria-hidden className="h-px w-6 bg-led/50" />
+                  <span className="label-caps text-2xs text-ink-low">Show Temático</span>
+                </div>
+                <h3 className="mt-1.5 text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
                 <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
                 {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
               </div>

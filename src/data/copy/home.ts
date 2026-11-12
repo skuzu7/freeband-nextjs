@@ -14,6 +14,12 @@ export const fold = {
   kicker: bandKicker,
   backdropPause: 'Pausar o vídeo de fundo',
   backdropPlay: 'Reproduzir o vídeo de fundo',
+  stageModeLabel: 'Modo de projeção do painel LED',
+  stageModes: [
+    { id: 'auto' as const, label: 'Auto 3D' },
+    { id: 'matrix' as const, label: 'Matriz LED' },
+    { id: 'stage' as const, label: 'Vídeo Puro' },
+  ],
   lead: 'Réveillon de prefeitura, baile de clube, casamento e formatura — no interior de São Paulo e em mais de sete estados. Som, luz, palco e logística são nossos.',
   ctaPrimary: 'Pedir orçamento',
   ctaSecondary: 'Ver o palco',
@@ -149,4 +155,49 @@ export const data = {
   whatsappCta: 'Falar pelo WhatsApp',
   // The address already sits in the "Endereço" row right above this line.
   meta: `CNPJ ${bandInfo.cnpj}`,
+  briefing: {
+    badge: 'Configurador rápido de proposta',
+    title: 'Monte o briefing do evento em 30 segundos',
+    subtitle: 'Selecione a configuração desejada para abrir o WhatsApp da produção já com os dados técnicos preenchidos.',
+    formatLabel: '1. Formato do evento',
+    formats: [
+      'Casamento',
+      'Formatura',
+      'Baile de Clube',
+      'Evento Corporativo',
+      'Réveillon / Prefeitura',
+    ],
+    packageLabel: '2. Estrutura de palco',
+    packages: [
+      { id: 'completo', name: 'Show Completo', detail: 'Painel de LED + Boate completa + 11 no palco + DJ pós-show' },
+      { id: 'essencial', name: 'Show Essencial', detail: 'Sonorização e luz de palco + 11 no palco + DJ pós-show' },
+    ],
+    dateLabel: '3. Data ou mês previsto',
+    datePlaceholder: 'Ex.: 14/11/2026 ou Novembro/2026',
+    cityLabel: '4. Cidade / UF',
+    cityPlaceholder: 'Ex.: Jaú/SP, Ribeirão Preto/SP',
+    summaryLabel: 'Mensagem pronta para a produção',
+    ctaConfigured: 'Enviar briefing pelo WhatsApp',
+  },
+  faq: {
+    label: 'Dúvidas técnicas e operacionais',
+    items: [
+      {
+        q: 'O som, a iluminação e o painel de LED são próprios da banda?',
+        a: 'Sim. A Freeband viaja em caminhão próprio com sonorização profissional de alta potência, painel de LED de alta definição, grid de iluminação computadorizada, sistema de backup completo e equipe técnica da própria banda — sem terceirizar locadoras.',
+      },
+      {
+        q: 'Qual é a duração do show e como funciona o DJ depois da banda?',
+        a: 'A entrega padrão inclui música mecânica na recepção dos convidados, o espetáculo ao vivo de 3 horas com os 11 integrantes e trocas de blocos temáticos, seguido de DJ com estrutura de boate após o show.',
+      },
+      {
+        q: 'A banda atende fora do interior de São Paulo e emite nota fiscal para prefeituras e empresas?',
+        a: `Sim. Sediada na região de Jaú/Trabiju (SP), a banda já se apresentou em mais de 100 cidades em 7+ estados, com logística rodoviária própria e documentação fiscal completa (CNPJ ${bandInfo.cnpj}) para contratações corporativas, clubes e órgãos públicos.`,
+      },
+      {
+        q: 'O repertório é engessado ou pode ser adaptado ao perfil do evento?',
+        a: 'O repertório é personalizado junto aos contratantes. Os blocos temáticos (Anos 50, Anos 70, Country, Cabaré) e a seleção musical se ajustam ao perfil de casamento, formatura, baile de gala ou grande evento público.',
+      },
+    ],
+  },
 };
