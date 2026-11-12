@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    versioning-strategy: "increase-if-necessary"
+    groups:
+      nonmajor-updates:
+        update-types: ["minor", "patch"]
+    labels: ["dependencies"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
