@@ -289,8 +289,12 @@ export function Player({ clip, sizes, blur, labelledBy, className }: PlayerProps
 
   const toggleCaptions = () => {
     const next = !captions;
-    const tracks = videoRef.current?.textTracks;
-    if (tracks) for (let i = 0; i < tracks.length; i += 1) tracks[i].mode = next && i === 0 ? 'showing' : 'disabled';
+    const video = videoRef.current;
+    if (!video) return;
+    const tracks = video.textTracks;
+    for (let i = 0; i < tracks.length; i += 1) {
+      tracks[i].mode = next && i === 0 ? 'showing' : 'disabled';
+    }
     setCaptions(next);
   };
 
