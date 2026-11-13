@@ -63,6 +63,7 @@ No painel do Vercel, as três variáveis acima precisam existir no ambiente de p
 
 ## Segurança e Engenharia Defensiva
 
+- **Estudo de caso verificável de remediação de dependência:** [Next.js 16.3.8 → 16.4.6, alerta crítico detectado no CI, correção e validação completa](docs/SECURITY_CASE_STUDY_NEXTJS_2026.md). Não representa CVE própria nem comprovação de deploy em produção.
 - **Revisão de Segurança Documentada:** Veja [`SECURITY_REVIEW.md`](SECURITY_REVIEW.md) para a análise detalhada de autenticação e mitigação de vulnerabilidades lógicas.
 - **Modelagem de Ameaças (STRIDE):** Consulte [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) para a matriz de riscos e defesas arquiteturais.
 - **Proteção de Sessão Criptográfica:** cookie `__Host-freeband_admin` assinado com HMAC-SHA256 via Web Crypto (o mesmo código roda no proxy Edge e nas server actions), comparação em tempo constante sobre digests de tamanho fixo, limite de tentativas no login e no link legado, e a página `/orcamento` conferindo a sessão além do proxy — tudo coberto por `src/lib/__tests__/session.test.ts`, `proxy.test.ts` e `rateLimit.test.ts`.
