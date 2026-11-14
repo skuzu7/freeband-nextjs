@@ -90,12 +90,24 @@ async function measure(browser, route) {
   });
 
   await page.evaluateOnNewDocument(() => {
-    window.__perf = { lcp: 0, cls: 0, longest: 0, loaded: 0 };
+    window.__perf = { lcp: 0, shifts: [], longest: 0, loaded: 0 };
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) window.__perf.lcp = entry.startTime;
     }).observe({ type: 'largest-contentful-paint', buffered: true });
     new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) if (!entry.hadRecentInput) window.__perf.cls += entry.value;
+      for (const entry of list.getEntries()) {
+        if (entry.hadRecentInput) continue;
+        const sources = (entry.sources ?? []).slice(0, 3).map((source) => {
+          const node = source.node;
+          const className = typeof node?.className === 'string' ? node.className : '';
+          return {
+            node: node ? String(node.nodeName).toLowerCase() + '#' + (node.id || '') + '.' + className.slice(0, 80) : null,
+            previousRect: source.previousRect,
+            currentRect: source.currentRect,
+          };
+        });
+        window.__perf.shifts.push({ value: entry.value, startTime: entry.startTime, sources });
+      }
     }).observe({ type: 'layout-shift', buffered: true });
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
@@ -127,7 +139,35 @@ async function measure(browser, route) {
   await page.waitForNetworkIdle({ idleTime: 500, timeout: 15000 }).catch(() => {});
   await Promise.all(pending);
 
-  const perf = await page.evaluate(() => ({ ...window.__perf, canvases: document.querySelectorAll('canvas').length }));
+  const perf = await page.evaluate(() => {
+    const shifts = window.__perf.shifts;
+    let cls = 0;
+    let sessionValue = 0;
+    let sessionStart = null;
+    let lastShiftTime = null;
+    for (const shift of shifts) {
+      if (
+        sessionStart === null ||
+        lastShiftTime === null ||
+        shift.startTime - lastShiftTime >= 1000 ||
+        shift.startTime - sessionStart >= 5000
+      ) {
+        sessionStart = shift.startTime;
+        sessionValue = shift.value;
+      } else {
+        sessionValue += shift.value;
+      }
+      cls = Math.max(cls, sessionValue);
+      lastShiftTime = shift.startTime;
+    }
+    return {
+      ...window.__perf,
+      cls,
+      totalShift: shifts.reduce((sum, shift) => sum + shift.value, 0),
+      shiftSources: shifts.slice(0, 12),
+      canvases: document.querySelectorAll('canvas').length,
+    };
+  });
   await page.close();
 
   const unasked = media.filter((path) => !SILENT_MEDIA.some((allowed) => allowed.test(path)));
@@ -136,6 +176,7 @@ async function measure(browser, route) {
     jsKB: Math.round(jsBytes / 1000),
     lcpMs: Math.round(perf.lcp),
     cls: +perf.cls.toFixed(4),
+    totalShift: +perf.totalShift.toFixed(4),
     longestTaskMs: Math.round(perf.longest),
     canvases: perf.canvases,
     unaskedMedia: unasked,
@@ -147,7 +188,12 @@ async function measure(browser, route) {
   const budget = budgetFor(route);
   if (jsBytes > budget.jsBytes) failures.push(`${route}: ${row.jsKB} KB of JavaScript (budget ${budget.jsBytes / 1000} KB)`);
   if (perf.lcp > budget.lcpMs) timing(`${route}: LCP at ${row.lcpMs} ms (budget ${budget.lcpMs} ms)`);
-  if (perf.cls > budget.cls) failures.push(`${route}: CLS ${row.cls} (budget ${budget.cls})`);
+  if (perf.cls > budget.cls) {
+    failures.push(`${route}: CLS ${row.cls} (budget ${budget.cls})`);
+    if (perf.shiftSources.length) {
+      console.log('   CLS source details: ' + JSON.stringify(perf.shiftSources));
+    }
+  }
   if (perf.longest > budget.longTaskMs) timing(`${route}: a ${row.longestTaskMs} ms task after load (budget ${budget.longTaskMs} ms)`);
   if (perf.canvases > (route === '/' ? 1 : 0)) failures.push(`${route}: ${perf.canvases} canvas element(s)`);
   for (const path of unasked) failures.push(`${route}: fetched ${path} before any interaction`);
