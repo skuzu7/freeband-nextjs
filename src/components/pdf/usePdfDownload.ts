@@ -5,7 +5,7 @@
 // saved straight away, instead of PDFDownloadLink's two steps (build, then
 // click the link it becomes). Everything here is client-only, like the rest
 // of src/components/pdf/.
-import { pdf, type DocumentProps } from '@react-pdf/renderer';
+import type { DocumentProps } from '@react-pdf/renderer';
 import { useCallback, useEffect, useRef, useState, type ReactElement } from 'react';
 
 export type PdfDownloadState = 'idle' | 'generating' | 'error';
@@ -30,8 +30,10 @@ function save(blob: Blob, fileName: string): void {
  * screen then. With `autoStart`, the first run begins on mount: the button
  * that loaded this module was the producer's click.
  */
+type PdfDownloadSpec = { document: ReactElement<DocumentProps>; fileName: string };
+
 export function usePdfDownload(
-  build: () => { document: ReactElement<DocumentProps>; fileName: string },
+  build: () => PdfDownloadSpec | Promise<PdfDownloadSpec>,
   { autoStart = false }: { autoStart?: boolean } = {},
 ) {
   const [state, setState] = useState<PdfDownloadState>('idle');
@@ -49,7 +51,10 @@ export function usePdfDownload(
       // Laying the pages out holds the main thread for a moment: let the
       // "Gerando…" state paint first, or the button looks dead until it ends.
       await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
-      const { document: doc, fileName } = buildRef.current();
+      const [{ pdf }, { document: doc, fileName }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        buildRef.current(),
+      ]);
       save(await pdf(doc).toBlob(), fileName);
       setState('idle');
     } catch (error) {

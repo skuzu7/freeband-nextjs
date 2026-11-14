@@ -78,6 +78,27 @@ describe('usePdfDownload', () => {
     expect(downloads).toEqual(['proposta.pdf']);
   });
 
+  it('awaits an asynchronous document builder before rendering', async () => {
+    const { result } = renderHook(() =>
+      usePdfDownload(async () => {
+        await Promise.resolve();
+        return {
+          document: (<div />) as ReactElement<DocumentProps>,
+          fileName: 'lazy.pdf',
+        };
+      }),
+    );
+
+    act(() => {
+      void result.current.start();
+    });
+    await settle();
+
+    expect(pdfMock).toHaveBeenCalledTimes(1);
+    expect(downloads).toEqual(['lazy.pdf']);
+    expect(result.current.state).toBe('idle');
+  });
+
   it('ignores a second press while the first file is being built', async () => {
     const { result } = renderHook(() => usePdfDownload(buildFor('proposta.pdf')));
 
