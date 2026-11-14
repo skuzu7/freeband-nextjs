@@ -10,13 +10,16 @@ import type { ReactElement } from 'react';
 import { portfolio } from '@/data/copy/portfolio';
 import { Button } from '@/components/ui/Button';
 import { usePdfDownload } from '../usePdfDownload';
-import { PortfolioDocument } from './PortfolioDocument';
 
 export function PortfolioDownloadButton() {
-  const { state, start } = usePdfDownload(() => ({
-    document: (<PortfolioDocument />) as ReactElement<DocumentProps>,
-    fileName: portfolio.fileName,
-  }));
+  const { state, start } = usePdfDownload(async () => {
+    // Keep the multi-megabyte PDF document graph out of the initial route bundle.
+    const { PortfolioDocument } = await import('./PortfolioDocument');
+    return {
+      document: (<PortfolioDocument />) as ReactElement<DocumentProps>,
+      fileName: portfolio.fileName,
+    };
+  });
   const generating = state === 'generating';
 
   return (
