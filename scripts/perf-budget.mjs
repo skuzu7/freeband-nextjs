@@ -48,14 +48,13 @@ const BUDGET = {
  * with the CPU slowed four times. It runs once, on idle, and never again in
  * that session.
  *
- * /portfolio exists to hand over a PDF, and it loads the PDF engine
- * (@react-pdf/renderer, about 1.3 MB of script) as soon as the page is up so
- * that the button answers in one press. That engine is the page's budget:
- * measured at 2 021 KB, with one 398 ms task while it is evaluated.
+ * /portfolio hands over a PDF. The button and page stay lightweight; the PDF
+ * engine and seven-page document graph are imported only after the visitor
+ * clicks Download. PDF generation work is therefore interaction-time work,
+ * not part of the initial page-load budget.
  */
 const ROUTE_BUDGET = {
   '/': { longTaskMs: 400 },
-  '/portfolio': { jsBytes: 2_100_000, longTaskMs: 500 },
 };
 const budgetFor = (route) => ({ ...BUDGET, ...(ROUTE_BUDGET[route] ?? {}) });
 
