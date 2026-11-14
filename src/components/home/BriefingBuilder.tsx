@@ -6,7 +6,7 @@
 // open WhatsApp with the technical briefing pre-filled.
 import { useId, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { buildBriefingMessage, whatsappBriefingLink } from '@/data/contact';
+import { buildBriefingMessage, whatsappBriefingLink } from '@/data/briefing';
 import { data } from '@/data/copy/home';
 import { DotGrid } from '@/components/brand/DotGrid';
 import { Button } from '@/components/ui/Button';
