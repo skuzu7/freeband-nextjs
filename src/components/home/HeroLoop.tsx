@@ -14,7 +14,7 @@
 // No WebGL2, a lost context, reduced motion or Save-Data all end the same
 // way: the canvas stays transparent and the poster or the loop shows through.
 // One control pauses the loop (WCAG 2.2.2).
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 import { toHex } from '@/design/color';
 import { tokens } from '@/design/tokens';
@@ -27,6 +27,7 @@ import {
 } from '@/lib/led/wall';
 import { getLevel } from '@/lib/media/level';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { Icon } from '@/components/ui/Icon';
 import { PlayToggle } from '@/components/ui/PlayToggle';
 
 const PALETTE: WallPalette = {
@@ -92,17 +93,97 @@ export function HeroLoop({
   const reduced = useReducedMotion();
   const [paused, setPaused] = useState(false);
   const [viewMode, setViewMode] = useState<StageViewMode>('auto');
+  const [ambientOn, setAmbientOn] = useState(false);
+  const [controlsOpen, setControlsOpen] = useState(false);
+  const controlsId = useId();
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const ambienceRef = useRef<{ start: () => void; stop: () => void } | null>(null);
   const viewModeRef = useRef<StageViewMode>('auto');
   const wakeRef = useRef<(() => void) | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Close the stage controls popover on Escape or outside click.
+  useEffect(() => {
+    if (!controlsOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setControlsOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (controlsRef.current && !controlsRef.current.contains(event.target as Node)) {
+        setControlsOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [controlsOpen]);
+
   // Sync interactive stage projection mode into the WebGL loop without re-creating the context.
   useEffect(() => {
     viewModeRef.current = viewMode;
     wakeRef.current?.();
   }, [viewMode]);
+
+  // Lazy-load Lenis + GSAP ScrollTrigger choreography on first real user pointer/wheel/touch
+  // interaction so cold-load JS stays well within the 680 KB performance budget.
+  useEffect(() => {
+    if (reduced || savesData()) return;
+    let disposeChoreography: (() => void) | undefined;
+    let loaded = false;
+
+    const boot = () => {
+      if (loaded) return;
+      loaded = true;
+      window.removeEventListener('wheel', boot);
+      window.removeEventListener('pointermove', boot);
+      window.removeEventListener('touchstart', boot);
+      import('@/lib/animations/stageChoreography')
+        .then((mod) => {
+          disposeChoreography = mod.initStageChoreography();
+        })
+        .catch(() => {});
+    };
+
+    window.addEventListener('wheel', boot, { passive: true, once: true });
+    window.addEventListener('pointermove', boot, { passive: true, once: true });
+    window.addEventListener('touchstart', boot, { passive: true, once: true });
+    return () => {
+      window.removeEventListener('wheel', boot);
+      window.removeEventListener('pointermove', boot);
+      window.removeEventListener('touchstart', boot);
+      disposeChoreography?.();
+    };
+  }, [reduced]);
+
+  useEffect(() => {
+    return () => {
+      ambienceRef.current?.stop();
+    };
+  }, []);
+
+  const toggleAmbientSound = async () => {
+    if (ambientOn) {
+      ambienceRef.current?.stop();
+      setAmbientOn(false);
+      return;
+    }
+    try {
+      if (!ambienceRef.current) {
+        const mod = await import('@/lib/audio/stageAmbience');
+        ambienceRef.current = mod.createStageAmbience();
+      }
+      ambienceRef.current.start();
+      setAmbientOn(true);
+      wakeRef.current?.();
+    } catch {
+      setAmbientOn(false);
+    }
+  };
 
   // The loop attaches once the page is idle: the poster is the LCP and the
   // video must not compete with it.
@@ -334,49 +415,86 @@ export function HeroLoop({
         <div aria-hidden className="hero-scrim absolute inset-0" />
       </div>
       {!reduced && (
-        <div className="absolute inset-x-[var(--pad-inline)] top-4 z-10 flex flex-wrap items-center justify-between gap-2 sm:top-6">
-          <div className="hidden items-center gap-2 border border-led/35 bg-surface/80 px-3 py-2 backdrop-blur-md lg:inline-flex">
-            <span aria-hidden className="size-2 rounded-pill bg-led shadow-[0_0_8px_var(--color-led)]" />
-            <span className="label-caps text-2xs text-led-text">Palco 3D Volumétrico · Interativo</span>
-          </div>
-          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-            <div
-              role="group"
-              aria-label={stageModeLabel}
-              className="hidden items-center gap-1 border border-led/40 bg-surface/85 px-1.5 shadow-[0_0_24px_color-mix(in_oklab,var(--color-led),transparent_84%)] backdrop-blur-md sm:inline-flex"
+        <div
+          ref={controlsRef}
+          className="absolute top-3 right-[var(--pad-inline)] z-20 flex flex-col items-end gap-2 sm:top-5"
+        >
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-expanded={controlsOpen}
+              aria-controls={controlsId}
+              onClick={() => setControlsOpen((prev) => !prev)}
+              className={cn(
+                'label-caps transition-quick tap inline-flex items-center gap-2 rounded-sm border px-3 text-2xs backdrop-blur-md',
+                controlsOpen
+                  ? 'border-led bg-surface/95 text-led-text'
+                  : 'border-line/80 bg-surface/75 text-ink-muted hover:border-line-strong hover:text-ink',
+              )}
             >
-              {stageModes.map((mode) => {
-                const active = viewMode === mode.id;
-                return (
-                  <button
-                    key={mode.id}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setViewMode(mode.id)}
-                    className={cn(
-                      'label-caps transition-quick tap inline-flex items-center gap-1.5 px-2.5 text-2xs',
-                      active
-                        ? 'bg-led/15 text-led-text'
-                        : 'text-ink-muted hover:text-ink',
-                    )}
-                  >
-                    <i
-                      aria-hidden
-                      className={cn('size-1.5 rounded-pill', active ? 'bg-led shadow-[0_0_6px_var(--color-led)]' : 'bg-ink-low/50')}
-                    />
-                    {mode.label}
-                  </button>
-                );
-              })}
-            </div>
+              <Icon name="sliders" className="size-3.5" />
+              <span>Palco</span>
+            </button>
             <PlayToggle
               paused={paused}
               onToggle={() => setPaused((p) => !p)}
               pauseLabel={pauseLabel}
               playLabel={playLabel}
-              className="border border-line bg-surface/85 px-3 text-ink backdrop-blur-md"
+              compactMobile
+              className="rounded-sm border border-line/80 bg-surface/75 px-3 text-ink backdrop-blur-md hover:border-line-strong"
             />
           </div>
+
+          {controlsOpen && (
+            <div
+              id={controlsId}
+              role="region"
+              aria-label={stageModeLabel}
+              className="flex w-[min(18rem,calc(100vw-2*var(--pad-inline)))] flex-col gap-3 rounded-sm border border-line bg-surface/95 p-3.5 shadow-2xl backdrop-blur-md"
+            >
+              <div className="flex flex-col gap-2">
+                <span className="label-caps text-2xs text-ink-low">{stageModeLabel}</span>
+                <div role="group" aria-label={stageModeLabel} className="grid grid-cols-3 gap-1 bg-surface-raise p-1">
+                  {stageModes.map((mode) => {
+                    const active = viewMode === mode.id;
+                    return (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => setViewMode(mode.id)}
+                        className={cn(
+                          'transition-quick tap flex items-center justify-center rounded-sm px-2 text-2xs font-medium whitespace-nowrap',
+                          active
+                            ? 'bg-surface text-led-text ring-1 ring-led/60'
+                            : 'text-ink-muted hover:text-ink',
+                        )}
+                      >
+                        {mode.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-line pt-2.5">
+                <span className="text-xs text-ink-muted">Áudio ambiente do palco</span>
+                <button
+                  type="button"
+                  aria-pressed={ambientOn}
+                  onClick={toggleAmbientSound}
+                  className={cn(
+                    'label-caps transition-quick tap inline-flex items-center justify-center rounded-sm border px-3 text-2xs',
+                    ambientOn
+                      ? 'border-led bg-led/15 text-led-text'
+                      : 'border-line text-ink-muted hover:border-line-strong hover:text-ink',
+                  )}
+                >
+                  {ambientOn ? 'Ativo' : 'Ativar'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

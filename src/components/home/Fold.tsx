@@ -1,8 +1,8 @@
 // src/components/home/Fold.tsx
-// Block 1. Everything here is in the HTML the server sends: the stage poster
-// (the page's LCP), the wordmark lit in dots and then in red acrylic, the
-// pitch, the two ways in and the four numbers. HeroLoop is the one island:
-// it adds the loop, the pause control and the WebGL wall over the poster.
+// Block 1 — Cinematographic editorial hero: stage film behind a measured
+// contrast scrim, red acrylic wordmark, clear statement, ONE primary CTA
+// leading directly to the 30s Briefing + ONE quiet watch link, and a clean
+// hairline-divided proof strip.
 import Image from 'next/image';
 import { blurMap } from '@/data/blur';
 import { fold } from '@/data/copy/home';
@@ -10,7 +10,6 @@ import { heroMedia } from '@/data/media/hero';
 import { BrandLine } from '@/components/brand/BrandLine';
 import { LedNumber } from '@/components/brand/LedNumber';
 import { LedWordmark } from '@/components/brand/LedWordmark';
-import { WhatsAppCta } from '@/components/site/WhatsAppCta';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { Icon } from '@/components/ui/Icon';
@@ -29,8 +28,9 @@ interface FoldProps {
 export function Fold({ yearsActive }: FoldProps) {
   return (
     <section
+      id="fold-hero"
       aria-labelledby="fold-title"
-      className="relative isolate flex min-h-[calc(100svh-var(--nav-h))] flex-col justify-end overflow-hidden"
+      className="relative isolate flex min-h-[calc(100svh-3.5rem)] flex-col justify-end overflow-hidden md:min-h-[min(calc(100svh-var(--nav-h)),52rem)]"
     >
       <HeroLoop
         video={heroMedia.video}
@@ -39,9 +39,6 @@ export function Fold({ yearsActive }: FoldProps) {
         stageModeLabel={fold.stageModeLabel}
         stageModes={fold.stageModes}
       >
-        {/* The one photograph on the site that IS allowed to bleed: it is the
-            stage as backdrop, under a scrim, not a picture on display. The
-            `data-backdrop` flag exempts it from the smoke test's crop audit. */}
         <Image
           src={heroMedia.poster}
           alt={heroMedia.alt}
@@ -55,72 +52,59 @@ export function Fold({ yearsActive }: FoldProps) {
           data-backdrop
         />
       </HeroLoop>
-      <Container className="relative z-10 flex flex-col gap-6 pt-24 pb-6 md:gap-7">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <Label dot>{fold.badge}</Label>
-          <nav
-            aria-label="Capítulos da página"
-            className="hidden items-center gap-1 border border-line bg-surface/75 px-2 backdrop-blur-md lg:inline-flex"
-          >
-            {[
-              { href: '#caminhao', num: '01', label: 'Estrutura' },
-              { href: '#blocos', num: '02', label: 'Blocos' },
-              { href: '#prova', num: '03', label: 'Ao Vivo' },
-              { href: '#contato', num: '04', label: 'Briefing 30s' },
-            ].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="label-caps transition-quick tap inline-flex items-center gap-1.5 px-2.5 text-2xs text-ink-muted hover:text-led-text"
-              >
-                <span className="text-led">{item.num}</span>
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </nav>
-        </div>
+
+      <Container className="relative z-10 flex flex-col gap-5 pt-20 pb-7 md:gap-7 md:pt-28 md:pb-9">
+        <Label className="text-ink/90 drop-shadow-[0_1px_12px_rgba(4,5,10,0.95)]">{fold.badge}</Label>
+
         <h1 id="fold-title" className="sr-only">
           {fold.title}
         </h1>
-        <div className="flex w-full max-w-[min(100%,66rem)] flex-col gap-2.5">
+
+        <div className="flex w-full max-w-[min(100%,60rem)] flex-col gap-2">
           <BrandLine rule size="lg" />
           <LedWordmark label={fold.wordmarkLabel} />
         </div>
-        <div className="grid gap-6 md:grid-cols-[1.15fr_1fr] md:items-end">
-          <div>
-            <p className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">{fold.kicker(yearsActive)}</p>
-            <p className="mt-3 max-w-[54ch] text-base text-ink-muted md:text-lg">{fold.lead}</p>
+
+        <div className="grid gap-6 md:grid-cols-[1.25fr_auto] md:items-end md:gap-10">
+          <div className="max-w-[54ch]">
+            <p className="text-[clamp(1.75rem,3.4vw,3.15rem)] leading-[1.08] font-semibold tracking-tight text-balance text-ink">
+              {fold.kicker(yearsActive)}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-muted sm:text-base md:text-lg">{fold.lead}</p>
           </div>
-          {/* Stacked and full-width on phones, side by side from 40rem. */}
-          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap md:justify-end">
-            <WhatsAppCta size="lg" className="w-full sm:w-auto">
-              {fold.ctaPrimary}
-            </WhatsAppCta>
-            <Button variant="secondary" size="lg" href="#contato" className="w-full border-led/50 bg-surface/75 backdrop-blur-sm sm:w-auto">
-              Briefing em 30s
-            </Button>
-            <Button variant="secondary" size="lg" href="/palco" className="w-full bg-surface/75 backdrop-blur-sm sm:w-auto">
-              {fold.ctaSecondary}
-            </Button>
-            <Button variant="ghost" size="lg" href="/palco#show" className="w-full gap-3 px-0 sm:w-auto">
+
+          {/* Focal anchor: 1 clear primary CTA + 1 quiet secondary action */}
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center md:flex-col md:items-end lg:flex-row">
+            <div data-magnetic className="w-full sm:w-auto">
+              <Button size="lg" href="#contato" className="w-full whitespace-nowrap sm:w-auto">
+                Montar briefing em 30s
+              </Button>
+            </div>
+            <Button
+              variant="ghost"
+              size="lg"
+              href="#prova"
+              className="w-full gap-2.5 px-2 whitespace-nowrap text-ink hover:text-led-text sm:w-auto"
+            >
               <Icon name="play" className="size-4 text-led" />
-              {fold.ctaWatch}
+              <span>Assistir ao show ao vivo</span>
             </Button>
           </div>
         </div>
       </Container>
-      <Container className="relative z-10 border-t border-line/80 py-4">
-        <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+
+      {/* Hairline-divided editorial proof strip — 2x2 on phones & portrait tablets, 4-across on lg+ */}
+      <Container className="relative z-10 border-t border-line/80 py-4 md:py-5">
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-line">
           {fold.proof.map((item, i) => (
             <li
               key={item.label}
-              className="transition-quick relative overflow-hidden border border-line bg-surface/80 p-3.5 backdrop-blur-md hover:border-led/60"
+              className="flex items-center lg:px-6 lg:first:pl-0 lg:last:pr-0"
             >
-              <span aria-hidden className="mb-2 block h-0.5 w-8 bg-led/80" />
               <LedNumber
                 value={item.value}
                 label={item.label}
-                matrixClassName="h-6 md:h-7"
+                matrixClassName="h-5 sm:h-6 md:h-7"
                 delayMs={PROOF_DELAY_MS + i * PROOF_STEP_MS}
               />
             </li>

@@ -16,34 +16,43 @@
     "tokens": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-tokens.mjs",
     "blur": "node scripts/generate-blur.mjs",
     "social": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/social/build.mjs",
-    "optimize:images": "node scripts/optimize-images.mjs"
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:models": "node scripts/optimize-models.mjs"
   },
   "engines": {
     "node": ">=22.18"
   },
   "dependencies": {
-    "@react-pdf/renderer": "^4.6.0",
-    "clsx": "^2.1.1",
+    "@gsap/react": "2.1.2",
+    "@react-pdf/renderer": "4.9.0",
+    "@types/three": "0.187.0",
+    "clsx": "2.1.1",
+    "detect-gpu": "5.0.70",
+    "gsap": "3.15.1",
+    "lenis": "1.3.27",
     "next": "16.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "3.6.0",
+    "three": "0.187.0",
+    "zustand": "5.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@types/node": "^20.19.43",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
-    "axe-core": "^4.14.0",
-    "eslint": "^9.39.5",
+    "@tailwindcss/postcss": "4.3.3",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "20.19.43",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.0.5",
+    "axe-core": "4.14.0",
+    "eslint": "9.39.5",
     "eslint-config-next": "16.4.6",
-    "jsdom": "^29.1.1",
-    "puppeteer": "^25.6.0",
-    "sharp": "^0.35.3",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.10"
+    "jsdom": "29.1.1",
+    "puppeteer": "25.17.0",
+    "sharp": "0.35.3",
+    "tailwindcss": "4.3.5",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
   }
 }

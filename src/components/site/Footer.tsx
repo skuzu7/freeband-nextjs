@@ -59,17 +59,21 @@ export function Footer() {
         </div>
       </Container>
 
-      <Container className="flex flex-col gap-4 border-t border-line py-6 text-2xs text-ink-low sm:flex-row sm:items-center sm:justify-between">
+      <Container className="flex flex-col gap-4 border-t border-line py-6 pb-24 text-2xs text-ink-low sm:flex-row sm:items-center sm:justify-between md:pb-6">
         <p>
           © {year} {bandInfo.name} · {site.footer.rightsNote}
         </p>
-        <p>
+        <p className="tabular-nums">
           {site.footer.cnpjLabel} {bandInfo.cnpj}
         </p>
-        <ul aria-label={site.footer.decadesLabel} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <ul aria-label={site.footer.decadesLabel} className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
           {site.footer.years.map((y, i) => (
-            <li key={y} className="flex items-center gap-3">
-              {i > 0 && <i aria-hidden className="size-1 rounded-pill bg-led-dim" />}
+            <li key={y} className="flex items-center gap-2.5">
+              {i > 0 && (
+                <span aria-hidden className="text-ink-low/60">
+                  ·
+                </span>
+              )}
               <span className="tabular-nums">{y}</span>
             </li>
           ))}

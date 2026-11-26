@@ -47,9 +47,16 @@ export function PlateRow({ frames, className, preload = false, rowFraction = 1, 
         const photo: PhotoData = { src: frame.src, alt: frame.alt, aspect: frame.aspect };
         const view = { photo, sizes: layout.sizes[i], preload: preload && i === 0, quality, led, grade: frame.grade };
         return (
-          <figure key={frame.src} className="m-0 flex flex-col gap-2">
+          <figure
+            key={frame.src}
+            className="group m-0 flex min-w-0 flex-col bg-surface-raise/80 ring-1 ring-line transition-[box-shadow,color] duration-200 hover:ring-line-strong"
+          >
             {frame.link ? <PhotoLink link={frame.link} blur={blurMap[frame.src]} {...view} /> : <Photo {...view} />}
-            {frame.caption && <figcaption className="label-caps text-ink-low">{frame.caption}</figcaption>}
+            {frame.caption && (
+              <figcaption className="flex min-w-0 items-center border-t border-line bg-surface-raise px-3 py-2.5 text-xs tracking-normal text-ink-muted transition-colors group-hover:text-ink">
+                <span className="min-w-0 truncate">{frame.caption}</span>
+              </figcaption>
+            )}
           </figure>
         );
       })}

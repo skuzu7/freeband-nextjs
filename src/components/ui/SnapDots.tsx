@@ -1,17 +1,16 @@
 'use client';
 
 // src/components/ui/SnapDots.tsx
-// Position indicator for a scroll-snap row: one LED per item, the current one
-// lit — and, when labels are given, a pair of step buttons for pointer
-// devices (touch users swipe; the row is a native scroller). Reads the row by
-// id so the row itself can stay a server component.
+// Touch-friendly position indicator & step controls for horizontal scroll-snap
+// carousels on both mobile and desktop: interactive dot jumps, tabular counter
+// (01 / 04), and accessible Prev/Next buttons.
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { prefersReducedMotion } from '@/hooks/useReducedMotion';
 import { Icon } from './Icon';
 
 interface SnapDotsProps {
-  /** id of the `.snap-row` element. */
+  /** id of the scroll-snap row element. */
   rowId: string;
   count: number;
   label: string;
@@ -37,7 +36,7 @@ export function SnapDots({ rowId, count, label, prev, next, className }: SnapDot
     const update = () => {
       const items = Array.from(row.children) as HTMLElement[];
       if (items.length === 0) return;
-      const left = row.scrollLeft + row.clientWidth * 0.25;
+      const left = row.scrollLeft + row.clientWidth * 0.28;
       let index = 0;
       items.forEach((item, i) => {
         if (item.offsetLeft <= left) index = i;
@@ -53,33 +52,57 @@ export function SnapDots({ rowId, count, label, prev, next, className }: SnapDot
     };
   }, [rowId, count]);
 
-  const step = (dir: -1 | 1) => {
+  const scrollToIndex = (targetIndex: number) => {
     const found = itemsOf(rowId);
     if (!found) return;
     const { row, items } = found;
-    const target = items[Math.max(0, Math.min(items.length - 1, active + dir))];
+    const clamped = Math.max(0, Math.min(items.length - 1, targetIndex));
+    const target = items[clamped];
     if (!target) return;
     const reduce = prefersReducedMotion();
-    row.scrollTo({ left: target.offsetLeft - (items[0]?.offsetLeft ?? 0), behavior: reduce ? 'auto' : 'smooth' });
+    row.scrollTo({
+      left: target.offsetLeft - (items[0]?.offsetLeft ?? 0),
+      behavior: reduce ? 'auto' : 'smooth',
+    });
   };
 
   const arrows = prev !== undefined && next !== undefined;
 
   return (
-    <div className={cn('flex items-center gap-5', className)}>
-      <div className="flex items-center gap-2" role="img" aria-label={`${label} ${active + 1} / ${count}`}>
-        {Array.from({ length: count }, (_, i) => (
-          <i
-            key={i}
-            aria-hidden
-            className={cn('transition-quick rounded-pill', i === active ? 'size-2 bg-led' : 'size-1.5 bg-led-dim')}
-          />
-        ))}
+    <div className={cn('flex items-center justify-between gap-4 sm:justify-start sm:gap-5', className)}>
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-medium tabular-nums text-ink-muted" aria-live="polite">
+          {String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+        </span>
+        <div className="flex items-center gap-1.5" role="group" aria-label={label}>
+          {Array.from({ length: count }, (_, i) => {
+            const isCurrent = i === active;
+            return (
+              <button
+                key={i}
+                type="button"
+                aria-label={`${label} ${i + 1} de ${count}`}
+                aria-current={isCurrent ? 'true' : undefined}
+                onClick={() => scrollToIndex(i)}
+                className="flex h-8 items-center justify-center px-1 focus-visible:outline-offset-2"
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    'transition-quick block h-1.5 rounded-pill',
+                    isCurrent ? 'w-5 bg-led' : 'w-1.5 bg-line-strong hover:bg-ink-muted',
+                  )}
+                />
+              </button>
+            );
+          })}
+        </div>
       </div>
+
       {arrows && (
-        <div className="hidden items-center gap-2 md:flex">
-          <StepButton label={prev} disabled={active === 0} onClick={() => step(-1)} dir={-1} />
-          <StepButton label={next} disabled={active >= count - 1} onClick={() => step(1)} dir={1} />
+        <div className="flex items-center gap-1.5">
+          <StepButton label={prev} disabled={active === 0} onClick={() => scrollToIndex(active - 1)} dir={-1} />
+          <StepButton label={next} disabled={active >= count - 1} onClick={() => scrollToIndex(active + 1)} dir={1} />
         </div>
       )}
     </div>

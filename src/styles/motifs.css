@@ -67,40 +67,59 @@
   }
   @media (width >= 40rem) {
     .plate {
-      gap: var(--plate-gap, 0.5rem);
+      gap: var(--plate-gap, 1rem);
       grid-template-columns: var(--plate-cols, 1fr);
     }
   }
 
-  /* The thematic blocks: a vertical stack on phones, a horizontal scroll-snap
-     row from 48rem. */
+  /* The thematic blocks: touch-first horizontal peek carousel on mobile
+     (next card peeks from the right edge) and proportional scroll-snap row on desktop. */
   .snap-row {
     display: flex;
-    flex-direction: column;
-    gap: 3rem;
+    flex-direction: row;
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad-inline);
     padding-inline: var(--pad-inline);
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .snap-row::-webkit-scrollbar {
+    display: none;
   }
   .snap-row > * {
-    width: 100%;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: min(82vw, 22rem);
   }
   @media (width >= 48rem) {
     .snap-row {
-      flex-direction: row;
       gap: var(--snap-gap, 1.5rem);
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-snap-type: x mandatory;
-      scroll-padding-inline: var(--pad-inline);
-      scrollbar-width: none;
-    }
-    .snap-row::-webkit-scrollbar {
-      display: none;
     }
     .snap-row > * {
-      flex: 0 0 auto;
-      scroll-snap-align: start;
-      width: calc(var(--bloco-h, 32rem) * var(--ratio, 1));
+      width: calc(var(--bloco-h, 30rem) * var(--ratio, 1));
     }
+  }
+
+  /* Horizontal touch strip for mobile filters, act jump rails, and decade tabs. */
+  .scroll-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-strip::-webkit-scrollbar {
+    display: none;
+  }
+  .scroll-strip > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
   }
 
   /* Pre-digital prints in the 1969 chapter. */
@@ -108,17 +127,34 @@
     filter: sepia(0.3) saturate(0.75) contrast(1.08);
   }
 
-  /* The fold: the scrim that seats the type on the stage. */
+  /* The fold: cinema-grade multi-stop contrast scrim guaranteeing >= 4.5:1
+     legibility over bright LED/video frames on both desktop and mobile. */
   .hero-scrim {
     background:
       linear-gradient(
-        to top,
-        var(--color-surface) 0%,
-        color-mix(in oklab, var(--color-surface), transparent 20%) 38%,
-        color-mix(in oklab, var(--color-surface), transparent 65%) 70%,
-        color-mix(in oklab, var(--color-surface), transparent 85%) 100%
+        to bottom,
+        color-mix(in oklab, var(--color-surface), transparent 16%) 0%,
+        color-mix(in oklab, var(--color-surface), transparent 36%) 30%,
+        color-mix(in oklab, var(--color-surface), transparent 10%) 62%,
+        var(--color-surface) 100%
       ),
-      linear-gradient(to right, color-mix(in oklab, var(--color-surface), transparent 30%), transparent 60%);
+      radial-gradient(
+        ellipse 88% 76% at 20% 72%,
+        color-mix(in oklab, var(--color-surface), transparent 12%) 0%,
+        transparent 72%
+      );
+  }
+  @media (width < 48rem) {
+    .hero-scrim {
+      background:
+        linear-gradient(
+          to bottom,
+          color-mix(in oklab, var(--color-surface), transparent 12%) 0%,
+          color-mix(in oklab, var(--color-surface), transparent 28%) 34%,
+          color-mix(in oklab, var(--color-surface), transparent 6%) 70%,
+          var(--color-surface) 100%
+        );
+    }
   }
 
   /* Running line of names. Two copies of the list sit side by side and the

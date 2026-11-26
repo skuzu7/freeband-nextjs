@@ -26,21 +26,15 @@ function mockMatchMedia(initial: boolean) {
 }
 
 describe('Nav', () => {
-  it('renders every public route and the WhatsApp CTA', () => {
+  it('renders every public route and the primary Briefing 30s CTA', () => {
     render(<Nav />);
     const nav = screen.getByRole('navigation', { name: 'Principal' });
     for (const link of site.nav.links) {
       expect(nav).toContainElement(screen.getByRole('link', { name: link.label }));
     }
-    // One CTA in the desktop nav, one beside the phone menu button: jsdom
-    // applies no media queries, so both are in the tree here.
-    const ctas = screen.getAllByRole('link', { name: site.nav.cta.label });
-    expect(ctas).toHaveLength(2);
-    for (const cta of ctas) {
-      expect(cta).toHaveAttribute('href', site.nav.cta.href);
-      expect(cta).toHaveAttribute('target', '_blank');
-    }
-    expect(screen.getByRole('button', { name: site.nav.menuOpen }).parentElement).toContainElement(ctas[1]);
+    const cta = screen.getByRole('link', { name: site.nav.briefingCta.label });
+    expect(cta).toHaveAttribute('href', site.nav.briefingCta.href);
+    expect(screen.getByRole('button', { name: site.nav.menuOpen })).toBeInTheDocument();
   });
 
   it('marks the current route', () => {

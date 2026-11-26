@@ -21,9 +21,18 @@ function Year({ year }: { year: string }) {
   return <span className="text-2xl font-semibold tracking-tight text-led-text">{year}</span>;
 }
 
+export function eraAnchorId(year: string): string {
+  return `era-${year
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')}`;
+}
+
 export function EraChapter({ era }: { era: Era }) {
   return (
-    <li className="relative grid gap-6 pl-8 md:grid-cols-[minmax(9rem,13rem)_1fr] md:gap-10 md:pl-12">
+    <li id={eraAnchorId(era.year)} className="relative grid gap-6 pl-8 md:grid-cols-[minmax(9rem,13rem)_1fr] md:gap-10 md:pl-12">
       <Node />
       {/* The year stays in view while its era scrolls past. */}
       <div className="md:sticky md:top-[calc(var(--nav-h)+1.5rem)] md:self-start">

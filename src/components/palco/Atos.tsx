@@ -1,9 +1,7 @@
 // src/components/palco/Atos.tsx
-// The gallery as a programme in three acts. An index of anchors comes first;
-// then each act is a section named by its title, its frames out of platesOf()
-// already grouped into rows, and every row a plate: equal height, columns
-// proportional to each frame's ratio, nothing cropped. Every frame is a link
-// to its own address, which opens it in the photo viewer.
+// The gallery as a programme in three acts. On mobile, a horizontal touch jump
+// strip lets visitors leap straight to any act, wardrobe, rig, or video; on
+// desktop, the editorial 3-column act index leads into equal-height photo plates.
 import { palco } from '@/data/copy/palco';
 import { platesOf, stageFrames } from '@/data/media/frames';
 import { gallery } from '@/data/media/gallery';
@@ -16,13 +14,39 @@ import { PlateRow } from '@/components/media/PlateRow';
 const actId = (key: string) => `ato-${key}`;
 
 export function Atos() {
+  const quickJumps = [
+    ...palco.acts.map((act) => ({
+      href: `#${actId(act.key)}`,
+      label: `${palco.actWord} ${act.numeral}`,
+    })),
+    { href: '#figurinos', label: palco.figurinos.label },
+    { href: '#estrutura', label: palco.estrutura.label },
+    { href: '#show', label: 'Vídeos' },
+  ];
+
   return (
-    <Container className="flex flex-col gap-20 md:gap-28">
-      <nav aria-labelledby="atos-indice" className="-mb-6 border-y border-line py-6 md:-mb-12">
-        <Label id="atos-indice" as="h2" dot>
+    <Container className="flex flex-col gap-16 md:gap-28">
+      <nav aria-labelledby="atos-indice" className="-mb-4 border-y border-line py-5 md:-mb-12 md:py-6">
+        <Label id="atos-indice" as="h2">
           {palco.index.label}
         </Label>
-        <ol className="act-index mt-5 list-none p-0">
+
+        {/* Mobile horizontal touch jump rail */}
+        <ul className="scroll-strip -mx-[var(--pad-inline)] mt-4 list-none gap-2 px-[var(--pad-inline)] md:hidden">
+          {quickJumps.map((item) => (
+            <li key={item.href}>
+              <a
+                href={item.href}
+                className="label-caps tap transition-quick inline-flex items-center whitespace-nowrap border border-line bg-surface-raise/70 px-3.5 text-2xs text-ink-muted hover:border-led hover:text-ink"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop editorial 3-column index */}
+        <ol className="act-index mt-5 hidden list-none p-0 md:grid">
           {palco.acts.map((act) => (
             <li key={act.key}>
               <a
@@ -61,7 +85,7 @@ export function Atos() {
           ))}
         </section>
       ))}
-      <p className="-mt-10 text-sm text-ink-low md:-mt-16">{palco.photoCredit}</p>
+      <p className="-mt-8 text-sm text-ink-low md:-mt-16">{palco.photoCredit}</p>
     </Container>
   );
 }

@@ -81,10 +81,15 @@ describe('HeroLoop', () => {
     expect(video).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('switches the 3D LED stage projection mode via accessible toggle buttons', () => {
+  it('opens the collapsible stage controls and switches 3D LED projection mode', () => {
     const { container } = renderLoop();
     const canvas = container.querySelector('canvas');
     expect(canvas).toHaveAttribute('data-stage-mode', 'auto');
+
+    const toggle = screen.getByRole('button', { name: 'Palco' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
 
     const matrixBtn = screen.getByRole('button', { name: 'Matriz LED' });
     expect(matrixBtn).toHaveAttribute('aria-pressed', 'false');

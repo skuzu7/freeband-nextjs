@@ -13,6 +13,7 @@ import { LedStage } from '@/components/brand/LedStage';
 import { HistoryKeeper } from '@/components/media/lightbox/HistoryKeeper';
 import { Footer } from '@/components/site/Footer';
 import { JsonLd } from '@/components/site/JsonLd';
+import { MobileThumbBar } from '@/components/site/MobileThumbBar';
 import { Nav } from '@/components/site/Nav';
 import { SkipLink } from '@/components/site/SkipLink';
 
@@ -39,6 +40,7 @@ export default function SiteLayout({ children, lightbox }: SiteLayoutProps) {
         {children}
       </main>
       <Footer />
+      <MobileThumbBar />
       <HistoryKeeper />
       {lightbox}
     </>

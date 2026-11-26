@@ -1,10 +1,6 @@
 // src/components/home/Blocos.tsx
-// Block 3 — the thematic blocks as panels on the wall: each photograph
-// resolves out of the dots as it scrolls into view. The wardrobe shot
-// and the block's number sit beside the text, under the frame: nothing is
-// laid over a photograph. On small screens cards stack in a responsive grid so
-// every photograph stays whole and nothing is cut off horizontally; from md:
-// they sit in a horizontal scroll-snap row with a LED position indicator.
+// Block 3 — Thematic show blocks as a touch-first horizontal peek carousel on
+// mobile (with interactive SnapDots & counter) and proportional snap-row on desktop.
 import type { CSSProperties } from 'react';
 import { blocos } from '@/data/copy/home';
 import { ratioOf } from '@/data/media/paths';
@@ -27,54 +23,57 @@ export function Blocos() {
           label={blocos.position}
           prev={blocos.prev}
           next={blocos.next}
-          className="mb-2 hidden md:flex"
+          className="md:mb-2"
         />
       </Container>
 
-      {/* Thematic blocks: stacks vertically on mobile so every photograph stays
-          whole and nothing is cut off horizontally; on desktop it runs as
-          a horizontal scroll-snap row with LED controls. */}
       <ul
         id={ROW_ID}
-        // The row scrolls sideways from 48rem: it takes focus so the arrow
-        // keys can scroll it, and is named by the block's heading.
         tabIndex={0}
         aria-labelledby="blocos-title"
-        className="snap-row mt-10 items-start md:mt-14"
-        style={{ '--snap-gap': '1.5rem', '--bloco-h': 'min(32rem, 100vw)' } as CSSProperties}
+        className="snap-row mt-8 items-start md:mt-12"
+        style={{ '--snap-gap': '1.5rem', '--bloco-h': 'min(30rem, 96vw)' } as CSSProperties}
       >
         {blocos.items.map((bloco, i) => (
           <li
             key={bloco.id}
-            className="rise flex flex-col gap-4"
+            data-stage-era={bloco.id}
+            className="rise flex flex-col border border-line bg-surface-raise/80 transition-colors duration-200 hover:border-line-strong"
             style={{ '--ratio': ratioOf(bloco.photo.aspect).toFixed(4) } as CSSProperties}
           >
-            <Photo photo={bloco.photo} sizes="(min-width: 768px) 24rem, 92vw" led />
-            <div className="transition-quick flex items-start gap-4 border border-line bg-surface-raise/75 p-4 backdrop-blur-sm hover:border-led/60">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span aria-hidden className="label-caps text-led-text">
+            <Photo photo={bloco.photo} sizes="(min-width: 768px) 24rem, 82vw" led />
+            <div className="flex flex-1 flex-col justify-between gap-4 border-t border-line p-4 md:p-5">
+              <div>
+                <div className="flex items-center gap-2 text-2xs tracking-wide text-ink-low uppercase">
+                  <span aria-hidden className="tabular-nums text-led-text">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span aria-hidden className="h-px w-6 bg-led/50" />
-                  <span className="label-caps text-2xs text-ink-low">Show Temático</span>
+                  <span aria-hidden>·</span>
+                  <span>Show temático</span>
                 </div>
-                <h3 className="mt-1.5 text-2xl font-semibold tracking-tight text-ink">{bloco.title}</h3>
-                <p className="mt-1 text-sm text-ink-muted">{bloco.note}</p>
-                {bloco.figurino && <p className="label-caps mt-3 text-ink-low">{bloco.figurino.caption}</p>}
+                <h3 className="mt-1.5 text-xl font-semibold tracking-tight text-ink md:text-2xl">{bloco.title}</h3>
               </div>
-              {bloco.figurino && (
-                <div className="w-24 shrink-0 md:w-28">
-                  <Photo photo={bloco.figurino} sizes="7rem" />
+
+              <div className="flex items-end justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm leading-relaxed text-ink-muted">{bloco.note}</p>
+                  <p className="mt-3 border-t border-line/60 pt-2.5 text-xs text-led-text">
+                    {bloco.figurino ? bloco.figurino.caption : 'Performance & Painel LED'}
+                  </p>
                 </div>
-              )}
+                {bloco.figurino && (
+                  <div className="w-16 shrink-0 overflow-hidden ring-1 ring-line/80 sm:w-20">
+                    <Photo photo={bloco.figurino} sizes="5rem" />
+                  </div>
+                )}
+              </div>
             </div>
           </li>
         ))}
       </ul>
 
       <Container>
-        <p className="mt-8 max-w-[60ch] text-sm text-ink-low">{blocos.note}</p>
+        <p className="mt-7 max-w-[60ch] text-sm text-ink-low">{blocos.note}</p>
       </Container>
     </Section>
   );

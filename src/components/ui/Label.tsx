@@ -14,10 +14,10 @@ interface LabelProps {
   className?: string;
 }
 
-export function Label({ children, dot = false, as: Tag = 'span', id, className }: LabelProps) {
+export function Label({ children, dot: _dot = false, as: Tag = 'span', id, className }: LabelProps) {
+  void _dot;
   return (
-    <Tag id={id} className={cn('label-caps inline-flex items-center gap-2.5 text-led-text', className)}>
-      {dot && <i aria-hidden className="inline-block size-1.5 shrink-0 rounded-pill bg-led" />}
+    <Tag id={id} className={cn('label-caps inline-flex items-center gap-2 text-led-text', className)}>
       {children}
     </Tag>
   );

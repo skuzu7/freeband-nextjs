@@ -29,6 +29,12 @@ export const site = {
       { label: 'Portfólio', href: '/portfolio' },
     ],
     cta: { label: 'Orçamento', href: contact.whatsappQuoteLink },
+    briefingCta: { label: 'Briefing 30s', href: '/#contato' },
+    mobileBar: {
+      landmark: 'Ações rápidas de contratação',
+      briefing: 'Briefing em 30s',
+      whatsapp: 'WhatsApp',
+    },
     brandLine: `Desde ${bandInfo.founded} · ${bandInfo.location}`,
     homeLabel: 'Internacional Freeband — início',
     homeLink: 'Início',

@@ -228,6 +228,11 @@
   .led-wall[data-live] {
     opacity: 1;
   }
+  @media (width < 48rem) {
+    .led-wall[data-live] {
+      opacity: 0.58;
+    }
+  }
 }
 
 @keyframes led-sweep {

@@ -1,6 +1,6 @@
 // src/components/arquivo/Filtro.tsx
-// The category filter: one pressed button per category, each carrying the
-// number of flyers behind it, so the archive's size is legible at a glance.
+// Horizontally scrollable touch-first filter strip on mobile; clean wrapped
+// segmented buttons on desktop with tabular counts.
 import { cn } from '@/lib/cn';
 import { arquivo, type FilterKey } from '@/data/copy/arquivo';
 
@@ -12,7 +12,11 @@ interface FiltroProps {
 
 export function Filtro({ value, counts, onChange }: FiltroProps) {
   return (
-    <div role="group" aria-label={arquivo.filterLabel} className="flex flex-wrap gap-2">
+    <div
+      role="group"
+      aria-label={arquivo.filterLabel}
+      className="scroll-strip -mx-[var(--pad-inline)] gap-2 px-[var(--pad-inline)] pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+    >
       {arquivo.filters.map((f) => {
         const active = f.key === value;
         return (
@@ -22,13 +26,13 @@ export function Filtro({ value, counts, onChange }: FiltroProps) {
             aria-pressed={active}
             onClick={() => onChange(f.key)}
             className={cn(
-              'label-caps transition-quick tap inline-flex items-center gap-2 border px-3.5 py-2.5',
+              'label-caps transition-quick tap inline-flex shrink-0 items-center gap-2 whitespace-nowrap border px-3.5 py-2.5',
               active
                 ? 'border-led bg-surface-raise text-ink'
                 : 'border-line text-ink-muted hover:border-line-strong hover:text-ink',
             )}
           >
-            {f.label}{' '}
+            <span>{f.label}</span>{' '}
             <span className={cn('tabular-nums', active ? 'text-led-text' : 'text-ink-low')}>
               {counts[f.key]}
             </span>

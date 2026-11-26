@@ -105,12 +105,17 @@ const blocoItems: Bloco[] = [
     {
       id: 'cabare',
       title: 'Cabaré',
-      note: 'Performance teatral e sofisticada, figurino elegante e iluminação intimista sob o painel de LED.',
-      // No separate wardrobe shot for cabaré in the archive.
+      note: 'Performance teatral e sofisticada, cartolas, casacas e iluminação intimista sob o painel de LED.',
       photo: {
         src: images.palcoCabare,
         alt: 'Vocalista em figurino de cabaré à frente da banda e do painel de LED',
         aspect: '1174/1600',
+      },
+      figurino: {
+        src: images.nauticoBailarinaCirco,
+        alt: 'Bailarina de cartola e casaca vermelha sorrindo em cena diante do painel de LED',
+        caption: 'Cabaré & Espetáculo',
+        aspect: '955/1365',
       },
     },
 ];
@@ -118,8 +123,8 @@ const blocoItems: Bloco[] = [
 export const blocos = {
   label: 'Blocos temáticos',
   headline: 'Os blocos\ntemáticos.',
-  lead: 'O show se transforma visualmente a cada época do repertório: anos 50, anos 70, country, cabaré. Cada bloco traz figurino exclusivo e viaja completo com a banda.',
-  note: 'Anos 50, country, cabaré, anos 70: figurino, coreografia e painel trocam juntos. Foto do bloco anos 50: Jonas Matheus, Clube Náutico Araraquara.',
+  lead: 'O show se transforma visualmente a cada época do repertório: anos 50, anos 70, country, cabaré e abertura de circo. Cada bloco traz figurino exclusivo e viaja completo com a banda.',
+  note: 'Anos 50, country, cabaré, anos 70 e circo: figurino, coreografia e painel trocam juntos. Fotos de palco: Jonas Matheus (Clube Náutico Araraquara) e acervo @internacionalfreeband.',
   position: 'Bloco',
   prev: 'Bloco anterior',
   next: 'Próximo bloco',
@@ -133,6 +138,10 @@ export const prova = {
     'Trechos de gravações oficiais ao vivo, sem overdubs ou playback — a vibração real dos 11 integrantes, do painel de LED e da iluminação cênica.',
   // The player's own labels live in ./player.ts.
   videoFootnote: 'Cortes da filmagem oficial, em câmera e com som. O material completo vai por WhatsApp.',
+  stagePhotosLabel: 'Em cena · Registro fotográfico de palco',
+  stagePhotosLead:
+    'Registros reais de grandes bailes em clubes tradicionais (Clube Náutico Araraquara, Caiçara Clube de Jaú, Cosmopolitano FC, Clube de Campo Céu Azul) e réveillons municipais.',
+  instagramCta: 'Seguir @internacionalfreeband no Instagram',
   arquivoLabel: 'O arquivo',
   arquivoLead:
     'Grandes réveillons públicos, bailes de clubes tradicionais e eventos corporativos. Mais de cinco décadas registrando momentos inesquecíveis.',
@@ -159,7 +168,7 @@ export const data = {
     badge: 'Configurador rápido de proposta',
     title: 'Monte o briefing do evento em 30 segundos',
     subtitle: 'Selecione a configuração desejada para abrir o WhatsApp da produção já com os dados técnicos preenchidos.',
-    formatLabel: '1. Formato do evento',
+    formatLabel: 'Formato do evento',
     formats: [
       'Casamento',
       'Formatura',
@@ -167,14 +176,14 @@ export const data = {
       'Evento Corporativo',
       'Réveillon / Prefeitura',
     ],
-    packageLabel: '2. Estrutura de palco',
+    packageLabel: 'Estrutura de palco',
     packages: [
       { id: 'completo', name: 'Show Completo', detail: 'Painel de LED + Boate completa + 11 no palco + DJ pós-show' },
       { id: 'essencial', name: 'Show Essencial', detail: 'Sonorização e luz de palco + 11 no palco + DJ pós-show' },
     ],
-    dateLabel: '3. Data ou mês previsto',
+    dateLabel: 'Data prevista',
     datePlaceholder: 'Ex.: 14/11/2026 ou Novembro/2026',
-    cityLabel: '4. Cidade / UF',
+    cityLabel: 'Cidade / UF',
     cityPlaceholder: 'Ex.: Jaú/SP, Ribeirão Preto/SP',
     summaryLabel: 'Mensagem pronta para a produção',
     ctaConfigured: 'Enviar briefing pelo WhatsApp',

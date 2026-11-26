@@ -1,10 +1,9 @@
 'use client';
 
 // src/components/orcamento/Page.tsx
-// The editor: form on the left, live A4 preview on the right, on paper. The
-// header carries the way back to the site and the logout; both hide in print.
-// The draft lives in this browser's localStorage, so a reload, a slip on the
-// back button or an expired session does not cost the producer the proposal.
+// Proposal generator: split form + live A4 preview on desktop (>= lg), and
+// clean segmented tab switch ("01. Editar" | "02. Preview A4") with a sticky
+// thumb-zone footer on mobile (< lg) so producers never scroll endlessly.
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
@@ -22,22 +21,18 @@ interface PageProps {
 }
 
 const SAVE_DELAY_MS = 300;
+type MobileTab = 'edit' | 'preview';
 
 export function Page({ onLogout }: PageProps) {
   const [data, setData] = useState<OrcamentoData>(defaultOrcamento);
   const [restored, setRestored] = useState(false);
-  // What "Limpar formulário" threw away, until the producer types again.
   const [cleared, setCleared] = useState<OrcamentoData | null>(null);
-  // Nothing is written until the stored draft has been read, so a fresh
-  // render can never overwrite the draft with the empty form.
+  const [mobileTab, setMobileTab] = useState<MobileTab>('edit');
   const hydrated = useRef(false);
 
   useEffect(() => {
     const draft = readDraft();
     if (draft && !isDefault(draft)) {
-      // The draft exists only in this browser: reading it in the state
-      // initialiser would render HTML the server never sent. After
-      // hydration is the one place it can be picked up.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(draft);
       setRestored(true);
@@ -51,8 +46,6 @@ export function Page({ onLogout }: PageProps) {
     return () => window.clearTimeout(id);
   }, [data]);
 
-  // Leaving with unsaved typing asks first. The draft covers a reload, but
-  // not a navigation that clears site data or a different browser.
   const dirty = !isDefault(data);
   useEffect(() => {
     if (!dirty) return;
@@ -84,16 +77,14 @@ export function Page({ onLogout }: PageProps) {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="no-print flex h-16 items-center justify-between gap-4 border-b border-line bg-surface-high px-[var(--pad-inline)] sm:gap-6">
-        <div className="flex min-w-0 items-center gap-5">
+      <header className="no-print sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-line bg-surface-high/95 px-[var(--pad-inline)] backdrop-blur-md sm:h-16 sm:gap-6">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-5">
           <Wordmark className="h-5 w-auto shrink-0 text-red" title={orcamento.header.brand} />
-          {/* On a phone the title gives its room to the two exits; it stays
-              the page's heading for screen readers. */}
           <span aria-hidden className="hidden h-5 w-px bg-line-strong sm:block" />
           <h1 className="label-caps sr-only text-ink-muted sm:not-sr-only">{orcamento.header.title}</h1>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Link href="/" className="label-caps transition-quick whitespace-nowrap px-3 py-2 text-ink-muted hover:text-ink">
+          <Link href="/" className="label-caps tap transition-quick inline-flex items-center whitespace-nowrap px-3 py-2 text-ink-muted hover:text-ink">
             {orcamento.header.back}
           </Link>
           {onLogout && (
@@ -106,22 +97,58 @@ export function Page({ onLogout }: PageProps) {
         </div>
       </header>
 
-      <div className="print-unclip grid flex-1 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+      {/* Mobile segmented switcher: Edit Form vs Live A4 Preview */}
+      <div
+        role="tablist"
+        aria-label="Modo de visualização do orçamento"
+        className="no-print sticky top-14 z-20 grid grid-cols-2 border-b border-line bg-surface-high px-[var(--pad-inline)] py-2 sm:top-16 lg:hidden"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'edit'}
+          onClick={() => setMobileTab('edit')}
+          className={cn(
+            'label-caps tap transition-quick rounded-sm px-3 text-xs',
+            mobileTab === 'edit'
+              ? 'bg-surface-raise font-semibold text-ink ring-1 ring-line-strong'
+              : 'text-ink-muted hover:text-ink',
+          )}
+        >
+          01 · Editar dados
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mobileTab === 'preview'}
+          onClick={() => setMobileTab('preview')}
+          className={cn(
+            'label-caps tap transition-quick rounded-sm px-3 text-xs',
+            mobileTab === 'preview'
+              ? 'bg-surface-raise font-semibold text-ink ring-1 ring-line-strong'
+              : 'text-ink-muted hover:text-ink',
+          )}
+        >
+          02 · Preview A4
+        </button>
+      </div>
+
+      <div className="print-unclip grid flex-1 grid-cols-1 pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:pb-0">
         <section
           aria-labelledby="form-title"
-          className="no-print border-b border-line lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto lg:border-r lg:border-b-0"
+          className={cn(
+            'no-print border-b border-line lg:block lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto lg:border-r lg:border-b-0',
+            mobileTab !== 'edit' && 'hidden',
+          )}
         >
-          <div className="p-[clamp(1.5rem,3vi,3rem)]">
+          <div className="p-[clamp(1.25rem,3vi,3rem)]">
             <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
               <div>
-                <Label dot>{orcamento.form.step}</Label>
+                <Label>{orcamento.form.step}</Label>
                 <h2 id="form-title" className="mt-3 text-2xl font-semibold tracking-tight text-ink">
                   {orcamento.form.title}
                 </h2>
               </div>
-              {/* Always laid out, hidden while there is nothing to clear: on a
-                  phone it wraps to its own line, and appearing on the first
-                  keystroke would shove the form down under the finger. */}
               <Button variant="ghost" onClick={clear} className={cn(!dirty && 'invisible')}>
                 {orcamento.form.clearDraft}
               </Button>
@@ -145,12 +172,33 @@ export function Page({ onLogout }: PageProps) {
             <Form data={data} onChange={edit} />
           </div>
         </section>
+
         <section
           aria-label={orcamento.preview.label}
-          className="print-unclip bg-surface-raise p-[clamp(1.25rem,3vi,2.5rem)] lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto"
+          className={cn(
+            'print-unclip bg-surface-raise p-[clamp(1.25rem,3vi,2.5rem)] lg:block lg:max-h-[calc(100dvh-4rem)] lg:overflow-y-auto',
+            mobileTab !== 'preview' && 'hidden',
+          )}
         >
           <Preview data={data} onPrint={() => window.print()} />
         </section>
+      </div>
+
+      {/* Mobile thumb-zone quick bar for switching to Preview or Printing */}
+      <div
+        className="no-print fixed inset-x-0 bottom-0 z-30 flex h-[60px] items-center gap-2.5 border-t border-line bg-surface-high/95 px-[var(--pad-inline)] backdrop-blur-md lg:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <Button
+          variant="secondary"
+          onClick={() => setMobileTab(mobileTab === 'edit' ? 'preview' : 'edit')}
+          className="flex-1 py-2.5 text-xs"
+        >
+          {mobileTab === 'edit' ? 'Ver Preview A4' : 'Voltar para Edição'}
+        </Button>
+        <Button onClick={() => window.print()} className="shrink-0 px-5 py-2.5 text-xs">
+          {orcamento.preview.print}
+        </Button>
       </div>
     </div>
   );

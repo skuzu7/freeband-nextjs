@@ -45,8 +45,13 @@ export function CartazGrid({ cartazes, counts }: CartazGridProps) {
   const visible = filter === 'todos' ? cartazes : cartazes.filter((c) => c.category === filter);
 
   return (
-    <div className="flex flex-col gap-10">
-      <Filtro value={filter} counts={counts} onChange={setFilter} />
+    <div className="flex flex-col gap-8 md:gap-10">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Filtro value={filter} counts={counts} onChange={setFilter} />
+        <p className="text-xs tabular-nums text-ink-low" aria-live="polite">
+          {visible.length} {visible.length === 1 ? 'cartaz' : 'cartazes'}
+        </p>
+      </div>
 
       <div className="flex flex-col gap-10">
         {chunk(visible, PER_ROW).map((row) => {
